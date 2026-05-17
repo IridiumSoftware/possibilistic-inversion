@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 .paper-index.json
 .DS_Store
+*.html

@@ -21,6 +21,7 @@ artifacts of the regularization choice).
 | `synthetic_demo.py` | Straight-ray demonstration: synthetic model → straight-ray data + noise → feasible-set ensemble → possibilistic decomposition → validation. |
 | `eikonal.py` | The faithful nonlinear forward operator — Fast Marching Method Eikonal solver + ray-path Fréchet kernel. Standalone, self-tested. |
 | `synthetic_demo_eikonal.py` | Eikonal demonstration: same model, the `eikonal.py` operator, a Levenberg–Marquardt inversion + smooth-perturbation feasible-set sampler, the same possibilistic decomposition. |
+| `decomposition_exact.jl` | Exact-arithmetic (`Rational{BigInt}`) formalization of the decomposition layer in Julia — `classify` proven total/exclusive/exhaustive; the feasible-set monotonicity properties exact-verified. |
 | `make_figures.py` | The explanatory figures for the write-up (`fig_schematic.png`, `fig_ray_bending.png`). |
 | `*.png` | Figures: the two demonstrations and the two explanatory figures. |
 | `pyproject.toml`, `uv.lock` | Pinned environment (numpy, matplotlib). |
@@ -66,8 +67,11 @@ feasible models must be physically plausible (smooth), not merely data-fitting.
 
 ## Status
 
-EXPERIMENTAL — a methodology demonstration, not a library. Both the straight-ray
-(linear) and Eikonal (nonlinear) operators are implemented, and the
-possibilistic decomposition is validated against ground truth for each.
-Natural next steps: a detailed write-up; and applying the decomposition to a
+EXPERIMENTAL — a methodology demonstration, not a library. Both forward
+operators (straight-ray, Eikonal) are implemented and the possibilistic
+decomposition is validated against ground truth for each; the decomposition
+layer is additionally formalized in exact `Rational{BigInt}` arithmetic
+(`decomposition_exact.jl`), its core properties proven or exact-verified. The
+write-up (`possibilistic_tomography_note.md`) is drafted. Next: a C port of the
+numerical code (speed, dependency-free); and applying the decomposition to a
 real inversion ensemble (e.g. ZTM/TFM's `runs=20` output).
