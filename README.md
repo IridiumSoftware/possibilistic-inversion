@@ -16,11 +16,13 @@ artifacts of the regularization choice).
 
 | File | What |
 |---|---|
+| `possibilistic_tomography_note.md` | **The write-up** — the scientific communication: the possibilistic decomposition, both demonstrations, the open frontier. |
 | `geophysical_invariants.md` | The stratified constraint set (Tier-1 hard / Tier-2 frame-dependent / Tier-3 observational). The possibilistic feasible set is bounded by the Tier-1 invariants. |
 | `synthetic_demo.py` | Straight-ray demonstration: synthetic model → straight-ray data + noise → feasible-set ensemble → possibilistic decomposition → validation. |
 | `eikonal.py` | The faithful nonlinear forward operator — Fast Marching Method Eikonal solver + ray-path Fréchet kernel. Standalone, self-tested. |
 | `synthetic_demo_eikonal.py` | Eikonal demonstration: same model, the `eikonal.py` operator, a Levenberg–Marquardt inversion + smooth-perturbation feasible-set sampler, the same possibilistic decomposition. |
-| `possibilistic_decomposition*.png` | Output figures (straight-ray, Eikonal). |
+| `make_figures.py` | The explanatory figures for the write-up (`fig_schematic.png`, `fig_ray_bending.png`). |
+| `*.png` | Figures: the two demonstrations and the two explanatory figures. |
 | `pyproject.toml`, `uv.lock` | Pinned environment (numpy, matplotlib). |
 
 ## Run
