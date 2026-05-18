@@ -1,0 +1,429 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.05in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,
+            linkcolor=blue!40!black,
+            urlcolor=blue!40!black,
+            pdftitle={Possibilistic Decomposition of a Tomographic Inversion},
+            pdfauthor={Aaron Green}]{hyperref}
+
+\setlist{itemsep=3pt,topsep=5pt,parsep=0pt}
+\emergencystretch=3em   % absorb the odd overfull line (long \texttt tokens)
+\newcommand{\amin}{a_{\min}}
+\newcommand{\amax}{a_{\max}}
+\newcommand{\file}[1]{\texttt{#1}}
+
+\title{\textbf{Possibilistic Decomposition of a Tomographic Inversion}\\[6pt]
+  {\large\itshape Separating data-forced structure from regularization
+  artifact}}
+\author{Aaron Green}
+\date{Draft prepared for Zagid Abatchev \;---\; 2026-05-17}
+
+\begin{document}
+\maketitle
+
+\section*{What this is}
+
+A tomographic image is not a picture of the Earth. It is the output of a long
+chain of lossy, selective steps---sparse rays, a simplified forward model, a
+parameterization, a regularizer, an optimizer---and what survives that chain is
+not the structure but a \emph{filtered residue} of it. You and I have said as
+much to each other already. The practical question that framing forces is the
+one this note is about:
+
+\begin{quote}
+\itshape\bfseries Given a finished inversion, which features did the data
+force, and which did the regularization invent?
+\end{quote}
+
+Standard practice does not answer that question. It picks a damping value,
+returns one model, and attaches a posterior covariance---and every part of that
+is conditional on the damping choice. Your own thesis says it plainly:
+``there is no simple solution for regularization, and optimization of damping
+conditions remains a highly parametrization and input dependent problem''
+(ZTM/TFM, \S11).
+
+This note proposes a different reading of an inversion---a
+\textbf{possibilistic} one---and demonstrates it end-to-end on synthetic
+travel-time tomography with two forward operators, straight-ray and Eikonal. It
+is a methods communication and a draft; the demonstrations are synthetic;
+nothing here is claimed as proven. What I am claiming is that the reading is
+sound, that it is implemented and validated against known ground truth, and
+that the place it stops working cleanly is a real open problem worth our
+working on together.
+
+\section{The problem: a damping choice is not a fact}
+
+Tomographic inversion is ill-posed. Many models fit the data within noise. To
+return \emph{one} model you must regularize---damp, smooth, prefer a
+reference---and the model you get is as much a property of that choice as of
+the data.
+
+The honest consequence: a feature in a tomographic image belongs to one of
+three classes, and they are not the same kind of thing.
+
+\begin{table}[htbp]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}l p{0.72\linewidth}@{}}
+\toprule
+\textbf{Class} & \textbf{Meaning} \\
+\midrule
+\textbf{Forced} & Present in \emph{every} model consistent with the data and
+the hard physical bounds. Data-determined. Independent of the damping choice. \\
+\textbf{Forbidden} & Present in \emph{no} such model. \\
+\textbf{Measure-dependent} & Present in \emph{some} consistent models and
+absent in others. The data do not determine it---which sign or structure you
+see is set by the regularization. Such a feature may still be physically real:
+measure-dependence diagnoses \emph{underdetermination}, not falsehood. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A posterior covariance does not draw this line. It reports a spread \emph{under
+one prior and one damping}; it cannot tell you that a given feature would
+vanish under a different, equally defensible choice. The damping problem of
+\S11 is, in this language, a symptom of reading an inversion through the wrong
+layer: it is the search for the ``right'' measure-layer choice to extract a
+model, when the features that \emph{depend} on that choice are exactly the ones
+the data does not determine.
+
+\section{The possibilistic frame}
+
+The distinction in \S1 is the \textbf{possibilistic / probabilistic} split,
+taken from the two-layer discipline of the Closure Forces Structure programme
+(\file{inverse\_born\_methodology.md}) and carried over to inversion:
+
+\begin{itemize}
+\item The \textbf{possibilistic layer} asks what is \emph{forced or forbidden}
+  by the data and the hard physical constraints alone. Its answers are
+  unconditional---they do not depend on a prior, a damping value, or a measure.
+\item The \textbf{probabilistic layer} asks how a measure distributes weight
+  over what the possibilistic layer permits. Its answers are conditional on
+  that measure.
+\end{itemize}
+
+A posterior covariance lives entirely in the probabilistic layer. The
+possibilistic layer is the one that answers the \S1 question, and it is the one
+standard tomography leaves on the table.
+
+Figure~\ref{fig:possibilism} draws the split in model space. The data alone
+defines a \emph{feasible set} of models (panel~1): a region, not a point.
+Probabilistic inversion puts a measure on that set and reports one point of it
+with a spread---but the report moves with the measure, and two equally
+defensible priors can disagree on a feature's sign (panel~2). The possibilistic
+reading looks instead at the \emph{shape} of the set: a feature is forced when
+the set lies wholly on one side of zero, measure-dependent when it straddles
+zero (panel~3). Forced structure survives every prior; measure-dependent
+structure is whatever a prior happened to pick---and no single probabilistic
+run flags which is which.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{fig_possibilism.png}
+\caption{The same feasible set, two questions. Probabilistic inversion asks how
+a measure distributes weight over $F$; its answer is conditional on that
+measure. The possibilistic reading asks what the shape of $F$ forces---what
+holds under every measure. Each cell of a tomogram is one such feature, and its
+feasible interval is $F$ projected onto that cell's axis.}
+\label{fig:possibilism}
+\end{figure}
+
+The object that carries it is the \textbf{feasible interval}. Take an ensemble
+of models that each fit the data within noise and respect the hard bounds. For
+each cell, record the interval $[\amin,\amax]$ of the anomaly across the
+ensemble. That interval is the possibilistic content of the inversion:
+
+\begin{itemize}
+\item $\amin > 0$ everywhere in the ensemble $\rightarrow$
+  \textbf{forced-high} (no data-consistent model makes this cell
+  non-positive);
+\item $\amax < 0$ $\rightarrow$ \textbf{forced-low};
+\item the interval straddles zero $\rightarrow$ \textbf{measure-dependent}
+  (the sign itself is not data-forced);
+\item the interval sits inside a small band around zero $\rightarrow$
+  \textbf{forced-quiet}.
+\end{itemize}
+
+Figure~\ref{fig:schematic} is the whole idea in one cartoon. The same ensemble,
+read two ways: the probabilistic reading collapses it to a mean and an error
+band; the possibilistic reading keeps the feasible interval and classifies it.
+The big feature is forced; the flanks and the small bump are
+measure-dependent---and the probabilistic band does not distinguish them.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{fig_schematic.png}
+\caption{The same feasible ensemble, read two ways. Left: one model, one
+uncertainty band. Right: the feasible interval, classified into
+forced-high / forced-low / measure-dependent.}
+\label{fig:schematic}
+\end{figure}
+
+\paragraph{On prior art --- said straight.}
+This is not unprecedented, and pretending otherwise would not survive five
+minutes of your scrutiny. Computing bounds on what a model \emph{can} be,
+rather than a single estimate, is the spirit of Backus--Gilbert extremal
+inversion (1968); the under-determined directions are the null space of
+resolution analysis; multi-model joint coupling has the Gramian-constraint
+literature (Zhdanov, 2012 onward). And a transdimensional / reversible-jump
+MCMC posterior ensemble (Bodin \& Sambridge, 2009) already \emph{contains} this
+information---forced structure appears as high-consensus, measure-dependent
+structure as sign-variable posterior mass. The epistemic intuition is old. What
+I am putting forward is narrower: not a new inverse-theory principle but a
+\emph{reporting discipline}---the forced / measure-dependent split made an
+explicit, first-class output; measure-dependence treated as the operational
+diagnostic of \emph{underdetermination}; and the whole run as a transferable,
+documented procedure on top of arbitrary inversion machinery, rather than the
+informal robustness check practitioners already perform inconsistently. The
+contribution is the operationalization, not the distinction.
+
+\section{Method}
+
+\paragraph{The feasible set.}
+A model is \emph{feasible} if it (a) fits the data to within the noise level
+and (b) satisfies the hard physical bounds. The bounds are not left implicit:
+\file{geophysical\_invariants.md} stratifies them into Tier-1
+(frame-independent---positivity, first-arrival minimality, a generous velocity
+envelope; used freely), Tier-2 (frame-dependent---typical mantle/crust values,
+reference Earth models, petrophysical relations; soft priors only), and Tier-3
+(the observational context). The possibilistic feasible set is bounded by
+Tier-1 alone. Worth noting in passing: TFM currently clamps node velocities to
+7.5--9.5\,km/s and initializes from IASP91---Tier-2 values used as hard limits.
+That is the layer-confusion the stratification is meant to catch.
+
+\paragraph{Sampling it.}
+Generate many feasible models by inverting toward many random reference models,
+each inversion taken to the point where its misfit equals the noise level. The
+references diversify the data-null directions; the data-resolved directions are
+common to all. Then read the feasible interval and classify it (\S2).
+
+\paragraph{The decomposition is forward-model-agnostic.}
+It operates on the ensemble of models; it does not care how they were produced.
+That is the point of the two demonstrations below: the \emph{same}
+decomposition code runs on a linear straight-ray operator and a nonlinear
+Eikonal operator.
+
+\section{Demonstration 1 --- straight-ray operator (linear)}
+
+A synthetic velocity model: one large tilted high-velocity slab, one broad
+low-velocity zone, three small sub-resolution blobs. Synthetic first-arrival
+times with 1.2\% noise, dense four-edge ray coverage. The feasible set is
+sampled exactly per \S3 (the linear operator admits an exact eigendecomposition,
+so the feasible set is parametrized cleanly).
+
+Figure~\ref{fig:demo1} is the result. The forced-sign cores sit on the true
+features---panel~(e), the black forced-high contour lies inside the true slab,
+the white forced-low contour inside the true low-velocity zone. The numbers:
+
+\begin{itemize}
+\item \textbf{Forced cores are correct.} $\sim$7 sign errors within the
+  resolution length out of $\sim$300 forced cells ($\sim$2\%). What the method
+  certifies, the ground truth bears out.
+\item \textbf{The measure-dependent shell captures $\sim$89\% of the
+  sub-resolution blob cells}---it correctly flags the detail the data cannot
+  pin down.
+\item \textbf{The forced set is conservative}: $\sim$19\% of the grid is
+  sign-certain. This is not a weakness. It is the method saying out loud what
+  is true---most of a tomographic image is \emph{not} forced.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{possibilistic_decomposition.png}
+\caption{The straight-ray (linear) demonstration. Panel~(d) is the
+decomposition; panel~(e) shows the forced cores landing on the true features.}
+\label{fig:demo1}
+\end{figure}
+
+\section{Demonstration 2 --- Eikonal operator (nonlinear)}
+
+The straight-ray operator is exact only in a homogeneous medium. The faithful
+operator is the Eikonal first-arrival solver---the operator class your
+\file{FMM.cpp} implements. First-arrival rays bend: toward fast structure, away
+from slow (Figure~\ref{fig:rays}). \file{eikonal.py} provides it (Fast Marching
+Method solver $+$ ray-path Fr\'echet kernel), standalone and self-tested.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.62\linewidth]{fig_ray_bending.png}
+\caption{Why the forward operator matters. Solid: Eikonal first-arrival rays,
+bending through the medium. Dashed: the straight-ray approximation.}
+\label{fig:rays}
+\end{figure}
+
+Because travel time is now a nonlinear functional of slowness, the one-shot
+linear solve is replaced by an iterative Levenberg--Marquardt inversion that
+recomputes the ray paths through the current model---the DGN $+$ FMM structure
+of your own pipeline. Figure~\ref{fig:demo2} is the result, and the
+decomposition code is \emph{identical} to Demonstration~1:
+
+\begin{itemize}
+\item \textbf{Forced cores $\sim$89\% sign-correct within the resolution
+  length}, but $\sim$71--81\% strict (cell-exact). The gap is resolution-length
+  blur---a forced cell one or two cells off a true feature edge, not a sign
+  mistake---but the strict figure is the honest co-headline; the
+  within-resolution number alone overstates the precision.
+\item \textbf{The measure-dependent shell captures $\sim$76\% of the blobs.}
+\end{itemize}
+
+These figures are from the feasible-set sampler at its default operating point,
+and at that operating point the forced set itself over-claims: an adversarial
+stress test (\S6, point~6; \file{witness\_pass.md}, RWC-2) finds $\sim$41\% of
+forced cells admit a feasible, equally-smooth, opposite-sign model. The
+decomposition layer is sound and forward-model-agnostic; what is
+coverage-limited is the feasible-set \emph{sampling} that feeds it (\S7).
+
+The decomposition transferred across two genuinely different forward operators
+without change. That is the load-bearing result of this note: the possibilistic
+reading is a property of \emph{inversions}, not of a particular operator.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{possibilistic_decomposition_eikonal.png}
+\caption{The Eikonal (nonlinear) demonstration---same decomposition, faithful
+operator.}
+\label{fig:demo2}
+\end{figure}
+
+\section{What building it surfaced --- the discipline the method needs}
+
+A method that always says ``yes'' is a gimmick. This one has real failure
+modes, and finding them is how I know it has content. Each was surfaced by a
+synthetic run failing honestly; each is now documented in the script headers.
+
+\begin{enumerate}
+\item \textbf{The ensemble must sample the feasible set's diversity, or it
+  certifies its own bias.} An ensemble built by varying damping \emph{strength}
+  alone shares a bias in the data-null directions; the intersection then stamps
+  that shared bias ``forced.'' The fix is many random references.
+\item \textbf{Sample where the data is actually fit}---at the
+  misfit $=$ noise level. An over-damped ensemble has had data-resolved
+  structure regularized away.
+\item \textbf{``Forced'' is a sign statement off the interval, not a hard
+  threshold.} A single anomaly-magnitude cutoff is brittle; the feasible
+  interval is the honest object.
+\item \textbf{Precision is honest only at the resolution length.} Every
+  feasible model inherits the same forward-operator blur; the forced core is
+  correct to within roughly one cell, not cell-exact.
+\item \textbf{Feasible models must be physically plausible --- smooth.} The raw
+  null space of a ray (line-integral) operator is dominated by high-frequency
+  checkerboard modes the operator cannot see. Those fit the data but are not
+  admissible Earth models; perturbing freely in them injects unphysical
+  speckle. A feasible model is data-fitting \emph{and} smooth.
+\item \textbf{The forced set is coverage-gated --- and the gate is
+  measurable.} A forced label asserts that \emph{every} feasible model agrees;
+  an ensemble that under-samples the feasible set will agree spuriously and
+  over-claim. Two checks quantify this (\file{witness\_pass.md}, RWC-1 and
+  RWC-2): the forced set converges only above an ensemble-coverage
+  threshold---here $N \approx 250$ sampled models for a $40\times40$ grid---and
+  at the default operating point an adversarial stress test finds $\sim$41\% of
+  forced cells \emph{false-forced} (a feasible, equally-smooth, opposite-sign
+  model exists). A forced claim is honest only with its coverage-adequacy curve
+  attached.
+\end{enumerate}
+
+These are not patches. They are the methodology's anti-anchoring
+discipline---the same one that, in the Closure programme, keeps a derivation
+from quietly tuning itself to the answer it wants.
+
+\section{The open frontier --- and where you come in}
+
+Here is the honest seam, and it is the reason this is a note to \emph{you} and
+not a finished claim.
+
+The linear straight-ray case has a clean, exact answer: the operator is fixed,
+$G^{\top}G$ eigendecomposes once, and the feasible set is parametrized directly.
+The nonlinear case does not. Sampling the feasible set of a nonlinear inverse
+problem---getting genuine diversity in the data-null directions without
+injecting artifacts---is itself a hard problem. Building Demonstration~2 walked
+straight into it: a naive Levenberg--Marquardt ensemble shares an
+inversion-dynamics bias; fixing that needs explicit, physically-constrained
+feasible-set sampling. I have a working version, but I would not call the
+nonlinear feasible-set sampler solved.
+
+This is exactly the territory of transdimensional / reversible-jump MCMC
+tomography (Bodin \& Sambridge, 2009 onward)---methods built precisely to
+produce a genuine posterior ensemble. And it is where ZTM already lives: your
+\file{runs=20} top-level Monte Carlo \emph{is} a feasible-set sampler. A
+coverage study on the synthetic problem (\file{witness\_pass.md}, RWC-1) now
+puts a number on the question: the forced set stabilizes only near
+$N \approx 250$ sampled models, and a 20-run ensemble sits at roughly three
+times the converged forced-set size---20 runs is far short of coverage
+adequacy. So the open question is no longer \emph{whether} the sampler needs
+upgrading but \emph{to what}: whether a transdimensional sampler reaches the
+coverage the forced/measure-dependent split requires, on real data, at
+tractable cost.
+
+That question is not mine to answer from the outside. It needs your inversion
+expertise, your code, and your data. My contribution is the possibilistic
+reading and the formal scaffolding behind it; yours is the geophysics and the
+instrument. Neither half is sufficient alone. That is the collaboration I am
+proposing---not ``adopt this method,'' but ``here is a method, validated in the
+linear case, and here is the concrete nonlinear problem your own pipeline is
+already engaging. Let us solve that part together.''
+
+\section{Honest scope}
+
+\begin{itemize}
+\item Everything here is \textbf{synthetic}. The demonstrations validate the
+  \emph{method} against known ground truth; they are not a result about the
+  real Earth.
+\item The Eikonal solver is \textbf{first-order FMM}. Its $\sim$2\% mean
+  accuracy is fine for a forward-model-agnostic demonstration; your FMM-VFD
+  hybrid is the production-grade version.
+\item Two dimensions, modest velocity contrasts, a single noise realization.
+  None of the conclusions depend on scale, but none have been \emph{tested} at
+  scale.
+\item The forced/measure-dependent split is \textbf{operator-relative}: it
+  reports what is forced \emph{given a forward operator}. An operator with
+  systematic error propagates that error into the forced set. This is not a
+  defect of the method---it is the method correctly reflecting the
+  operator---but it means the operator's fidelity is load-bearing.
+\item The \textbf{forced set is coverage-gated}. It is trustworthy only above
+  an ensemble-coverage threshold (RWC-1: $N \approx 250$ here); below it the
+  sampler over-claims (RWC-2: $\sim$41\% of forced cells false-forced at the
+  default operating point). The demonstrations are reported at that default
+  point and so over-state the forced set. The decomposition layer is
+  sound---what is coverage-limited is the feasible-set \emph{sampling} that
+  feeds it; a forced claim must travel with its coverage-adequacy curve.
+\end{itemize}
+
+\section*{Pointers}
+
+\begin{itemize}
+\item \file{geophysical\_invariants.md} --- the stratified constraint set.
+\item \file{synthetic\_demo.py}, \file{synthetic\_demo\_eikonal.py} --- the two
+  demonstrations.
+\item \file{eikonal.py} --- the standalone Eikonal forward operator (self-test:
+  \file{uv run python eikonal.py}).
+\item \file{decomposition\_exact.jl} --- the decomposition layer formalized in
+  exact \texttt{Rational\{BigInt\}} arithmetic (Julia); \file{classify} proven
+  total, exclusive, and exhaustive, the feasible-interval properties
+  exact-verified.
+\item \file{c/} --- a dependency-free C port of the whole method: the forward
+  operators, the Levenberg--Marquardt inversion over a hand-rolled
+  dense-Cholesky module, the feasible-set sampler, and the decomposition,
+  pulled together by \file{possibilistic\_inversion.c}.
+\item \file{witness\_pass.md} --- the synthesis witness pass: an adversarial
+  external review of the method by three independent models, and the two
+  Required Witness Checks it carried, \file{rwc1\_forced\_stability.py} and
+  \file{rwc2\_disconnected\_test.py}.
+\item \file{inverse\_born\_methodology.md} (Closure Forces Structure
+  programme) --- the source of the two-layer possibilistic / probabilistic
+  discipline.
+\item Bodin, T. \& Sambridge, M. (2009), \emph{Seismic tomography with the
+  reversible jump algorithm}, Geophys.\ J.\ Int.\ --- the
+  transdimensional-sampling reference.
+\item Abatchev, Z. (2019), ZTM/TFM, UCLA --- the joint seismic$+$gravity
+  inverter this note is in conversation with.
+\end{itemize}
+
+\end{document}
