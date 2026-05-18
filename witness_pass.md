@@ -175,7 +175,38 @@ Copy-paste, one block per model.
 
 ### Witness B — Gemini
 
-*Pending.*
+*Returned 2026-05-17.*
+
+**Role:** Synthesis — Coherence of the whole; what is load-bearing versus over-claimed; whether the framing does real work or relabels known analysis.
+
+#### 1. Coherence of the Whole
+
+The two-layer epistemic framework proposed in `possibilistic_tomography_note.md` is structurally coherent if evaluated as a non-parametric, outer-loop diagnostic suite applied to multi-physics inversions (e.g., joint seismic-gravity systems).
+
+The mathematical trajectory flows logically: continuous data misfits are bounded by an acceptable error tolerance $\epsilon$, defining an upper-bound data-admissible model space. The framework then sweeps across varying prior/regularization measures to partition model features into a binary classification: **Forced Features** (invariants that persist across all valid topologies regardless of the metric) and **Measure-Dependent Features** (geometrical structures whose sign or existence is conditional on the choice of the prior).
+
+However, a core conceptual tension exists between the discrete, topological constraints derived from the triadic closure/graph-grammar framework and the continuous, non-linear operators of geophysical field theories. The coherence of the system relies entirely on the translation layer—specifically, how continuous fields are discretized into categorical "features" (e.g., via Voronoi cells or localized basis functions). If this discretization is unstable, the boundary between "forced" and "measure-dependent" features blurs, collapsing the operational utility of the binary classification.
+
+#### 2. What is Load-Bearing vs. Over-Claimed
+
+* **Load-Bearing:** The operational diagnostic core is robust. Isolating features that survive under arbitrary prior distributions provides a clean, transferable metric for structural validation. In joint inversions where cross-property relationships (e.g., mapping seismic velocity $V_p$ to density $\rho$) are highly uncertain, using a strict topological invariant (the "riverbed" syntax) to restrict cross-operator couplings does real work. It prevents the optimization from generating mathematically minimized but physically decoupled unstratified artifacts.
+* **Over-Claimed:** The assertion that "measure-dependence diagnoses artifact" is an overstatement that misinterprets the role of priors in physical systems. In highly underdetermined, ill-posed inverse problems, certain real, physical boundaries (such as a sharp Moho discontinuity or a localized magmatic chamber) cannot be resolved by sparse data alone; they require the injection of sharp structural priors (e.g., Total Variation or Gramian constraints). Labeling a feature as an "artifact" simply because it requires a specific prior to manifest conflates a data-deficiency with a systemic error. Furthermore, framing the system as an autonomous "discovery engine" overpromises; it functions as a highly sophisticated topological linter and cross-channel consistency checker, not a generator of new physical realities.
+
+#### 3. Framing Evaluation: Real Work vs. Relabeling Known Analysis
+
+The framework sits at a crossroads where novel structural syntax meets deeply established inverse-problem methodologies.
+
+* **Where it does real work:** The framework introduces value by establishing a formal, machine-verifiable grammar for multi-channel coupling. Rather than relying on empirical, case-by-case joint-inversion weights, it treats cross-operator consistency as an absolute boundary condition. This topological enforcement of structural conservation across distinct forward operators provides an objective, transferable pipeline for verifying complex, multi-layered ontologies.
+* **Where it relabels known analysis:** The core mathematical objectives heavily re-map existing geophysical literature under new nomenclature:
+* **Backus–Gilbert Extremal Inversion:** The search for "forced features" that hold across all data-fitting models is conceptually identical to the Backus–Gilbert approach, which calculates resolving kernels and strict bounds on linear functionals of the model space independent of a subjective prior.
+* **Null-Space Exploration:** In classical linear and non-linear inverse theory, features that shift or vanish based on the choice of regularization ($L_1$ vs. $L_2$, smoothness penalties, or covariance scaling) are known as *null-space or near-null-space components*. Describing these as "measure-dependent features" is a direct relabeling of "null-space elements stabilized by the regularization choice."
+* **Transdimensional Tomography (rj-MCMC):** The use of adaptive Voronoi parameterization to explore model space without fixing grid geometry is the standard domain of transdimensional MCMC (Bodin & Sambridge, 2009). In rj-MCMC, "forced features" naturally emerge as high-probability, high-consensus spatial structures across the posterior ensemble, while "measure-dependent features" show up as high-variance, low-consensus fluctuations driven by individual chain trajectories.
+
+#### 4. Verdict
+
+**Partly Novel.** The execution of a two-layer possibilistic filter to split model spaces into forced and measure-dependent categories is a highly effective, operationalized packaging of ensemble analysis. However, the foundational inverse-problem mechanics are deeply rooted in established null-space exploration and Backus–Gilbert style extremal bounding. The true residual novelty lies not in the underlying optimization math, but in the deployment of discrete topological closure conditions (the algebraic syntax) as a strict, automated arbiter for continuous multi-physics coupling.
+
+> *[Metabolizer's note — recorded with the return, not part of it. This return imports framing from adjacent projects (triadic closure, graph-grammar, Voronoi parameterization, a "discovery engine," "riverbed syntax") that is **not** part of possibilistic-inversion — the method here is a plain per-grid-cell tomographic decomposition with no graph grammar and no triadic structure. That contamination fouls the W-4 coherence read (it assesses a system this is not) and the verbatim weakest-sentence ask went undelivered. The W-3 finding, however, lands clean and is not contaminated: forced ≈ Backus–Gilbert extremal bounds, measure-dependent ≈ regularization-stabilized near-null-space components, and rj-MCMC already yields high-consensus vs high-variance structure. That relabeling critique of P-1 and P-7 is carried to synthesis at full weight; the off-target framing is discounted.]*
 
 ### Witness C — ChatGPT
 
