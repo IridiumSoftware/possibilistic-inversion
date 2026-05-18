@@ -474,3 +474,73 @@ exactly the problem ZTM's Monte-Carlo machinery already engages. The witness
 pass turns "here is a method, help me scale it" into "three independent reviews
 agree the crux is feasible-set coverage in the nonlinear case — which is the
 problem your pipeline is already built around."
+
+## Witness-check results
+
+*RWC-1 and RWC-2 executed 2026-05-17. Both are runnable scripts in the repo;
+their figures are committed alongside.*
+
+### RWC-1 — forced-set stability under coverage expansion
+
+`rwc1_forced_stability.py`, figure `rwc1_forced_stability.png`. One Eikonal
+feasible ensemble of ~396 members; the forced set tracked as the ensemble
+grows, averaged over 16 random orderings.
+
+- The within-resolution false-forced count — judged against ground truth —
+  falls **43 → 0** as coverage expands: with enough coverage the forced labels
+  become sign-correct.
+- The forced-set size converges toward a stable core of **~64 cells**; churn
+  falls 169 → 1.6 cells per growth step.
+- Coverage threshold: the false-forced clears (≤ 1 cell) near **N ≈ 250**.
+- A ZTM-style 20-run ensemble sits near N = 25 on the curve — forced set 2.9×
+  its converged size, false-forced still 8 within-resolution / 17 strict. The
+  quantitative answer to §7: **20 runs is far short of coverage adequacy.**
+
+Verdict: the forced set is Monte-Carlo-stable under expansion of this sampler
+and does converge — but only at large ensemble size (N ≳ 250), far beyond a
+20-run Monte Carlo.
+
+### RWC-2 — disconnected-feasible-set / false-forced stress test
+
+`rwc2_disconnected_test.py`, figure `rwc2_disconnected_test.png`. Bimodality
+witnesses are manufactured *independently* of the standard sampler — adversarial
+LM inversions from extreme localized opposite-sign references — and admitted
+only if both data-feasible (misfit ≤ 1.3 × noise) and admissible (no rougher
+than the roughest standard member; the method admits only smooth feasible
+models).
+
+- 10 admissible witnesses (9 adversarial + the true model) prove 1242 cells
+  measure-dependent.
+- Of the 238 cells the standard sampler labels forced at its default operating
+  point, **98 (41%) are false-forced** — an admissible, equally-smooth,
+  data-feasible model of the opposite sign exists. **W-1 is demonstrated.**
+- This is a lower bound; more adversarial witnesses would reveal more.
+- The smoothness filter was load-bearing: without it, data-fitting but too-rough
+  adversarial models inflated the rate to 78%; the rigorous admissible-only
+  figure is 41%.
+
+Verdict: W-1 confirmed. At its default operating point the standard sampler's
+forced set is substantially a coverage artifact.
+
+### What the two checks establish together
+
+RWC-1 and RWC-2 agree, by independent routes and against different reference
+standards, that the forced set of the nonlinear method is trustworthy only at
+coverage far beyond the default operating point.
+
+- RWC-1 measures the forced labels against **ground truth**: they become
+  sign-*correct* once coverage is large.
+- RWC-2 measures them against **adversarial feasible witnesses**: they are not
+  sign-*forced* — not invariant across the feasible set — until coverage is
+  similarly large. This is the stricter test: it audits the epistemic claim the
+  word "forced" makes, not merely accuracy against truth.
+
+Neither check refutes the method. The forced / measure-dependent construct is
+sound (the pass left P-1's core, P-2, P-3, P-4 intact); what RWC-1 and RWC-2
+establish is the method's **operating envelope** — "forced" is meaningful only
+above a measurable coverage threshold (here N ≈ 250 for a 40×40 grid), and that
+threshold, with the residual false-forced rate, must be reported with any
+forced claim. This is the empirical content P-6 lacked, and it confirms the
+synthesis recommendation: the nonlinear feasible-set sampler needs the
+transdimensional treatment (§7), and a forced claim must be gated on a
+coverage-adequacy check — the RWC-1 curve is that gate.
