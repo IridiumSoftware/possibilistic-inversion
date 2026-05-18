@@ -171,7 +171,31 @@ Copy-paste, one block per model.
 
 ### Witness A — Grok
 
-*Pending.*
+*Returned 2026-05-17.*
+
+**Role:** Edge-witness (Φ) — red-team.
+
+#### W-1. Attack on P-6 (sampler fragility → false-forced error)
+
+The nonlinear feasible-set sampler is a narrow local heuristic (LM inversions from random reference models + multi-pass-averaged smooth perturbations scaled to stay inside the noise band) that cannot guarantee coverage of the full non-convex feasible set. It therefore systematically misses entire basins or thin corridors in model space and can stamp genuinely measure-dependent features as forced.
+
+**Concrete counterexample scenario.** In the Eikonal case, ray bending creates nonlinear trade-offs: a sub-resolution low-V blob's travel-time anomaly can be equivalently explained by either (a) a positive velocity perturbation in cell X plus compensatory slowness adjustments elsewhere, or (b) a negative perturbation in cell X with a different compensatory pattern. LM starts from random references preferentially converge into the "positive-X" basin (smooth ray-path topologies are easier attractors). The subsequent smooth perturbations (neighbor-averaging low-pass filtered noise) are incapable of inducing the coordinated, non-local sign-flip required to jump the misfit barrier into the negative-X basin without temporarily exceeding the ε tolerance. Result: every sampled model has positive sign in cell X → the classifier declares it forced. A full enumeration (impossible in high dimension) would reveal the cell straddles zero and is measure-dependent. With the ~20-run Monte Carlo proposed for real data, this false-forced is not an edge case; it is the expected behavior wherever the feasible set has multiple disconnected or poorly connected components.
+
+**Severity: serious.** False-forced is the catastrophic failure mode—the method's only trusted output becomes an artifact of incomplete sampling. The entire possibilistic claim collapses if the ensemble is not a faithful proxy for the true data-admissible set.
+
+#### W-2. Attack on P-5 (resolution-length tolerance as moving goalpost)
+
+Strict per-cell sign accuracy of the forced cores is only ~71 % in the nonlinear case. The headline ~89 % figure is obtained by loosening the metric to "sign-correct within a 2-cell resolution length." This is not honest validation; it is post-hoc goalpost-moving that converts a sharp cell-wise invariant claim into a vague "roughly in the neighborhood" claim.
+
+**Strongest case.** "Resolution length" is not an objective, data-only quantity. It is itself an output of the same inversion/ensemble process (resolution matrix, point-spread functions, or ad-hoc smoothing scale) and can be tuned, spatially variable, and prior-dependent. Allowing a 1–2 cell shift or blur forgives exactly the localization errors the method purports to eliminate. In synthetic tests one can always choose a tolerance large enough to make the numbers look good, but that concedes the forced cores are reliable only at coarser scales than the per-cell decomposition promises. The linear convex case looks better (~2 % error) precisely because the feasible set is a simple polytope; the nonlinear headline number hides that the method recovers broad-scale forced structure (which classical null-space or ensemble methods already give) while struggling with the precision needed for trustworthy fine-scale features.
+
+**Severity: manageable but damaging to credibility.** It does not kill the method, but it forces a downgrade of P-5 from "forced cores recover true features" to "forced cores recover true features up to the same smearing you already get from any regularized inversion."
+
+#### Single thing that, if true, would most damage the method
+
+If the feasible-set sampler cannot be upgraded to provably (or even reliably) cover the full data-admissible set in the nonlinear case—i.e., if P-6 is not merely "open" but fundamentally intractable with local heuristics—then every "forced" label on real data becomes an unverifiable sampler-dependent bias rather than a disciplined, data-only invariant. The entire possibilistic layer reduces to "yet another ensemble method whose coverage error is unknown."
+
+> *[Metabolizer's note. Clean return — no adjacent-project contamination; the attack stays entirely inside the tomographic problem. W-1 sharpens P-6 from "open" to a named, systematic failure: a disconnected (multi-basin) feasible set, where LM-from-random-references is captured by the dominant basin and smooth perturbations cannot cross the misfit barrier — the miss is structural, not random under-sampling, and it produces a false-forced. This converges with Gemini's W-3: both witnesses independently locate the load-bearing weakness in the nonlinear feasible-set sampler, and the fix each implies is the same — a genuine transdimensional / posterior sampler (Bodin–Sambridge), which is exactly the §7 collaboration seam. W-2 partly meets §6 point 4, where the note already concedes precision is honest only at the resolution length; Grok's residual point stands — the ~89% headline uses the loosened metric while ~71% strict is the cell-exact number (the C port already prints both). Carried to synthesis: W-1 → P-6 downgrade and a Required Witness Check on sampler coverage; W-2 → report strict accuracy as co-headline.]*
 
 ### Witness B — Gemini
 
