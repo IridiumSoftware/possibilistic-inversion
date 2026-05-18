@@ -384,7 +384,93 @@ The dangerous failure mode is asymmetric: a missed measure-dependent feature can
 
 ## Synthesis
 
-*Pending all three returns. Will record: which claims in the ledger survived
-intact, which need downgrading and to what, which witness checks become Required
-Witness Checks carried forward into the note, and any new open item the pass
-surfaced.*
+*Written 2026-05-17, all three returns in.*
+
+### Headline
+
+The pass did not break the method. It did two more useful things: it confirmed
+which parts are sound, and — three independent witnesses, from three different
+angles — it converged on exactly **one over-claim** and **one real open
+problem**. Nothing else took a hit.
+
+- **Sound, and untouched by any witness:** the forced / measure-dependent split
+  as a construct, the forward-model-agnostic decomposition (P-2), the
+  exhaustively-proven classifier (P-3), and the linear demonstration (P-4).
+  Grok explicitly conceded the linear convex case.
+- **One over-claim — a wording fix, not a method fix:** "measure-dependence
+  diagnoses artifact."
+- **One real open problem — the actual work:** nonlinear feasible-set sampling
+  (P-6). The pass independently confirms this is the genuine crux, and that the
+  note's §7 names the right collaboration seam.
+
+### The two convergences
+
+**Convergence 1 — the artifact over-claim.** Gemini flagged it three times
+across two returns; ChatGPT (W-5) dissected it. The agreed finding: calling a
+measure-dependent feature an *artifact* conflates three different things —
+(1) a numerical artifact, (2) a physically real but weakly-constrained feature
+that needs a sharp prior to localize, and (3) a true null-space ambiguity. The
+decomposition catches (3), sometimes (1), and **cannot distinguish (2)**. A
+feature that moves with the prior may still be real; prior-dependence is
+underdetermination, not falsehood. The fix is a reword both witnesses converge
+on: *measure-dependence diagnoses prior-sensitive inference*, not artifact.
+
+**Convergence 2 — the nonlinear sampler is load-bearing.** Grok (W-1, severity
+*serious*) named the mechanism: a disconnected, multi-basin feasible set, where
+LM-from-random-references is captured by the dominant basin and smooth
+perturbations cannot cross the misfit barrier — a *structural* miss that yields
+a **false-forced**. Gemini (W-3) reached the same locus from prior art: rj-MCMC
+posterior ensembles already separate high-consensus from sign-variable
+structure. ChatGPT (W-7) sharpened the diagnostic: the question is not "are 20
+runs enough" but **does the forced set converge under coverage expansion, and
+what is the false-forced rate as the ensemble grows**. The asymmetry is the
+point — a missed measure-dependent feature can be recovered later; a false-forced
+label manufactures unwarranted trust.
+
+### Claim ledger after the pass
+
+| ID | Status after the pass |
+|---|---|
+| P-1 | **Hold the construct, reword the interpretation.** The forced / measure-dependent split is real; "measure-dependent = artifact" over-claims. Honest form: "measure-dependent = prior-sensitive / underdetermined." |
+| P-2 | **Hold.** Untouched; implicitly endorsed by Gemini's decontaminated W-4. |
+| P-3 | **Hold.** Untouched — no witness contested the classifier's proven properties. |
+| P-4 | **Hold.** Untouched; the linear convex case was explicitly conceded. |
+| P-5 | **Hold, with caveat.** Report the ~71% strict per-cell accuracy as a co-headline alongside the ~89% within-resolution figure (the C port already prints both). |
+| P-6 | **Hold (was open), now sharpened.** The failure is not random under-sampling — it is structural: a disconnected feasible set produces basin-capture and false-forced labels. |
+| P-7 | **Hold, reframe.** The contribution is "a reporting discipline for inverse problems," not "a new inverse-theory principle." The epistemic intuition is old; the portable operationalization is the residual novelty. |
+
+### Note revisions recommended
+
+1. **The artifact reword** — §1 table row and §2 (the "operational diagnostic of
+   artifact" line). Replace the artifact equivalence with prior-sensitive /
+   underdetermined language.
+2. **Strict accuracy as co-headline** — §5 and the README: state ~71% strict
+   beside the ~89% within-resolution number, not the loosened figure alone.
+3. **Reframe the contribution** — §2: "operationalized and standardized a
+   robustness diagnostic practitioners perform informally and inconsistently,"
+   not "a distinction Bayesian tomography misses." Per ChatGPT, this is the
+   framing that makes the novelty claim defensible rather than a target.
+4. **Optional** — §2 prior-art paragraph could add the transdimensional point:
+   an rj-MCMC posterior ensemble already *contains* forced / measure-dependent
+   information; the contribution is exposing it as an explicit, portable split.
+
+### Required Witness Checks (carried forward)
+
+- **RWC-1 — Forced-set stability under coverage expansion.** Does the forced set
+  converge as the ensemble grows? Measure the false-forced rate as a function of
+  ensemble size. This is the gate before any real-data forced claim.
+- **RWC-2 — Disconnected-feasible-set stress test.** Construct a synthetic case
+  with a known bimodal feasible set — a sub-resolution feature genuinely
+  explainable by either sign — and verify the sampler finds both basins, or the
+  cell is correctly labeled measure-dependent. A direct false-forced test.
+
+### What the pass means for the collaboration
+
+The §7 seam is now confirmed by independent adversarial review as the genuine
+crux: three witnesses, unprompted, converged on nonlinear feasible-set sampling
+as the load-bearing open problem. That strengthens, rather than weakens, the
+case the note makes. The honest open frontier is the real frontier — and it is
+exactly the problem ZTM's Monte-Carlo machinery already engages. The witness
+pass turns "here is a method, help me scale it" into "three independent reviews
+agree the crux is feasible-set coverage in the nonlinear case — which is the
+problem your pipeline is already built around."
