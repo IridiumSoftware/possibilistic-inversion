@@ -267,7 +267,120 @@ The single weakest sentence in the core methodology is:
 
 ### Witness C — ChatGPT
 
-*Pending.*
+*Returned 2026-05-17.*
+
+**Role:** Domain-probabilist witness — skeptical Bayesian geophysicist.
+
+I read the artifact as instructed (the note, especially §2 and the "On prior art — said straight" framing), and I am deliberately excluding adjacent-project baggage. This review treats the repository as what it is: a per-grid-cell ensemble decomposition layered atop standard travel-time tomography.
+
+#### W-5. Steelman the probabilist
+
+The strongest probabilist rebuttal is **not** "priors don't matter" or "Bayes solves everything." A serious Bayesian geophysicist would concede the premise — inverse problems are prior-sensitive — and still reject the inference the note draws from Figure 1.
+
+##### The rebuttal, stated so its author would accept it
+
+The argument mistakes **prior dependence** for **artifact dependence**.
+
+In a Bayesian inverse problem, the posterior is *supposed* to move with the prior because the prior encodes physically meaningful information that the data alone cannot determine. In seismic tomography, the data are routinely insufficient to localize structure uniquely: ray geometry is incomplete, coverage is anisotropic, kernels are broad, and finite-frequency effects smear information. The inversion therefore requires additional assumptions — smoothness, sparsity, blockiness, petrological coupling, covariance structure, structural boundaries — not because the method is defective, but because the Earth is under-observed.
+
+A probabilist would therefore object to Figure 1 at the level of interpretation:
+
+> "If a feature appears under one prior but not another, that does not diagnose artifact; it diagnoses underdetermination."
+
+A feature that changes with regularization may still be physically real. The fact that a sharp interface only appears under a Total Variation prior and disappears under an (L_2) smoothness prior is not evidence that the interface is fictitious. It may simply mean the data support a discontinuity weakly and require geological information to localize it.
+
+The strongest Bayesian version of the objection is sharper:
+
+> Your framework privileges **prior-invariant structure** as epistemically superior, but prior-invariance is not the same thing as truth. It systematically favors broad, smooth, low-wavenumber features because those are the easiest structures for many priors to agree upon. Conversely, physically real but weakly constrained localized features are disproportionately labeled "measure-dependent."
+
+In that reading, the decomposition is conservative but biased:
+
+* **Forced** ≈ robust, low-frequency, data-dominant structure.
+* **Measure-dependent** ≈ under-resolved structure requiring assumptions.
+
+A Bayesian would accept the first category as valuable but reject the leap from the second category to "artifact."
+
+##### Strongest rebuttal to the phrase "measure-dependence diagnoses artifact"
+
+The probabilist's strongest criticism is semantic and epistemic:
+
+Calling measure-dependent structure an *artifact* conflates three distinct categories:
+
+1. **Numerical artifact** — produced by inversion pathology or discretization.
+2. **Prior-supported inference** — physically plausible but weakly constrained.
+3. **True null-space ambiguity** — genuinely not identifiable from the data.
+
+Your decomposition cleanly identifies (3), sometimes catches (1), but cannot distinguish (2) from either without external physical validation.
+
+A skeptical geophysicist would therefore propose the weaker — and harder to attack — wording:
+
+> "Measure-dependence diagnoses *prior-sensitive inference*."
+
+That is a meaningful and defensible claim. "Artifact" is stronger than the method earns.
+
+##### Where the probabilist would nevertheless agree
+
+A fair probabilist would still concede the note surfaces a real practical failure mode in published tomography:
+
+Many studies report a single posterior mean or MAP model while under-reporting **structural instability under reasonable prior choices**. The decomposition is useful insofar as it operationalizes a question practitioners often ask informally:
+
+> "Which parts of this image survive if I stop believing my favorite regularizer?"
+
+That is scientifically valuable. The disagreement is over the interpretation of what fails to survive.
+
+#### W-6. Prior-art positioning audit
+
+##### Verdict: **Partly novel**
+
+The prior-art positioning in §2 is **mostly fair**, but the residual novelty is narrower than the strongest framing implies.
+
+I do **not** think this is "already done" in the trivial sense of relabeling standard posterior variance. But I also do **not** think it is fully novel at the conceptual level.
+
+The cleanest prior-art reading is:
+
+> **Novel operational packaging of a familiar epistemic distinction.**
+
+##### Where I think the note is fair
+
+The positioning against classical methods is largely honest. The note is correct that:
+
+* **Backus–Gilbert** style extremal inversion asks a different question: bounds on resolvable functionals and averaging kernels, not an explicit decomposition into sign-stable vs sign-variable features across admissible models.
+* **Zhdanov/Gramian constraint approaches** formalize structural coupling and admissible model geometry but are not typically framed as a transferable "artifact diagnostic."
+* **Transdimensional tomography** (e.g., reversible-jump MCMC ensemble methods) produces posterior ensembles that *contain* this information but do not necessarily expose it in the explicit forced/measure-dependent split the note advocates.
+
+Those distinctions are materially real.
+
+##### Where the note risks over-claiming
+
+A skeptical literature-aware reader will immediately recognize that the core intuition has strong precedents:
+
+1. **Null-space / model-resolution analysis.** The distinction between "data-supported" and "regularization-supported" structure is foundational inverse theory. Practitioners already inspect resolution kernels, checkerboards, null-space projections, prior sensitivity, ensemble consistency, posterior spread. From that perspective: "Forced" looks like a cellwise invariant under null-space exploration; "Measure-dependent" looks like structure whose sign or existence is regularization-controlled. That is not a dismissal — but it means the conceptual substrate is old.
+2. **Ensemble agreement / consensus imaging.** There is an existing habit in tomography of asking "What survives across inversion choices?" — comparing damping values, smoothing scales, parameterizations, starting models, priors. What is unusual here is the attempt to formalize that instinct into a **binary decomposition rule** rather than an informal robustness narrative.
+3. **Bayesian posterior consensus.** In transdimensional and ensemble Bayesian inversion, persistent features already emerge naturally as high-posterior-consensus structures, while unstable regions appear as diffuse or sign-variable posterior mass.
+
+What I do **not** recall seeing, at least as a named and portable methodology, is the exact prescription: sweep admissible priors/regularizers → classify every cell by sign invariance across all feasible models → interpret the split as a disciplined epistemic layer on top of arbitrary inversion machinery. That specific operationalization feels genuinely residual.
+
+##### My bottom-line prior-art judgment
+
+I would not describe the contribution as "A new inverse-theory principle." I would describe it as "A new reporting discipline for inverse problems." That distinction matters.
+
+If framed as *"We discovered a new distinction Bayesian tomography misses,"* the literature pushback will be strong. If framed as *"We operationalized and standardized a robustness diagnostic practitioners currently perform informally and inconsistently,"* the novelty claim becomes much stronger and more defensible.
+
+##### Agreement / disagreement with Gemini
+
+I partly agree with Gemini's "relabeling" concern, but I would soften it. My read is **not** "This is just null-space analysis with new words." My read is "The underlying epistemic intuition is familiar; the methodological packaging is the contribution." That is a meaningful difference.
+
+#### W-7 (sharper question)
+
+The §7 question ("Is ~20 Monte Carlo runs enough?") is close, but not quite the sharpest question. The sharper one is:
+
+> **How stable is the forced set under increasing feasible-set coverage?**
+
+Operationally: Does the forced region converge as sampling increases? Are newly discovered feasible models disproportionately destroying previously forced cells? What is the *false-forced rate* as a function of ensemble expansion?
+
+The dangerous failure mode is asymmetric: a missed measure-dependent feature can later be recovered; a **false-forced** label creates unwarranted epistemic trust. So the right diagnostic is not ensemble size per se, but **forced-set stability under coverage expansion**. This is where I independently converge with Grok: sampler adequacy is the load-bearing empirical question for nonlinear deployment.
+
+> *[Metabolizer's note. Clean, on-target return — no contamination. ChatGPT entered the pass non-blind (it had seen the Grok and Gemini returns) and was asked for an independent verdict on that account; it delivered one — explicitly softening Gemini's "relabeling" verdict on W-6 rather than ratifying it ("the underlying intuition is familiar; the methodological packaging is the contribution"). The anchoring concern is therefore largely discharged. W-5 converges with Gemini on the artifact over-claim and supplies the operative fix — the three-way conflation (numerical artifact / prior-supported-but-real inference / true null-space ambiguity) and the proposed reword, "measure-dependence diagnoses prior-sensitive inference." W-7 converges independently with Grok: the load-bearing empirical question is forced-set stability under coverage expansion, not ensemble size. All carried to synthesis.]*
 
 ## Synthesis
 
