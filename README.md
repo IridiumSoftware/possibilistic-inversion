@@ -17,6 +17,7 @@ artifacts of the regularization choice).
 | File | What |
 |---|---|
 | `possibilistic_tomography_note.md` | **The write-up** — the scientific communication: the possibilistic decomposition, both demonstrations, the open frontier. |
+| `witness_pass.md` | The synthesis witness pass — adversarial external review of the method by three independent models; brief, returns, and synthesis collected as the pass proceeds. |
 | `geophysical_invariants.md` | The stratified constraint set (Tier-1 hard / Tier-2 frame-dependent / Tier-3 observational). The possibilistic feasible set is bounded by the Tier-1 invariants. |
 | `synthetic_demo.py` | Straight-ray demonstration: synthetic model → straight-ray data + noise → feasible-set ensemble → possibilistic decomposition → validation. |
 | `eikonal.py` | The faithful nonlinear forward operator — Fast Marching Method Eikonal solver + ray-path Fréchet kernel. Standalone, self-tested. |
