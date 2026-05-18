@@ -76,6 +76,24 @@ A posterior covariance lives entirely in the probabilistic layer. The
 possibilistic layer is the one that answers the §1 question, and it is the one
 standard tomography leaves on the table.
 
+Figure 1 draws the split in model space. The data alone defines a *feasible
+set* of models (panel 1): a region, not a point. Probabilistic inversion puts a
+measure on that set and reports one point of it with a spread — but the report
+moves with the measure, and two equally defensible priors can disagree on a
+feature's sign (panel 2). The possibilistic reading looks instead at the
+*shape* of the set: a feature is forced when the set lies wholly on one side of
+zero, measure-dependent when it straddles zero (panel 3). Forced structure
+survives every prior; measure-dependent structure is whatever a prior happened
+to pick — and no single probabilistic run flags which is which.
+
+![Figure 1. Possibilistic vs probabilistic in model space. Panel 1: the data defines a feasible set F of models. Panel 2: probabilistic inversion puts a measure on F — two defensible priors give two posteriors that disagree on the sign of feature B. Panel 3: the possibilistic reading projects F onto each feature's axis — feature A is forced (the interval clears zero), feature B is measure-dependent (the interval straddles zero).](fig_possibilism.png)
+
+*Figure 1. The same feasible set, two questions. Probabilistic inversion asks
+how a measure distributes weight over F; its answer is conditional on that
+measure. The possibilistic reading asks what the shape of F forces — what holds
+under every measure. Each cell of a tomogram is one such feature, and its
+feasible interval is F projected onto that cell's axis.*
+
 The object that carries it is the **feasible interval**. Take an ensemble of
 models that each fit the data within noise and respect the hard bounds. For
 each cell, record the interval `[a_min, a_max]` of the anomaly across the
@@ -88,15 +106,15 @@ ensemble. That interval is the possibilistic content of the inversion:
   data-forced);
 - the interval sits inside a small band around zero → **forced-quiet**.
 
-Figure 1 is the whole idea in one cartoon. The same ensemble, read two ways:
+Figure 2 is the whole idea in one cartoon. The same ensemble, read two ways:
 the probabilistic reading collapses it to a mean and an error band; the
 possibilistic reading keeps the feasible interval and classifies it. The big
 feature is forced; the flanks and the small bump are measure-dependent — and
 the probabilistic band does not distinguish them.
 
-![Figure 1. The same feasible ensemble read probabilistically (mean + error band) and possibilistically (feasible interval, classified into forced-high / forced-low / measure-dependent).](fig_schematic.png)
+![Figure 2. The same feasible ensemble read probabilistically (mean + error band) and possibilistically (feasible interval, classified into forced-high / forced-low / measure-dependent).](fig_schematic.png)
 
-*Figure 1. The same feasible ensemble, read two ways. Left: one model, one
+*Figure 2. The same feasible ensemble, read two ways. Left: one model, one
 uncertainty band. Right: the feasible interval, classified.*
 
 **On prior art — said straight.** This is not unprecedented, and pretending
@@ -146,7 +164,7 @@ times with 1.2% noise, dense four-edge ray coverage. The feasible set is
 sampled exactly per §3 (the linear operator admits an exact eigendecomposition,
 so the feasible set is parametrized cleanly).
 
-Figure 2 is the result. The forced-sign cores sit on the true features — panel
+Figure 3 is the result. The forced-sign cores sit on the true features — panel
 (e), the black forced-high contour lies inside the true slab, the white
 forced-low contour inside the true low-velocity zone. The numbers:
 
@@ -159,9 +177,9 @@ forced-low contour inside the true low-velocity zone. The numbers:
   not a weakness. It is the method saying out loud what is true — most of a
   tomographic image is *not* forced.
 
-![Figure 2. Straight-ray demonstration: ground truth, feasible-interval bounds, the forced-sign decomposition, the forced cores against true anomaly, and the measure-dependent shell against the blob centres.](possibilistic_decomposition.png)
+![Figure 3. Straight-ray demonstration: ground truth, feasible-interval bounds, the forced-sign decomposition, the forced cores against true anomaly, and the measure-dependent shell against the blob centres.](possibilistic_decomposition.png)
 
-*Figure 2. The straight-ray (linear) demonstration. Panel (d) is the
+*Figure 3. The straight-ray (linear) demonstration. Panel (d) is the
 decomposition; panel (e) shows the forced cores landing on the true features.*
 
 ---
@@ -171,18 +189,18 @@ decomposition; panel (e) shows the forced cores landing on the true features.*
 The straight-ray operator is exact only in a homogeneous medium. The faithful
 operator is the Eikonal first-arrival solver — the operator class your FMM.cpp
 implements. First-arrival rays bend: toward fast structure, away from slow
-(Figure 3). `eikonal.py` provides it (Fast Marching Method solver + ray-path
+(Figure 4). `eikonal.py` provides it (Fast Marching Method solver + ray-path
 Fréchet kernel), standalone and self-tested.
 
-![Figure 3. First-arrival rays through the synthetic model: Eikonal rays (solid) bend toward the fast slab; the straight-ray approximation (dashed) ignores it.](fig_ray_bending.png)
+![Figure 4. First-arrival rays through the synthetic model: Eikonal rays (solid) bend toward the fast slab; the straight-ray approximation (dashed) ignores it.](fig_ray_bending.png)
 
-*Figure 3. Why the forward operator matters. Solid: Eikonal first-arrival rays,
+*Figure 4. Why the forward operator matters. Solid: Eikonal first-arrival rays,
 bending through the medium. Dashed: the straight-ray approximation.*
 
 Because travel time is now a nonlinear functional of slowness, the one-shot
 linear solve is replaced by an iterative Levenberg–Marquardt inversion that
 recomputes the ray paths through the current model — the DGN + FMM structure of
-your own pipeline. Figure 4 is the result, and the decomposition code is
+your own pipeline. Figure 5 is the result, and the decomposition code is
 *identical* to Demonstration 1:
 
 - **Forced cores ~89–93% sign-correct**, 8 sign errors out of ~240 forced cells
@@ -193,9 +211,9 @@ The decomposition transferred across two genuinely different forward operators
 without change. That is the load-bearing result of this note: the possibilistic
 reading is a property of *inversions*, not of a particular operator.
 
-![Figure 4. Eikonal demonstration: the same possibilistic decomposition, with the nonlinear FMM forward operator and a Levenberg-Marquardt inversion ensemble.](possibilistic_decomposition_eikonal.png)
+![Figure 5. Eikonal demonstration: the same possibilistic decomposition, with the nonlinear FMM forward operator and a Levenberg-Marquardt inversion ensemble.](possibilistic_decomposition_eikonal.png)
 
-*Figure 4. The Eikonal (nonlinear) demonstration — same decomposition, faithful
+*Figure 5. The Eikonal (nonlinear) demonstration — same decomposition, faithful
 operator.*
 
 ---
@@ -286,6 +304,13 @@ already engaging. Let us solve that part together."
 - `synthetic_demo.py`, `synthetic_demo_eikonal.py` — the two demonstrations.
 - `eikonal.py` — the standalone Eikonal forward operator (self-test:
   `uv run python eikonal.py`).
+- `decomposition_exact.jl` — the decomposition layer formalized in exact
+  `Rational{BigInt}` arithmetic (Julia); `classify` proven total, exclusive,
+  and exhaustive, the feasible-interval properties exact-verified.
+- `c/` — a dependency-free C port of the whole method: the forward operators,
+  the Levenberg–Marquardt inversion over a hand-rolled dense-Cholesky module,
+  the feasible-set sampler, and the decomposition, pulled together by
+  `possibilistic_inversion.c`. Build and run: `cd c && make && ./pi`.
 - `inverse_born_methodology.md` (Closure Forces Structure programme) — the
   source of the two-layer possibilistic / probabilistic discipline.
 - Bodin, T. & Sambridge, M. (2009), *Seismic tomography with the reversible
