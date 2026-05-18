@@ -141,3 +141,33 @@ void ray_path(const double *T, int rz, int rx, double *kernel)
         x -= step * gx / gn;
     }
 }
+
+/* --- the survey forward operator ------------------------------------------
+ * One FMM solve per source covers all of that source's receivers; with the
+ * Eikonal field in hand, each receiver's time is a lookup and its Frechet row
+ * a single ray trace. This is the operator the inversion calls each step. */
+
+void traveltimes(const double *slow, const int *src, int n_src,
+                 const int *rec, int n_rec, double *t_out)
+{
+    double T[NCELL];
+    for (int s = 0; s < n_src; s++) {
+        fmm(slow, src[s] / NX, src[s] % NX, T);
+        for (int r = 0; r < n_rec; r++)
+            t_out[s * n_rec + r] = T[rec[r]];
+    }
+}
+
+void forward(const double *slow, const int *src, int n_src,
+             const int *rec, int n_rec, double *t_out, double *G_out)
+{
+    double T[NCELL];
+    for (int s = 0; s < n_src; s++) {
+        fmm(slow, src[s] / NX, src[s] % NX, T);
+        for (int r = 0; r < n_rec; r++) {
+            int row = s * n_rec + r;
+            t_out[row] = T[rec[r]];
+            ray_path(T, rec[r] / NX, rec[r] % NX, &G_out[row * NCELL]);
+        }
+    }
+}

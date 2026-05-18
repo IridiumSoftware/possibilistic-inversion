@@ -28,4 +28,20 @@ void fmm(const double *slow, int sz, int sx, double *T);
  * matrix d t / d slow. */
 void ray_path(const double *T, int rz, int rx, double *kernel);
 
+/* All source-receiver travel times (mirrors traveltimes in eikonal.py).
+ *   slow      : NCELL slowness field.
+ *   src, n_src: source cells as flat indices (z*NX + x).
+ *   rec, n_rec: receiver cells as flat indices.
+ *   t_out     : caller-allocated n_src*n_rec array; row s*n_rec + r is the
+ *               time from source s to receiver r. */
+void traveltimes(const double *slow, const int *src, int n_src,
+                 const int *rec, int n_rec, double *t_out);
+
+/* Travel times plus the Frechet matrix (mirrors forward in eikonal.py).
+ *   t_out : as traveltimes, length n_src*n_rec.
+ *   G_out : caller-allocated (n_src*n_rec) x NCELL, row-major; row s*n_rec + r
+ *           is the ray-path Frechet kernel for that source-receiver pair. */
+void forward(const double *slow, const int *src, int n_src,
+             const int *rec, int n_rec, double *t_out, double *G_out);
+
 #endif /* EIKONAL_H */
