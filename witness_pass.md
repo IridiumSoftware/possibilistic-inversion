@@ -208,6 +208,39 @@ The framework sits at a crossroads where novel structural syntax meets deeply es
 
 > *[Metabolizer's note — recorded with the return, not part of it. This return imports framing from adjacent projects (triadic closure, graph-grammar, Voronoi parameterization, a "discovery engine," "riverbed syntax") that is **not** part of possibilistic-inversion — the method here is a plain per-grid-cell tomographic decomposition with no graph grammar and no triadic structure. That contamination fouls the W-4 coherence read (it assesses a system this is not) and the verbatim weakest-sentence ask went undelivered. The W-3 finding, however, lands clean and is not contaminated: forced ≈ Backus–Gilbert extremal bounds, measure-dependent ≈ regularization-stabilized near-null-space components, and rj-MCMC already yields high-consensus vs high-variance structure. That relabeling critique of P-1 and P-7 is carried to synthesis at full weight; the off-target framing is discounted.]*
 
+#### W-4 — re-run (decontaminated)
+
+*Returned 2026-05-17. The W-4 brief was re-issued with the adjacent-project framing explicitly excluded; this return is on-target.*
+
+**W-4 Evaluation: Stripped-Down Per-Grid-Cell Ensemble Decomposition**
+
+##### 1. Coherence of the Argument Chain
+
+When stripped of discrete topological wrappers and evaluated purely as a grid-cell-level ensemble diagnostic suite, the chain **invariants $\rightarrow$ feasible set $\rightarrow$ decomposition $\rightarrow$ linear & nonlinear demonstrations $\rightarrow$ exact-arithmetic formalization $\rightarrow$ C port** is remarkably coherent. It traces a clean, logical engineering trajectory:
+
+* **Feasible Set to Invariants:** It starts with a rigorous definition of data admissibility—defining an upper-bound data-admissible model space (the feasible set) where the continuous data misfit is bounded by an acceptable error tolerance ($\|g(m) - d\| \le \epsilon$). Within this space, it scans for invariants (e.g., grid cells where the parameter sign or a structural boundary persists across all valid models).
+* **Decomposition:** It partitions the model space into a binary classification: *Forced Features* (invariants that hold across the entire data-fitting space) and *Measure-Dependent Features* (cells whose values or signs are stabilized or altered by changing the regularization/prior).
+* **Demonstrations:** It validates the framework across complexity tiers, showing how the boundaries behave when moving from convex linear hyperplanes to non-convex, non-linear forward operators.
+* **Formalization to C Port:** The exact-arithmetic formalization ensures that the strict boundaries defining the feasible set and its invariants are mathematically sound and free from floating-point round-off corruption. The high-performance C port operationalizes this logic, allowing the cell-by-cell optimization or sorting to scale across dense geophysical grids and large ensemble populations.
+
+The argument hangs together tightly as an outer-loop post-processing pipeline for evaluating model uncertainty independent of subjective weighting.
+
+##### 2. Where It Is Over-Claimed
+
+The framework over-claims in its semantic interpretation of the decomposition—specifically, the assertion that **measure-dependence is a direct diagnostic of a structural artifact**.
+
+In highly underdetermined, ill-posed geophysical inverse problems, real and vital geological structures (such as sharp tectonic boundaries or localized volcanic conduits) frequently cannot be resolved by sparse surface data alone. They strictly require the injection of specific, sharp structural priors (e.g., Total Variation minimization or localized covariance constraints) to appear in the inversion. If these real structures disappear or shift under a generic $L_2$ smoothness penalty, they are classified by this framework as "measure-dependent."
+
+Labeling a feature as an "artifact" simply because it requires a specific prior to manifest conflates a fundamental **data-resolution limitation** with an **unphysical hallucination**. The framework functions as an excellent indicator of null-space boundaries, but it over-claims when it treats a data-deficiency as proof of systemic falsehood.
+
+##### 3. Verbatim Weakest Sentence
+
+The single weakest sentence in the core methodology is:
+
+> **"Measure-dependence diagnoses artifact."**
+
+> *[Metabolizer's note. The coherence read is now clean — P-2 (forward-model-agnostic; "convex linear hyperplanes to non-convex non-linear operators") is implicitly endorsed. The quoted weakest sentence, "Measure-dependence diagnoses artifact," is a **compression, not a verbatim line of the note** — the actual text is §2 ("measure-dependence is treated as the operational diagnostic of artifact") and the §1 table row ("these features are artifacts of the choice, not of the data"). The substance holds: the artifact-equivalence is the load-bearing weak claim, and Gemini has now flagged it three times across two returns — it is the central item for synthesis. The over-claim Gemini names is the same objection W-5 routes to ChatGPT; the synthesis witness reaching it unprompted indicates the probabilist rebuttal is robust, not a strawman.]*
+
 ### Witness C — ChatGPT
 
 *Pending.*
