@@ -52,13 +52,16 @@ tomographic image is *not* forced — that is the methodology's point.
 
 **Eikonal operator** (`synthetic_demo_eikonal.py`) — the faithful nonlinear
 case (rays bend). Same possibilistic decomposition; the forced cores come out
-~89–93% sign-correct, 8 sign errors out of ~240 forced cells (~3%); the
-measure-dependent shell captures ~76% of the blobs. Reaching this needed the
-nonlinear-inversion machinery the linear case did not — Levenberg–Marquardt
+~89% sign-correct within the resolution length (~71–81% strict, cell-exact);
+the measure-dependent shell captures ~76% of the blobs. Reaching this needed
+the nonlinear-inversion machinery the linear case did not — Levenberg–Marquardt
 for the inversion, and a feasible-set sampler that perturbs with *smooth*
 fields (the raw null space of a ray operator is full of unphysical
 checkerboard modes a line-integral cannot see). The decomposition itself is
-identical to the straight-ray case: it is forward-model-agnostic.
+identical to the straight-ray case: it is forward-model-agnostic. These figures
+are at the sampler's default operating point; an adversarial witness pass
+(`witness_pass.md`) shows the forced set there is coverage-gated and
+over-claims — see the note's §6–§8.
 
 Methodological subtleties surfaced and fixed while building these — all
 documented in the script headers: the ensemble must sample the feasible set's

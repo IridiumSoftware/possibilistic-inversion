@@ -48,7 +48,7 @@ three classes, and they are not the same kind of thing.
 |---|---|
 | **Forced** | Present in *every* model consistent with the data and the hard physical bounds. Data-determined. Independent of the damping choice. |
 | **Forbidden** | Present in *no* such model. |
-| **Measure-dependent** | Present in *some* consistent models and absent in others. Which ones you see is set by your regularization — these features are artifacts of the choice, not of the data. |
+| **Measure-dependent** | Present in *some* consistent models and absent in others. The data do not determine it — which sign or structure you see is set by the regularization. Such a feature may still be physically real: measure-dependence diagnoses *underdetermination*, not falsehood. |
 
 A posterior covariance does not draw this line. It reports a spread *under one
 prior and one damping*; it cannot tell you that a given feature would vanish
@@ -122,11 +122,17 @@ otherwise would not survive five minutes of your scrutiny. Computing bounds on
 what a model *can* be, rather than a single estimate, is the spirit of
 Backus–Gilbert extremal inversion (1968); the under-determined directions are
 the null space of resolution analysis; multi-model joint coupling has the
-Gramian-constraint literature (Zhdanov, 2012 onward). What I am putting forward
-is narrower and, I think, still open: a *disciplined* reading in which
-measure-dependence is treated as the operational diagnostic of artifact, the
-forced/forbidden split is a first-class output, and the whole thing is run as a
-transferred, documented methodology rather than an ad-hoc robustness check.
+Gramian-constraint literature (Zhdanov, 2012 onward). And a transdimensional /
+reversible-jump MCMC posterior ensemble (Bodin & Sambridge, 2009) already
+*contains* this information — forced structure appears as high-consensus,
+measure-dependent structure as sign-variable posterior mass. The epistemic
+intuition is old. What I am putting forward is narrower: not a new inverse-theory
+principle but a *reporting discipline* — the forced / measure-dependent split
+made an explicit, first-class output; measure-dependence treated as the
+operational diagnostic of *underdetermination*; and the whole run as a
+transferable, documented procedure on top of arbitrary inversion machinery,
+rather than the informal robustness check practitioners already perform
+inconsistently. The contribution is the operationalization, not the distinction.
 
 ---
 
@@ -203,9 +209,19 @@ recomputes the ray paths through the current model — the DGN + FMM structure o
 your own pipeline. Figure 5 is the result, and the decomposition code is
 *identical* to Demonstration 1:
 
-- **Forced cores ~89–93% sign-correct**, 8 sign errors out of ~240 forced cells
-  (~3%) — the same quality band as the linear case.
+- **Forced cores ~89% sign-correct within the resolution length**, but ~71–81%
+  strict (cell-exact). The gap is resolution-length blur — a forced cell one or
+  two cells off a true feature edge, not a sign mistake — but the strict figure
+  is the honest co-headline; the within-resolution number alone overstates the
+  precision.
 - **The measure-dependent shell captures ~76% of the blobs.**
+
+These figures are from the feasible-set sampler at its default operating point,
+and at that operating point the forced set itself over-claims: an adversarial
+stress test (§6 point 6; `witness_pass.md`, RWC-2) finds ~41% of forced cells
+admit a feasible, equally-smooth, opposite-sign model. The decomposition layer
+is sound and forward-model-agnostic; what is coverage-limited is the
+feasible-set *sampling* that feeds it (§7).
 
 The decomposition transferred across two genuinely different forward operators
 without change. That is the load-bearing result of this note: the possibilistic
@@ -241,6 +257,15 @@ run failing honestly; each is now documented in the script headers.
    checkerboard modes the operator cannot see. Those fit the data but are not
    admissible Earth models; perturbing freely in them injects unphysical
    speckle. A feasible model is data-fitting *and* smooth.
+6. **The forced set is coverage-gated — and the gate is measurable.** A forced
+   label asserts that *every* feasible model agrees; an ensemble that
+   under-samples the feasible set will agree spuriously and over-claim. Two
+   checks quantify this (`witness_pass.md`, RWC-1 and RWC-2): the forced set
+   converges only above an ensemble-coverage threshold — here N ≈ 250 sampled
+   models for a 40×40 grid — and at the default operating point an adversarial
+   stress test finds ~41% of forced cells *false-forced* (a feasible,
+   equally-smooth, opposite-sign model exists). A forced claim is honest only
+   with its coverage-adequacy curve attached.
 
 These are not patches. They are the methodology's anti-anchoring discipline —
 the same one that, in the Closure programme, keeps a derivation from quietly
@@ -266,10 +291,14 @@ nonlinear feasible-set sampler solved.
 This is exactly the territory of transdimensional / reversible-jump MCMC
 tomography (Bodin & Sambridge, 2009 onward) — methods built precisely to
 produce a genuine posterior ensemble. And it is where ZTM already lives: your
-`runs=20` top-level Monte Carlo *is* a feasible-set sampler. The open question
-— a real one, not rhetorical — is whether 20 runs sample the feasible set well
-enough for the forced/measure-dependent split to be trustworthy on real data,
-or whether it needs the transdimensional treatment.
+`runs=20` top-level Monte Carlo *is* a feasible-set sampler. A coverage study on
+the synthetic problem (`witness_pass.md`, RWC-1) now puts a number on the
+question: the forced set stabilizes only near N ≈ 250 sampled models, and a
+20-run ensemble sits at roughly three times the converged forced-set size — 20
+runs is far short of coverage adequacy. So the open question is no longer
+*whether* the sampler needs upgrading but *to what*: whether a transdimensional
+sampler reaches the coverage the forced/measure-dependent split requires, on
+real data, at tractable cost.
 
 That question is not mine to answer from the outside. It needs your inversion
 expertise, your code, and your data. My contribution is the possibilistic
@@ -295,6 +324,13 @@ already engaging. Let us solve that part together."
   propagates that error into the forced set. This is not a defect of the
   method — it is the method correctly reflecting the operator — but it means
   the operator's fidelity is load-bearing.
+- The **forced set is coverage-gated**. It is trustworthy only above an
+  ensemble-coverage threshold (RWC-1: N ≈ 250 here); below it the sampler
+  over-claims (RWC-2: ~41% of forced cells false-forced at the default
+  operating point). The demonstrations are reported at that default point and
+  so over-state the forced set. The decomposition layer is sound — what is
+  coverage-limited is the feasible-set *sampling* that feeds it; a forced claim
+  must travel with its coverage-adequacy curve.
 
 ---
 
@@ -311,6 +347,9 @@ already engaging. Let us solve that part together."
   the Levenberg–Marquardt inversion over a hand-rolled dense-Cholesky module,
   the feasible-set sampler, and the decomposition, pulled together by
   `possibilistic_inversion.c`. Build and run: `cd c && make && ./pi`.
+- `witness_pass.md` — the synthesis witness pass: an adversarial external review
+  of the method by three independent models, and the two Required Witness Checks
+  it carried, `rwc1_forced_stability.py` and `rwc2_disconnected_test.py`.
 - `inverse_born_methodology.md` (Closure Forces Structure programme) — the
   source of the two-layer possibilistic / probabilistic discipline.
 - Bodin, T. & Sambridge, M. (2009), *Seismic tomography with the reversible
