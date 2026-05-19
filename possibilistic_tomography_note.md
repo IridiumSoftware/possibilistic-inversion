@@ -76,28 +76,69 @@ A posterior covariance lives entirely in the probabilistic layer. The
 possibilistic layer is the one that answers the §1 question, and it is the one
 standard tomography leaves on the table.
 
-Figure 1 draws the split in model space. The data alone defines a *feasible
-set* of models (panel 1): a region, not a point. Probabilistic inversion puts a
-measure on that set and reports one point of it with a spread — but the report
-moves with the measure, and two equally defensible priors can disagree on a
-feature's sign (panel 2). The possibilistic reading looks instead at the
-*shape* of the set: a feature is forced when the set lies wholly on one side of
-zero, measure-dependent when it straddles zero (panel 3). Forced structure
-survives every prior; measure-dependent structure is whatever a prior happened
-to pick — and no single probabilistic run flags which is which.
+The split has a natural geometry, and the next three figures build it up one
+idea at a time.
 
-![Figure 1. Possibilistic vs probabilistic in model space. Panel 1: the data defines a feasible set F of models. Panel 2: probabilistic inversion puts a measure on F — two defensible priors give two posteriors that disagree on the sign of feature B. Panel 3: the possibilistic reading projects F onto each feature's axis — feature A is forced (the interval clears zero), feature B is measure-dependent (the interval straddles zero).](fig_possibilism.png)
+**Figure 1 — the feasible set.** The data and the hard constraints do not pick
+out a model; they pick out a *set* F of models — every model that fits within
+noise and respects the bounds. Project F onto a feature's axis and the feature
+falls into one of two classes. It is **forced** when the projection lies
+entirely on one side of zero: every model consistent with the data agrees on
+its sign, and no prior is needed to settle it. It is **measure-dependent** when
+the projection straddles zero: the data leave the sign open, and any single
+value reported there is fixed by the measure you add, not by the data.
 
-*Figure 1. The same feasible set, two questions. Probabilistic inversion asks
-how a measure distributes weight over F; its answer is conditional on that
-measure. The possibilistic reading asks what the shape of F forces — what holds
-under every measure. Each cell of a tomogram is one such feature, and its
-feasible interval is F projected onto that cell's axis.*
+![Figure 1. The data give a feasible set F of models, not a point. Projected onto a feature's axis, F either clears zero — the feature is forced, its sign holds for every model in F — or straddles zero — the feature is measure-dependent, its sign fixed by the measure, not the data. Both terms are defined on the figure.](fig_feasible_set.png)
 
-The object that carries it is the **feasible interval**. Take an ensemble of
-models that each fit the data within noise and respect the hard bounds. For
-each cell, record the interval `[a_min, a_max]` of the anomaly across the
-ensemble. That interval is the possibilistic content of the inversion:
+*Figure 1. The data give a set, not a point. A feature is forced when F's
+projection clears zero and measure-dependent when it straddles zero — the two
+terms this note turns on, defined geometrically.*
+
+**On the word "possibilistic."** I use it in a deliberately narrow sense — the
+crisp, set-membership corner of possibility theory, not a graded possibility
+distribution. F is an ordinary feasible set: a model is in it or it is not. A
+feature is *forced* exactly when a fact holds for every model in F (necessity 1,
+in possibility-theory terms) and *measure-dependent* when F neither forces nor
+forbids it. No fuzzy membership is invoked; the only structure used is the set
+F and the all-or-nothing quantifier over it.
+
+**Figure 2 — two reports.** The same F can be turned into a reported answer two
+ways. The *possibilistic report* uses exactly F: forced features pinned to a
+sign, measure-dependent features returned as intervals — no more information
+than F carries, and no less. The *Bayesian report* uses F plus a measure μ — it
+places μ on F and reports its mean and credible interval. μ is information
+beyond F, and two defensible choices of μ can disagree on a measure-dependent
+feature's sign, so that choice needs a justification of its own. On a forced
+feature the two reports agree; the divergence is confined to the
+measure-dependent ones.
+
+![Figure 2. The same feasible set F, turned into a reported answer two ways. The possibilistic report uses exactly F. The Bayesian report uses F plus a measure μ; two defensible μ agree on the forced feature A but disagree on the sign of the measure-dependent feature B.](fig_two_reports.png)
+
+*Figure 2. Two reports from one feasible set. Possibilistic: use exactly F.
+Bayesian: use F plus a measure μ — defensible μ agree where F forces the answer
+and can conflict where it does not.*
+
+**Figure 3 — the layers compose.** The two are not rivals run side by side;
+they compose in sequence. The possibilistic layer runs first and bounds which
+measures are admissible — a measure is admissible only if it is supported on F.
+The Bayesian layer then runs inside that bound: sweep every admissible measure
+and the spread of the answer, the *measure-uncertainty*, can never exceed F's
+extent. On a forced feature that bound clears zero, so no admissible measure
+can move the sign; on a measure-dependent feature it straddles zero and the
+sign is genuinely open. Possibilism does not compete with Bayes — it brackets
+it.
+
+![Figure 3. The two layers in sequence. Step 1: the possibilistic layer fixes F and bounds the admissible measures — a measure is admissible only if supported on F. Step 2: the Bayesian sweep runs inside that bound, and F's extent caps the measure-uncertainty.](fig_bounded_uncertainty.png)
+
+*Figure 3. The layers compose. Possibilism runs first and bounds the admissible
+measures; the Bayesian sweep then stays inside that bound. The feasible
+interval below is exactly that bound.*
+
+The object that carries the possibilistic content is the **feasible
+interval**. Take an ensemble of models that each fit the data within noise and
+respect the hard bounds. For each cell, record the interval `[a_min, a_max]` of
+the anomaly across the ensemble. That interval is F projected onto the cell's
+axis — exactly the bound Figure 3 draws:
 
 - `a_min > 0` everywhere in the ensemble → **forced-high** (no data-consistent
   model makes this cell non-positive);
@@ -106,15 +147,15 @@ ensemble. That interval is the possibilistic content of the inversion:
   data-forced);
 - the interval sits inside a small band around zero → **forced-quiet**.
 
-Figure 2 is the whole idea in one cartoon. The same ensemble, read two ways:
-the probabilistic reading collapses it to a mean and an error band; the
-possibilistic reading keeps the feasible interval and classifies it. The big
-feature is forced; the flanks and the small bump are measure-dependent — and
-the probabilistic band does not distinguish them.
+Figure 4 puts the classification on a concrete ensemble. The same ensemble,
+read two ways: the probabilistic reading collapses it to a mean and an error
+band; the possibilistic reading keeps the feasible interval and classifies it.
+The big feature is forced; the flanks and the small bump are measure-dependent
+— and the probabilistic band does not distinguish them.
 
-![Figure 2. The same feasible ensemble read probabilistically (mean + error band) and possibilistically (feasible interval, classified into forced-high / forced-low / measure-dependent).](fig_schematic.png)
+![Figure 4. The same feasible ensemble read probabilistically (mean + error band) and possibilistically (feasible interval, classified into forced-high / forced-low / measure-dependent).](fig_schematic.png)
 
-*Figure 2. The same feasible ensemble, read two ways. Left: one model, one
+*Figure 4. The same feasible ensemble, read two ways. Left: one model, one
 uncertainty band. Right: the feasible interval, classified.*
 
 **On prior art — said straight.** This is not unprecedented, and pretending
@@ -170,7 +211,7 @@ times with 1.2% noise, dense four-edge ray coverage. The feasible set is
 sampled exactly per §3 (the linear operator admits an exact eigendecomposition,
 so the feasible set is parametrized cleanly).
 
-Figure 3 is the result. The forced-sign cores sit on the true features — panel
+Figure 5 is the result. The forced-sign cores sit on the true features — panel
 (e), the black forced-high contour lies inside the true slab, the white
 forced-low contour inside the true low-velocity zone. The numbers:
 
@@ -183,9 +224,9 @@ forced-low contour inside the true low-velocity zone. The numbers:
   not a weakness. It is the method saying out loud what is true — most of a
   tomographic image is *not* forced.
 
-![Figure 3. Straight-ray demonstration: ground truth, feasible-interval bounds, the forced-sign decomposition, the forced cores against true anomaly, and the measure-dependent shell against the blob centres.](possibilistic_decomposition.png)
+![Figure 5. Straight-ray demonstration: ground truth, feasible-interval bounds, the forced-sign decomposition, the forced cores against true anomaly, and the measure-dependent shell against the blob centres.](possibilistic_decomposition.png)
 
-*Figure 3. The straight-ray (linear) demonstration. Panel (d) is the
+*Figure 5. The straight-ray (linear) demonstration. Panel (d) is the
 decomposition; panel (e) shows the forced cores landing on the true features.*
 
 ---
@@ -195,18 +236,18 @@ decomposition; panel (e) shows the forced cores landing on the true features.*
 The straight-ray operator is exact only in a homogeneous medium. The faithful
 operator is the Eikonal first-arrival solver — the operator class your FMM.cpp
 implements. First-arrival rays bend: toward fast structure, away from slow
-(Figure 4). `eikonal.py` provides it (Fast Marching Method solver + ray-path
+(Figure 6). `eikonal.py` provides it (Fast Marching Method solver + ray-path
 Fréchet kernel), standalone and self-tested.
 
-![Figure 4. First-arrival rays through the synthetic model: Eikonal rays (solid) bend toward the fast slab; the straight-ray approximation (dashed) ignores it.](fig_ray_bending.png)
+![Figure 6. First-arrival rays through the synthetic model: Eikonal rays (solid) bend toward the fast slab; the straight-ray approximation (dashed) ignores it.](fig_ray_bending.png)
 
-*Figure 4. Why the forward operator matters. Solid: Eikonal first-arrival rays,
+*Figure 6. Why the forward operator matters. Solid: Eikonal first-arrival rays,
 bending through the medium. Dashed: the straight-ray approximation.*
 
 Because travel time is now a nonlinear functional of slowness, the one-shot
 linear solve is replaced by an iterative Levenberg–Marquardt inversion that
 recomputes the ray paths through the current model — the DGN + FMM structure of
-your own pipeline. Figure 5 is the result, and the decomposition code is
+your own pipeline. Figure 7 is the result, and the decomposition code is
 *identical* to Demonstration 1:
 
 - **Forced cores ~89% sign-correct within the resolution length**, but ~71–81%
@@ -227,9 +268,9 @@ The decomposition transferred across two genuinely different forward operators
 without change. That is the load-bearing result of this note: the possibilistic
 reading is a property of *inversions*, not of a particular operator.
 
-![Figure 5. Eikonal demonstration: the same possibilistic decomposition, with the nonlinear FMM forward operator and a Levenberg-Marquardt inversion ensemble.](possibilistic_decomposition_eikonal.png)
+![Figure 7. Eikonal demonstration: the same possibilistic decomposition, with the nonlinear FMM forward operator and a Levenberg-Marquardt inversion ensemble.](possibilistic_decomposition_eikonal.png)
 
-*Figure 5. The Eikonal (nonlinear) demonstration — same decomposition, faithful
+*Figure 7. The Eikonal (nonlinear) demonstration — same decomposition, faithful
 operator.*
 
 ---

@@ -114,32 +114,79 @@ A posterior covariance lives entirely in the probabilistic layer. The
 possibilistic layer is the one that answers the \S1 question, and it is the one
 standard tomography leaves on the table.
 
-Figure~\ref{fig:possibilism} draws the split in model space. The data alone
-defines a \emph{feasible set} of models (panel~1): a region, not a point.
-Probabilistic inversion puts a measure on that set and reports one point of it
-with a spread---but the report moves with the measure, and two equally
-defensible priors can disagree on a feature's sign (panel~2). The possibilistic
-reading looks instead at the \emph{shape} of the set: a feature is forced when
-the set lies wholly on one side of zero, measure-dependent when it straddles
-zero (panel~3). Forced structure survives every prior; measure-dependent
-structure is whatever a prior happened to pick---and no single probabilistic
-run flags which is which.
+The split has a natural geometry, and the next three figures build it up one
+idea at a time.
+
+\textbf{Figure~\ref{fig:feasible} --- the feasible set.} The data and the hard
+constraints do not pick out a model; they pick out a \emph{set} $F$ of
+models---every model that fits within noise and respects the bounds. Project
+$F$ onto a feature's axis and the feature falls into one of two classes. It is
+\textbf{forced} when the projection lies entirely on one side of zero: every
+model consistent with the data agrees on its sign, and no prior is needed to
+settle it. It is \textbf{measure-dependent} when the projection straddles zero:
+the data leave the sign open, and any single value reported there is fixed by
+the measure you add, not by the data.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{fig_possibilism.png}
-\caption{The same feasible set, two questions. Probabilistic inversion asks how
-a measure distributes weight over $F$; its answer is conditional on that
-measure. The possibilistic reading asks what the shape of $F$ forces---what
-holds under every measure. Each cell of a tomogram is one such feature, and its
-feasible interval is $F$ projected onto that cell's axis.}
-\label{fig:possibilism}
+\includegraphics[width=\linewidth]{fig_feasible_set.png}
+\caption{The data give a set, not a point. A feature is forced when $F$'s
+projection clears zero and measure-dependent when it straddles zero---the two
+terms this note turns on, defined geometrically.}
+\label{fig:feasible}
 \end{figure}
 
-The object that carries it is the \textbf{feasible interval}. Take an ensemble
-of models that each fit the data within noise and respect the hard bounds. For
-each cell, record the interval $[\amin,\amax]$ of the anomaly across the
-ensemble. That interval is the possibilistic content of the inversion:
+\textbf{On the word ``possibilistic.''} I use it in a deliberately narrow
+sense---the crisp, set-membership corner of possibility theory, not a graded
+possibility distribution. $F$ is an ordinary feasible set: a model is in it or
+it is not. A feature is \emph{forced} exactly when a fact holds for every model
+in $F$ (necessity~1, in possibility-theory terms) and \emph{measure-dependent}
+when $F$ neither forces nor forbids it. No fuzzy membership is invoked; the only
+structure used is the set $F$ and the all-or-nothing quantifier over it.
+
+\textbf{Figure~\ref{fig:reports} --- two reports.} The same $F$ can be turned
+into a reported answer two ways. The \emph{possibilistic report} uses exactly
+$F$: forced features pinned to a sign, measure-dependent features returned as
+intervals---no more information than $F$ carries, and no less. The
+\emph{Bayesian report} uses $F$ plus a measure $\mu$---it places $\mu$ on $F$
+and reports its mean and credible interval. $\mu$ is information beyond $F$, and
+two defensible choices of $\mu$ can disagree on a measure-dependent feature's
+sign, so that choice needs a justification of its own. On a forced feature the
+two reports agree; the divergence is confined to the measure-dependent ones.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{fig_two_reports.png}
+\caption{Two reports from one feasible set. Possibilistic: use exactly $F$.
+Bayesian: use $F$ plus a measure $\mu$---defensible $\mu$ agree where $F$ forces
+the answer and can conflict where it does not.}
+\label{fig:reports}
+\end{figure}
+
+\textbf{Figure~\ref{fig:compose} --- the layers compose.} The two are not
+rivals run side by side; they compose in sequence. The possibilistic layer runs
+first and bounds which measures are admissible---a measure is admissible only if
+it is supported on $F$. The Bayesian layer then runs inside that bound: sweep
+every admissible measure and the spread of the answer, the
+\emph{measure-uncertainty}, can never exceed $F$'s extent. On a forced feature
+that bound clears zero, so no admissible measure can move the sign; on a
+measure-dependent feature it straddles zero and the sign is genuinely open.
+Possibilism does not compete with Bayes---it brackets it.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{fig_bounded_uncertainty.png}
+\caption{The layers compose. Possibilism runs first and bounds the admissible
+measures; the Bayesian sweep then stays inside that bound. The feasible interval
+below is exactly that bound.}
+\label{fig:compose}
+\end{figure}
+
+The object that carries the possibilistic content is the \textbf{feasible
+interval}. Take an ensemble of models that each fit the data within noise and
+respect the hard bounds. For each cell, record the interval $[\amin,\amax]$ of
+the anomaly across the ensemble. That interval is $F$ projected onto the cell's
+axis---exactly the bound Figure~\ref{fig:compose} draws:
 
 \begin{itemize}
 \item $\amin > 0$ everywhere in the ensemble $\rightarrow$
@@ -152,10 +199,10 @@ ensemble. That interval is the possibilistic content of the inversion:
   \textbf{forced-quiet}.
 \end{itemize}
 
-Figure~\ref{fig:schematic} is the whole idea in one cartoon. The same ensemble,
-read two ways: the probabilistic reading collapses it to a mean and an error
-band; the possibilistic reading keeps the feasible interval and classifies it.
-The big feature is forced; the flanks and the small bump are
+Figure~\ref{fig:schematic} puts the classification on a concrete ensemble. The
+same ensemble, read two ways: the probabilistic reading collapses it to a mean
+and an error band; the possibilistic reading keeps the feasible interval and
+classifies it. The big feature is forced; the flanks and the small bump are
 measure-dependent---and the probabilistic band does not distinguish them.
 
 \begin{figure}[htbp]
