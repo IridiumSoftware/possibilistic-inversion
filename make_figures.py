@@ -512,6 +512,159 @@ def fig_bounded_uncertainty():
     print("fig_bounded_uncertainty.png")
 
 
+def fig_two_reports_dial():
+    """Figure A.1 (appendix) -- the possibilistic/Bayesian split as an
+    instrument (the 'mu-knob').
+
+    Drawn in an instrument-panel register on purpose: the Bayesian report
+    needs an input the data never supplied -- a knob mu. Turn it and feature
+    B's reading swings across zero (measure-dependent); feature A's reading
+    never moves (forced) -- the knob is not wired to A. The possibilistic
+    report has no knob: it returns F's shape, A pinned and B as its whole
+    interval. The register shift is the point -- it makes "F alone vs F plus
+    an arbitrary measure" unmistakable, where two model-space panels could be
+    misread as merely "weak vs strong prior" (Grok edge-witness, Phi-1)."""
+    from matplotlib.patches import Circle, FancyBboxPatch, FancyArrowPatch
+
+    fx, fy = _feasible_blob()
+    fxc, fyc = fx - fx.mean(), fy - fy.mean()         # blob centred on origin
+    BS = 0.24                                          # mini-blob scale
+    GRN, BLU, RDC = "#2e7d32", "#2166ac", "#b2182b"
+
+    fig, ax = plt.subplots(figsize=(14.2, 7.0))
+    ax.set_xlim(0, 2); ax.set_ylim(0, 1)
+    ax.set_aspect("equal"); ax.axis("off")
+    ax.plot([1, 1], [0.07, 0.88], color="0.86", lw=1.0, zorder=0)
+
+    def miniblob(cx, cy, fc, ec):
+        ax.fill(cx + fxc * BS, cy + fyc * BS, color=fc, ec=ec, lw=1.4,
+                zorder=3)
+        ax.text(cx, cy, "F", ha="center", va="center", fontsize=13,
+                style="italic", color=ec, zorder=4)
+
+    def badge(cx, cy, text, ec, fc, w, h, fs):
+        ax.add_patch(FancyBboxPatch((cx - w / 2, cy - h / 2), w, h,
+                     boxstyle="round,pad=0.012", fc=fc, ec=ec, lw=1.6,
+                     zorder=4))
+        ax.text(cx, cy, text, ha="center", va="center", fontsize=fs,
+                weight="bold", color=ec, zorder=5)
+
+    # ============ PANEL 1 — POSSIBILISTIC: no knob ======================
+    ax.text(0.50, 0.93, "POSSIBILISTIC  REPORT", ha="center", fontsize=13,
+            weight="bold", color="#1f4e6b")
+    ax.text(0.50, 0.885, "input:  F          knobs:  none", ha="center",
+            fontsize=9.2, color="0.45", style="italic")
+    miniblob(0.23, 0.71, "#cfe3f0", "#3b7aa8")
+    ax.annotate("", xy=(0.45, 0.55), xytext=(0.30, 0.62),
+                arrowprops=dict(arrowstyle="-|>", color="0.55", lw=1.8))
+    ax.text(0.30, 0.50, "read straight off F", fontsize=8.3, color="0.5",
+            style="italic", ha="left")
+
+    ax.text(0.12, 0.40, "feature A", fontsize=9.5, color="0.3", va="center")
+    badge(0.46, 0.40, "+   forced", GRN, "#e7f3e7", 0.30, 0.085, 11)
+
+    ax.text(0.12, 0.25, "feature B", fontsize=9.5, color="0.3", va="center")
+    bx0, bx1, by = 0.31, 0.66, 0.25
+    ax.plot([bx0, bx1], [by, by], color="#e8a33d", lw=8,
+            solid_capstyle="butt", zorder=4)
+    for xx in (bx0, bx1):
+        ax.plot([xx, xx], [by - 0.024, by + 0.024], color="#e8a33d", lw=3,
+                zorder=4)
+    ax.plot((bx0 + bx1) / 2, by, "o", color="0.4", ms=6, zorder=5)
+    ax.text((bx0 + bx1) / 2, by - 0.05, "0", fontsize=7.5, color="0.4",
+            ha="center", va="top")
+    ax.text(bx1 + 0.04, by, "the whole interval —\n\"sign open\"",
+            fontsize=8.3, color="#9a6a14", va="center", weight="bold")
+
+    ax.text(0.50, 0.085,
+            "The report is F's shape.  A is pinned by the data;  B is handed "
+            "back as\nits whole interval — the report declines to choose a "
+            "sign.",
+            ha="center", fontsize=9, color="0.3", style="italic")
+
+    # ============ PANEL 2 — BAYESIAN: F plus the mu-knob ================
+    ax.text(1.50, 0.93, "BAYESIAN  REPORT", ha="center", fontsize=13,
+            weight="bold", color="#7a3b1f")
+    ax.text(1.50, 0.885, "input:  F  +  μ          μ is a knob you set",
+            ha="center", fontsize=9.2, color="0.45", style="italic")
+    miniblob(1.19, 0.70, "#eceef0", "#9aa7ad")
+
+    # the mu-knob, with three settings shown
+    kx, ky, kr = 1.40, 0.42, 0.088
+    ax.add_patch(Circle((kx, ky), kr, fc="#f4f1ea", ec="0.35", lw=2.2,
+                        zorder=4))
+    ax.add_patch(Circle((kx, ky), kr * 0.16, fc="0.35", ec="none", zorder=6))
+    for ang, col in ((150, BLU), (90, "0.55"), (30, RDC)):
+        a = np.radians(ang)
+        ax.plot([kx, kx + kr * 0.94 * np.cos(a)],
+                [ky, ky + kr * 0.94 * np.sin(a)], color=col, lw=3.0,
+                solid_capstyle="round", zorder=5)
+    ax.add_patch(FancyArrowPatch((kx - kr * 1.35, ky + kr * 0.55),
+                                 (kx + kr * 1.35, ky + kr * 0.55),
+                                 connectionstyle="arc3,rad=-0.5",
+                                 arrowstyle="<|-|>", mutation_scale=10,
+                                 color="0.6", lw=1.2, zorder=5))
+    ax.text(kx, ky + kr * 1.45, "turn μ", fontsize=8, color="0.5",
+            ha="center", style="italic")
+    ax.text(kx - kr - 0.045, ky, "μ", ha="right", va="center", fontsize=16,
+            style="italic", weight="bold", color="0.3")
+
+    # feature A — fed by the data; the knob is NOT wired to it
+    ax.text(1.86, 0.575, "feature A", fontsize=9.5, color="0.3",
+            ha="center")
+    badge(1.86, 0.47, "+", GRN, "#e7f3e7", 0.12, 0.10, 16)
+    # wire: the data --> A  (solid)
+    ax.add_patch(FancyArrowPatch((1.27, 0.63), (1.79, 0.48),
+                                 connectionstyle="arc3,rad=-0.16",
+                                 arrowstyle="-|>", mutation_scale=13,
+                                 color="#3b7aa8", lw=1.8, zorder=3))
+    ax.text(1.585, 0.553, "from the data", fontsize=7.9, color="#3b7aa8",
+            ha="center", style="italic", rotation=-15)
+    # wire: knob --> A  (dashed, cut)
+    ax.plot([kx + kr * 0.72, 1.585], [ky + kr * 0.72, 0.50], color="0.6",
+            lw=1.4, ls=(0, (4, 2)), zorder=3)
+    xc, yc = 1.61, 0.505
+    ax.plot([xc - 0.02, xc + 0.02], [yc - 0.028, yc + 0.028], color=RDC,
+            lw=2.3, zorder=6)
+    ax.plot([xc - 0.02, xc + 0.02], [yc + 0.028, yc - 0.028], color=RDC,
+            lw=2.3, zorder=6)
+    ax.text(1.61, 0.445, "μ ⇢ A:\nnot wired", fontsize=7.8, color=RDC,
+            ha="center", va="top", weight="bold")
+
+    # feature B — a scale the knob sweeps across zero
+    sx0, sx1, sy = 1.61, 1.97, 0.25
+    sc = (sx0 + sx1) / 2
+    ax.text(1.86, 0.355, "feature B", fontsize=9.5, color="0.3",
+            ha="center")
+    ax.plot([sx0, sx1], [sy, sy], color="0.5", lw=2, zorder=3)
+    for xx, lab in ((sx0, "−"), (sc, "0"), (sx1, "+")):
+        ax.plot([xx, xx], [sy - 0.02, sy + 0.02], color="0.5", lw=1.7,
+                zorder=3)
+        ax.text(xx, sy - 0.043, lab, ha="center", va="top", fontsize=9.5,
+                color="0.4")
+    for xx, col in ((sx0 + 0.07, BLU), (sc, "0.55"), (sx1 - 0.07, RDC)):
+        ax.plot(xx, sy + 0.03, marker="v", color=col, ms=12, zorder=5)
+    # wire: knob --> B  (solid, live)
+    ax.add_patch(FancyArrowPatch((kx + 0.02, ky - kr), (sc - 0.12, sy + 0.07),
+                                 connectionstyle="arc3,rad=0.28",
+                                 arrowstyle="-|>", mutation_scale=13,
+                                 color="0.3", lw=2.0, zorder=3))
+    ax.text(1.52, 0.315, "μ drives B", fontsize=8.2, color="0.3",
+            weight="bold", style="italic")
+
+    ax.text(1.50, 0.085,
+            "Turn μ and B's reading swings across zero;  A's reading never "
+            "moves.\nThe data fixed A — the knob, your choice, fixed B.",
+            ha="center", fontsize=9, color="0.3", style="italic")
+
+    fig.text(0.5, 0.025, "Figure A.1.  The report is F, or F plus a knob "
+             "the data never set.", ha="center",
+             fontsize=9.5, weight="bold", color="0.2")
+    fig.savefig("fig_two_reports_dial.png", dpi=130, bbox_inches="tight")
+    plt.close(fig)
+    print("fig_two_reports_dial.png")
+
+
 def _bilinear(T, z, x):
     nz, nx = T.shape
     z = min(max(z, 0.0), nz - 1.0); x = min(max(x, 0.0), nx - 1.0)
@@ -567,5 +720,6 @@ if __name__ == "__main__":
     fig_feasible_set()
     fig_two_reports()
     fig_bounded_uncertainty()
+    fig_two_reports_dial()
     fig_schematic()
     fig_ray_bending()

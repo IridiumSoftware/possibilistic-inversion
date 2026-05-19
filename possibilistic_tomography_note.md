@@ -388,6 +388,28 @@ already engaging. Let us solve that part together."
 
 ---
 
+## Appendix A — The split as an instrument
+
+The main text draws the possibilistic / probabilistic split in model space — F
+as a set, a feature forced or measure-dependent according to where F's
+projection falls (Figures 1–3). Readers who think in terms of estimators and
+their inputs may find the same split crisper drawn as an *instrument*. The
+possibilistic report is a function of F alone. The Bayesian report is a
+function of F *and* a measure μ — a knob the data never set. Turn the knob and
+a measure-dependent feature's reported sign swings across zero; a forced
+feature's reading does not move, because the knob is not wired to it. Nothing
+here is new — it is Figure 2 again, in a different register — but the register
+makes one thing plain: the disagreement two defensible analysts can reach is
+located entirely in the knob, and the knob is not data.
+
+![Figure A.1. The possibilistic / Bayesian split as an instrument. The possibilistic report is a function of F alone — no knob. The Bayesian report needs a measure μ, a knob the data did not set: turning it swings feature B's reported sign across zero, while feature A's reading does not move — the knob is not wired to it.](fig_two_reports_dial.png)
+
+*Figure A.1. The same split as an instrument. Possibilistic: a function of F,
+no knob. Bayesian: a function of F and a knob μ — turning it moves B across
+zero, and never moves A.*
+
+---
+
 ## Pointers
 
 - `geophysical_invariants.md` — the stratified constraint set.
