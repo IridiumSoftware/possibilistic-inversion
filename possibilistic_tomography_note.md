@@ -81,15 +81,19 @@ set — every model that fits within the noise tolerance and obeys the hard
 physical bounds — and the probabilistic layer is taken as conditional on that
 admissibility. With a smooth likelihood a posterior need not vanish sharply
 outside F; the two-layer reading treats F as the tolerance-defined region and a
-measure μ as a measure on it. Every "measure on F" below is meant in that
-conditional sense.
+measure μ as a measure on it. Every "measure on F" below — and every bound
+stated in terms of "F's extent," including Figure 3's — is a claim about
+admissible μ in that conditional sense, not about an untruncated
+smooth-likelihood posterior.
 
 The split has a natural geometry, and the next three figures build it up one
 idea at a time.
 
 **Figure 1 — the feasible set.** The data and the hard constraints do not pick
 out a model; they pick out a *set* F of models — every model that fits within
-noise and respects the bounds. Project F onto a feature's axis and the feature
+noise and respects the bounds. F is a set, not a probability density — the
+figures shade it only to mark the region. Project F onto a feature's axis and
+the feature
 falls into one of two classes. It is **forced** when the projection lies
 entirely on one side of zero: every model consistent with the data agrees on
 its sign, and no prior is needed to settle it. It is **measure-dependent** when
