@@ -72,9 +72,17 @@ from the two-layer discipline of the Closure Forces Structure programme
 - The **probabilistic layer** asks how a measure distributes weight over what
   the possibilistic layer permits. Its answers are conditional on that measure.
 
-A posterior covariance lives entirely in the probabilistic layer. The
-possibilistic layer is the one that answers the §1 question, and it is the one
-standard tomography leaves on the table.
+A posterior covariance is a probabilistic-layer object. The possibilistic
+layer is the one that answers the §1 question, and it is the one standard
+tomography leaves on the table.
+
+One clarification carries the rest. Throughout, F is the *hard* admissibility
+set — every model that fits within the noise tolerance and obeys the hard
+physical bounds — and the probabilistic layer is taken as conditional on that
+admissibility. With a smooth likelihood a posterior need not vanish sharply
+outside F; the two-layer reading treats F as the tolerance-defined region and a
+measure μ as a measure on it. Every "measure on F" below is meant in that
+conditional sense.
 
 The split has a natural geometry, and the next three figures build it up one
 idea at a time.
@@ -95,8 +103,9 @@ projection clears zero and measure-dependent when it straddles zero — the two
 terms this note turns on, defined geometrically.*
 
 **On the word "possibilistic."** I use it in a deliberately narrow sense — the
-crisp, set-membership corner of possibility theory, not a graded possibility
-distribution. F is an ordinary feasible set: a model is in it or it is not. A
+crisp-set limit of possibility theory, equivalently a set-valued feasibility
+reading, not a graded possibility distribution. F is an ordinary feasible set:
+a model is in it or it is not. A
 feature is *forced* exactly when a fact holds for every model in F (necessity 1,
 in possibility-theory terms) and *measure-dependent* when F neither forces nor
 forbids it. No fuzzy membership is invoked; the only structure used is the set
@@ -121,9 +130,9 @@ and can conflict where it does not.*
 **Figure 3 — the layers compose.** The two are not rivals run side by side;
 they compose in sequence. The possibilistic layer runs first and bounds which
 measures are admissible — a measure is admissible only if it is supported on F.
-The Bayesian layer then runs inside that bound: sweep every admissible measure
-and the spread of the answer, the *measure-uncertainty*, can never exceed F's
-extent. On a forced feature that bound clears zero, so no admissible measure
+The Bayesian layer then runs inside that bound: across all admissible
+measures, the *attainable range of reported answers* — the measure-uncertainty
+— cannot exceed F's extent. On a forced feature that bound clears zero, so no admissible measure
 can move the sign; on a measure-dependent feature it straddles zero and the
 sign is genuinely open. Possibilism does not compete with Bayes — it brackets
 it.

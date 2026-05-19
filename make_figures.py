@@ -498,9 +498,9 @@ def fig_bounded_uncertainty():
              "bounds which priors are allowed.",
              ha="center", fontsize=8.7, color="0.18", linespacing=1.5)
     fig.text(0.74, 0.115,
-             "Sweep every admissible μ; each gives a posterior, all of them "
-             "inside F.\nThe spread of the answer — the measure-uncertainty "
-             "— never exceeds F's extent.",
+             "Sweep every admissible μ; each gives a posterior, all inside F.\n"
+             "Across all admissible μ, the reported answer cannot range "
+             "beyond F's extent.",
              ha="center", fontsize=8.7, color="0.18", linespacing=1.5)
     fig.text(0.5, 0.04,
              "Possibilism does not compete with Bayes — it runs first and "
