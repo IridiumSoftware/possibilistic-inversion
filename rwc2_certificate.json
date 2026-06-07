@@ -1,0 +1,8 @@
+{
+  "false_forced_cells": 98,
+  "forced_cells_standard_sampler": 238,
+  "honest_forced_cells": 140,
+  "false_forced_rate": 0.4117647058823529,
+  "witnesses_used": 10,
+  "scope_note": "lower bound \u2014 more adversarial witnesses would reveal more false-forced."
+}

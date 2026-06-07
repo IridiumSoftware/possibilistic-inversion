@@ -214,6 +214,26 @@ def main():
     plt.close(fig)
     print("\nFigure written: rwc2_disconnected_test.png")
 
+    # ---- sidecar JSON for coverage_diagnostics (ORSI #2 metadata) ---------
+    # Consumed by coverage_diagnostics.coverage_certificate() so the
+    # false-forced rate stamps every standard report.
+    import json
+    from pathlib import Path
+    sidecar = {
+        "false_forced_cells": ff,
+        "forced_cells_standard_sampler": int(nF),
+        "honest_forced_cells": int(honest_forced),
+        "false_forced_rate":
+            float(ff) / float(nF) if nF > 0 else 0.0,
+        "witnesses_used": int(len(witnesses)),
+        "scope_note":
+            "lower bound — more adversarial witnesses would reveal "
+            "more false-forced.",
+    }
+    Path("rwc2_certificate.json").write_text(
+        json.dumps(sidecar, indent=2))
+    print("Sidecar written: rwc2_certificate.json")
+
 
 if __name__ == "__main__":
     main()

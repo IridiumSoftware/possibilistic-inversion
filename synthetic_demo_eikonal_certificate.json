@@ -1,0 +1,127 @@
+{
+  "label": "synthetic_demo_eikonal (FMM, nonlinear)",
+  "ensemble_size": 80,
+  "grid_shape": [
+    40,
+    40
+  ],
+  "eps_deadband_kms": 0.04,
+  "decomposition": {
+    "forced_high_cells": 130,
+    "forced_low_cells": 108,
+    "forced_quiet_cells": 0,
+    "measure_dependent_cells": 1362
+  },
+  "interval_width_kms": {
+    "mean": 2.420158609724786,
+    "median": 2.306881716633233,
+    "max": 6.906790117044748
+  },
+  "ensemble_diagnostics": {
+    "feasible_set_diameter_kms_rms": 1.2317997622515195,
+    "principal_diameter_kms_rms": 1.1472712937538079,
+    "leading_singular_values": [
+      96.57709461484183,
+      90.26023564337527,
+      85.54635628021117,
+      84.73903326728876,
+      83.45469410767359
+    ],
+    "leading_explained_variance_ratio": [
+      0.15553949381353574,
+      0.13585803693444193,
+      0.12203810105651929,
+      0.11974555996606699,
+      0.11614324295783653
+    ],
+    "smoothness_kms_per_step": {
+      "mean": 1.158264652298624,
+      "std": 0.08330157407424149,
+      "min": 1.02634505713806,
+      "max": 1.3093792907118988
+    }
+  },
+  "coverage": {
+    "rwc1_curve": {
+      "Ns": [
+        4,
+        6,
+        9,
+        13,
+        18,
+        25,
+        34,
+        46,
+        62,
+        84,
+        112,
+        145,
+        190,
+        250,
+        320,
+        396
+      ],
+      "forced_sizes": [
+        670.6875,
+        502.5,
+        379.125,
+        294.125,
+        232.0,
+        183.5625,
+        150.625,
+        127.1875,
+        110.875,
+        95.8125,
+        84.875,
+        78.125,
+        73.125,
+        69.125,
+        65.5625,
+        64.0
+      ],
+      "false_forced_strict": [
+        80.375,
+        55.25,
+        38.0625,
+        28.875,
+        21.875,
+        16.9375,
+        13.3125,
+        11.25,
+        10.25,
+        8.875,
+        7.3125,
+        6.1875,
+        5.5,
+        4.5,
+        3.3125,
+        3.0
+      ],
+      "false_forced_res": [
+        43.125,
+        28.0625,
+        19.375,
+        14.3125,
+        10.9375,
+        8.25,
+        6.25,
+        5.1875,
+        4.875,
+        4.1875,
+        3.1875,
+        2.4375,
+        1.875,
+        1.0,
+        0.1875,
+        0.0
+      ],
+      "stabilization_N": 250,
+      "verdict_false_forced_eliminated": true,
+      "verdict_forced_set_converging": true
+    },
+    "rwc1_stabilized": 250,
+    "rwc2_false_forced_rate": 0.4117647058823529,
+    "rwc2_status": "fail"
+  },
+  "schema_version": "1.0"
+}

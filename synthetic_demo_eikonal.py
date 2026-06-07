@@ -259,6 +259,34 @@ def main():
     fig.savefig("possibilistic_decomposition_eikonal.png", dpi=130)
     print("\nFigure written: possibilistic_decomposition_eikonal.png")
 
+    # ---- standard reporting layer (coverage_diagnostics) ------------------
+    # ORSI #2/#4/#6: ship coverage certificate + standard report alongside
+    # the demo figure. RWC-1 curve + RWC-2 false-forced rate folded in if
+    # their sidecar JSON files are present.
+    import coverage_diagnostics as cd
+    rwc1 = cd.read_json_if_present("rwc1_coverage_curve.json")
+    rwc2 = cd.read_json_if_present("rwc2_certificate.json")
+    cert = cd.coverage_certificate(
+        feasible, bg, eps=EPS,
+        coverage_curve=rwc1,
+        false_forced_rate=(rwc2 or {}).get("false_forced_rate"),
+        label="synthetic_demo_eikonal (FMM, nonlinear)",
+    )
+    cd.write_certificate(cert, "synthetic_demo_eikonal_certificate.json")
+    cd.plot_three_maps_and_width(
+        a_min, a_max, eps=EPS,
+        coverage_curve=rwc1,
+        false_forced_rate=(rwc2 or {}).get("false_forced_rate"),
+        out_path="synthetic_demo_eikonal_report.png",
+        title="Possibilistic decomposition - Eikonal (FMM) "
+              "(standard report)",
+    )
+    print(f"Certificate written: synthetic_demo_eikonal_certificate.json "
+          f"(ensemble {cert['ensemble_size']}, RWC-1 stabilized at N="
+          f"{cert['coverage']['rwc1_stabilized']}, RWC-2 status="
+          f"{cert['coverage']['rwc2_status']})")
+    print("Standard report:     synthetic_demo_eikonal_report.png")
+
 
 if __name__ == "__main__":
     main()

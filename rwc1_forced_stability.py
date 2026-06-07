@@ -220,6 +220,26 @@ def report_and_plot(sched, f_size, ff_strict, ff_res, churn):
     plt.close(fig)
     print("\nFigure written: rwc1_forced_stability.png")
 
+    # ---- sidecar JSON for coverage_diagnostics (ORSI #2 metadata) ---------
+    # Consumed by coverage_diagnostics.coverage_certificate() to populate the
+    # coverage curve in every standard report.
+    import json
+    from pathlib import Path
+    sidecar = {
+        "Ns": [int(n) for n in sched],
+        "forced_sizes": [float(x) for x in fs_m],
+        "false_forced_strict": [float(x) for x in ffs_m],
+        "false_forced_res": [float(x) for x in ffr_m],
+        "stabilization_N":
+            int(clear) if clear is not None else None,
+        "verdict_false_forced_eliminated": bool(ffr_end <= 1.0),
+        "verdict_forced_set_converging":
+            bool(decel < 0.35 and churn_end < 0.06 * fs_m[-1]),
+    }
+    Path("rwc1_coverage_curve.json").write_text(
+        json.dumps(sidecar, indent=2))
+    print("Sidecar written: rwc1_coverage_curve.json")
+
 
 if __name__ == "__main__":
     print("RWC-1 — forced-set stability under coverage expansion")
