@@ -259,21 +259,21 @@ def main():
     fig.savefig("possibilistic_decomposition_eikonal.png", dpi=130)
     print("\nFigure written: possibilistic_decomposition_eikonal.png")
 
-    # ---- standard reporting layer (coverage_diagnostics) ------------------
+    # ---- standard reporting layer (posdec) --------------------------------
     # ORSI #2/#4/#6: ship coverage certificate + standard report alongside
     # the demo figure. RWC-1 curve + RWC-2 false-forced rate folded in if
     # their sidecar JSON files are present.
-    import coverage_diagnostics as cd
-    rwc1 = cd.read_json_if_present("rwc1_coverage_curve.json")
-    rwc2 = cd.read_json_if_present("rwc2_certificate.json")
-    cert = cd.coverage_certificate(
+    import posdec
+    rwc1 = posdec.read_json_if_present("rwc1_coverage_curve.json")
+    rwc2 = posdec.read_json_if_present("rwc2_certificate.json")
+    cert = posdec.coverage_certificate(
         feasible, bg, eps=EPS,
         coverage_curve=rwc1,
         false_forced_rate=(rwc2 or {}).get("false_forced_rate"),
         label="synthetic_demo_eikonal (FMM, nonlinear)",
     )
-    cd.write_certificate(cert, "synthetic_demo_eikonal_certificate.json")
-    cd.plot_three_maps_and_width(
+    posdec.write_certificate(cert, "synthetic_demo_eikonal_certificate.json")
+    posdec.plot_three_maps_and_width(
         a_min, a_max, eps=EPS,
         coverage_curve=rwc1,
         false_forced_rate=(rwc2 or {}).get("false_forced_rate"),

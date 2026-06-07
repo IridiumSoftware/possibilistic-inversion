@@ -1,0 +1,199 @@
+{
+  "baseline_forced_high": 29,
+  "baseline_forced_low": 47,
+  "baseline_measure_dependent": 1524,
+  "velocity_floor_sweep": [
+    {
+      "vp_floor": 2.0,
+      "n_kept": 396,
+      "forced_high_cells": 29,
+      "forced_low_cells": 47,
+      "measure_dependent_cells": 1524,
+      "jaccard_forced_high": 1.0,
+      "jaccard_forced_low": 1.0,
+      "jaccard_measure_dependent": 1.0
+    },
+    {
+      "vp_floor": 2.25,
+      "n_kept": 299,
+      "forced_high_cells": 30,
+      "forced_low_cells": 55,
+      "measure_dependent_cells": 1515,
+      "jaccard_forced_high": 0.9666666666666667,
+      "jaccard_forced_low": 0.8545454545454545,
+      "jaccard_measure_dependent": 0.9940944881889764
+    },
+    {
+      "vp_floor": 2.5,
+      "n_kept": 233,
+      "forced_high_cells": 35,
+      "forced_low_cells": 65,
+      "measure_dependent_cells": 1500,
+      "jaccard_forced_high": 0.8285714285714286,
+      "jaccard_forced_low": 0.7230769230769231,
+      "jaccard_measure_dependent": 0.984251968503937
+    },
+    {
+      "vp_floor": 2.75,
+      "n_kept": 127,
+      "forced_high_cells": 47,
+      "forced_low_cells": 86,
+      "measure_dependent_cells": 1467,
+      "jaccard_forced_high": 0.6170212765957447,
+      "jaccard_forced_low": 0.5465116279069767,
+      "jaccard_measure_dependent": 0.9625984251968503
+    },
+    {
+      "vp_floor": 3.0,
+      "n_kept": 56,
+      "forced_high_cells": 107,
+      "forced_low_cells": 146,
+      "measure_dependent_cells": 1347,
+      "jaccard_forced_high": 0.27102803738317754,
+      "jaccard_forced_low": 0.3219178082191781,
+      "jaccard_measure_dependent": 0.8838582677165354
+    },
+    {
+      "vp_floor": 3.25,
+      "n_kept": 28,
+      "forced_high_cells": 197,
+      "forced_low_cells": 238,
+      "measure_dependent_cells": 1165,
+      "jaccard_forced_high": 0.14720812182741116,
+      "jaccard_forced_low": 0.19747899159663865,
+      "jaccard_measure_dependent": 0.7644356955380578
+    },
+    {
+      "vp_floor": 3.5,
+      "n_kept": 5,
+      "forced_high_cells": 410,
+      "forced_low_cells": 506,
+      "measure_dependent_cells": 684,
+      "jaccard_forced_high": 0.07073170731707316,
+      "jaccard_forced_low": 0.09288537549407115,
+      "jaccard_measure_dependent": 0.44881889763779526
+    }
+  ],
+  "ceiling_saturation": {
+    "vp_max_kms": 9.0,
+    "tol_kms": 0.05,
+    "members_touching_ceiling": 396,
+    "fraction": 1.0
+  },
+  "smoothness_sweep": [
+    {
+      "percentile": 100,
+      "smoothness_thresh": 1.4999177268191508,
+      "n_kept": 396,
+      "forced_high_cells": 29,
+      "forced_low_cells": 47,
+      "measure_dependent_cells": 1524,
+      "jaccard_forced_high": 1.0,
+      "jaccard_forced_low": 1.0,
+      "jaccard_measure_dependent": 1.0,
+      "random_control": {
+        "jaccard_forced_high_mean": 1.0,
+        "jaccard_forced_low_mean": 1.0,
+        "jaccard_measure_dependent_mean": 1.0
+      }
+    },
+    {
+      "percentile": 90,
+      "smoothness_thresh": 1.358377965667381,
+      "n_kept": 356,
+      "forced_high_cells": 32,
+      "forced_low_cells": 52,
+      "measure_dependent_cells": 1516,
+      "jaccard_forced_high": 0.90625,
+      "jaccard_forced_low": 0.9038461538461539,
+      "jaccard_measure_dependent": 0.994750656167979,
+      "random_control": {
+        "jaccard_forced_high_mean": 0.9933333333333334,
+        "jaccard_forced_low_mean": 0.9916666666666666,
+        "jaccard_measure_dependent_mean": 0.9996062992125985
+      }
+    },
+    {
+      "percentile": 75,
+      "smoothness_thresh": 1.2635143761152825,
+      "n_kept": 297,
+      "forced_high_cells": 33,
+      "forced_low_cells": 59,
+      "measure_dependent_cells": 1508,
+      "jaccard_forced_high": 0.8787878787878788,
+      "jaccard_forced_low": 0.7966101694915254,
+      "jaccard_measure_dependent": 0.989501312335958,
+      "random_control": {
+        "jaccard_forced_high_mean": 0.9737634408602152,
+        "jaccard_forced_low_mean": 0.9639803921568628,
+        "jaccard_measure_dependent_mean": 0.9982939632545932
+      }
+    },
+    {
+      "percentile": 60,
+      "smoothness_thresh": 1.2153584914756286,
+      "n_kept": 238,
+      "forced_high_cells": 41,
+      "forced_low_cells": 69,
+      "measure_dependent_cells": 1490,
+      "jaccard_forced_high": 0.7073170731707317,
+      "jaccard_forced_low": 0.6811594202898551,
+      "jaccard_measure_dependent": 0.9776902887139107,
+      "random_control": {
+        "jaccard_forced_high_mean": 0.9491666666666667,
+        "jaccard_forced_low_mean": 0.9147551723156606,
+        "jaccard_measure_dependent_mean": 0.9960629921259843
+      }
+    },
+    {
+      "percentile": 50,
+      "smoothness_thresh": 1.1549425070348558,
+      "n_kept": 198,
+      "forced_high_cells": 47,
+      "forced_low_cells": 79,
+      "measure_dependent_cells": 1474,
+      "jaccard_forced_high": 0.6170212765957447,
+      "jaccard_forced_low": 0.5949367088607594,
+      "jaccard_measure_dependent": 0.9671916010498688,
+      "random_control": {
+        "jaccard_forced_high_mean": 0.9066043499511242,
+        "jaccard_forced_low_mean": 0.9181659125188537,
+        "jaccard_measure_dependent_mean": 0.9952755905511811
+      }
+    },
+    {
+      "percentile": 40,
+      "smoothness_thresh": 1.1267139349039847,
+      "n_kept": 159,
+      "forced_high_cells": 57,
+      "forced_low_cells": 87,
+      "measure_dependent_cells": 1456,
+      "jaccard_forced_high": 0.5087719298245614,
+      "jaccard_forced_low": 0.5402298850574713,
+      "jaccard_measure_dependent": 0.9553805774278216,
+      "random_control": {
+        "jaccard_forced_high_mean": 0.8852808205393593,
+        "jaccard_forced_low_mean": 0.8729671877654257,
+        "jaccard_measure_dependent_mean": 0.9929133858267717
+      }
+    },
+    {
+      "percentile": 25,
+      "smoothness_thresh": 1.0924807697522025,
+      "n_kept": 99,
+      "forced_high_cells": 81,
+      "forced_low_cells": 128,
+      "measure_dependent_cells": 1391,
+      "jaccard_forced_high": 0.35802469135802467,
+      "jaccard_forced_low": 0.3671875,
+      "jaccard_measure_dependent": 0.9127296587926509,
+      "random_control": {
+        "jaccard_forced_high_mean": 0.7725385188543084,
+        "jaccard_forced_low_mean": 0.8160300468806996,
+        "jaccard_measure_dependent_mean": 0.9872703412073491
+      }
+    }
+  ],
+  "eps_deadband_kms": 0.04,
+  "ensemble_size": 396
+}
