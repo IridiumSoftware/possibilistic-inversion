@@ -387,7 +387,38 @@ synthetic run failing honestly; each is now documented in the script headers.
   forced cells \emph{false-forced} (a feasible, equally-smooth, opposite-sign
   model exists). A forced claim is honest only with its coverage-adequacy curve
   attached.
+\item \textbf{The Tier-1 admissibility bounds are themselves load-bearing
+  --- and the dependence is now measured.} The possibilistic layer is defined
+  relative to a hard admissibility envelope
+  (\file{geophysical\_invariants.md}): a velocity range, a positivity
+  condition, a smoothness preference enforced by the sampler. The split is
+  only as data-forced as those bounds are data-independent. The natural worry
+  --- raised by ORSI propagation as ``smoothness sneaks regularization into
+  the possibilistic layer'' --- is now answered quantitatively
+  (\file{sensitivity\_tier1.py}, Figure~\ref{fig:sensitivity}). Tightening
+  the velocity floor $V_{P,\min}$ from $2.0$ to $3.0$ km/s drops the
+  forced-high Jaccard to $0.27$; the $V_{P,\max} = 9$ km/s ceiling is
+  saturated (every member touches it); and the smoothness preference is
+  load-bearing --- at the $25\%$ smoothness percentile the smoothness-kept
+  ensemble gives $J(\textrm{forced-high}) = 0.36$ versus $J = 0.77$ for a
+  random-size-matched control, a $\sim$0.4 Jaccard gap that is
+  \emph{specifically} the smoothness preference rather than the generic
+  smaller-sample narrowing. The Tier-1 envelope is therefore reported
+  alongside the coverage-adequacy curve, not assumed.
 \end{enumerate}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{sensitivity_tier1.png}
+\caption{Tier-1 sensitivity sweep on the 396-member RWC-1 ensemble. Top
+row: velocity-floor sweep (the $V_{P,\max}$ ceiling is saturated at
+$100\%$ and not separately sweepable). Bottom row: smoothness-percentile
+sweep with a random-subset control of the same $N$. The smoothness-kept
+Jaccard sits below the random-control curve at every $p$, identifying the
+smoothness preference as a load-bearing admissibility choice --- not
+merely a sampler convenience.}
+\label{fig:sensitivity}
+\end{figure}
 
 These are not patches. They are the methodology's anti-anchoring
 discipline---the same one that, in the Closure programme, keeps a derivation
@@ -453,6 +484,15 @@ already engaging. Let us solve that part together.''
   point and so over-state the forced set. The decomposition layer is
   sound---what is coverage-limited is the feasible-set \emph{sampling} that
   feeds it; a forced claim must travel with its coverage-adequacy curve.
+\item The forced/measure-dependent split is \textbf{conditional on the
+  Tier-1 admissibility bounds}. Both the velocity envelope (the
+  $V_{P,\max} = 9$ km/s ceiling is saturated and the floor is binding well
+  above the methodology's generous default) and the sampler's smoothness
+  preference shift the decomposition quantifiably (\S6 item 7,
+  Figure~\ref{fig:sensitivity}, \file{sensitivity\_tier1.py}). A
+  published forced/measure-dependent map travels with its Tier-1 envelope
+  \emph{and} its coverage-adequacy curve; either, varied within a
+  plausible range, changes the result.
 \end{itemize}
 
 \section*{Appendix A --- The split as an instrument}

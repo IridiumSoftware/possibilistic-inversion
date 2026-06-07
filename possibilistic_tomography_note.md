@@ -320,6 +320,31 @@ run failing honestly; each is now documented in the script headers.
    stress test finds ~41% of forced cells *false-forced* (a feasible,
    equally-smooth, opposite-sign model exists). A forced claim is honest only
    with its coverage-adequacy curve attached.
+7. **The Tier-1 admissibility bounds are themselves load-bearing — and the
+   dependence is now measured.** The possibilistic layer is defined relative
+   to a hard admissibility envelope (`geophysical_invariants.md`): a velocity
+   range, a positivity condition, a smoothness preference enforced by the
+   sampler. The split is only as data-forced as those bounds are
+   data-independent. The natural worry — raised by ORSI propagation as
+   "smoothness sneaks regularization into the possibilistic layer" — is now
+   answered quantitatively (`sensitivity_tier1.py`, Figure 8). Tightening the
+   velocity floor `VP_MIN` from 2.0 to 3.0 km/s drops the forced-high Jaccard
+   to 0.27; the `VP_MAX = 9` km/s ceiling is saturated (every member touches
+   it); and the smoothness preference is load-bearing — at 25% smoothness
+   percentile the smoothness-kept ensemble gives J(forced-high) = 0.36 versus
+   J = 0.77 for a random-size-matched control, a ~0.4 Jaccard gap that is
+   *specifically* the smoothness preference rather than the generic
+   smaller-sample narrowing. The Tier-1 envelope is therefore reported
+   alongside the coverage-adequacy curve, not assumed.
+
+![Figure 8. Tier-1 sensitivity. Top: tightening the velocity floor VP_MIN shifts the forced sets quickly (worst Jaccard 0.07 at VP_MIN = 3.5). Bottom: at every percentile p, the smoothness-kept ensemble (filled) sits well below the same-size random control (open), isolating the smoothness preference from generic sub-selection.](sensitivity_tier1.png)
+
+*Figure 8. Tier-1 sensitivity sweep on the 396-member RWC-1 ensemble. Top
+row: velocity-floor sweep (the VP_MAX ceiling is saturated at 100% and not
+separately sweepable). Bottom row: smoothness-percentile sweep with a
+random-subset control of the same N. The smoothness-kept Jaccard sits below
+the random-control curve at every p, identifying the smoothness preference
+as a load-bearing admissibility choice — not merely a sampler convenience.*
 
 These are not patches. They are the methodology's anti-anchoring discipline —
 the same one that, in the Closure programme, keeps a derivation from quietly
@@ -385,6 +410,14 @@ already engaging. Let us solve that part together."
   so over-state the forced set. The decomposition layer is sound — what is
   coverage-limited is the feasible-set *sampling* that feeds it; a forced claim
   must travel with its coverage-adequacy curve.
+- The forced/measure-dependent split is **conditional on the Tier-1
+  admissibility bounds**. Both the velocity envelope (the `VP_MAX = 9` km/s
+  ceiling is saturated and the floor is binding well above the methodology's
+  generous default) and the sampler's smoothness preference shift the
+  decomposition quantifiably (§6.7, Figure 8, `sensitivity_tier1.py`). A
+  published forced/measure-dependent map travels with its Tier-1 envelope
+  *and* its coverage-adequacy curve; either, varied within a plausible range,
+  changes the result.
 
 ---
 
