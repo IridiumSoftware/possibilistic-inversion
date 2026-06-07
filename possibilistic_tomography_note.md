@@ -325,9 +325,9 @@ run failing honestly; each is now documented in the script headers.
    to a hard admissibility envelope (`geophysical_invariants.md`): a velocity
    range, a positivity condition, a smoothness preference enforced by the
    sampler. The split is only as data-forced as those bounds are
-   data-independent. The natural worry — raised by ORSI propagation as
-   "smoothness sneaks regularization into the possibilistic layer" — is now
-   answered quantitatively (`sensitivity_tier1.py`, Figure 8). Tightening the
+   data-independent. The natural worry that the smoothness preference sneaks
+   regularization into the possibilistic layer is now answered quantitatively
+   (`sensitivity_tier1.py`, Figure 8). Tightening the
    velocity floor `VP_MIN` from 2.0 to 3.0 km/s drops the forced-high Jaccard
    to 0.27; the `VP_MAX = 9` km/s ceiling is saturated (every member touches
    it); and the smoothness preference is load-bearing — at 25% smoothness
@@ -418,6 +418,18 @@ already engaging. Let us solve that part together."
   published forced/measure-dependent map travels with its Tier-1 envelope
   *and* its coverage-adequacy curve; either, varied within a plausible range,
   changes the result.
+
+---
+
+## Acknowledgements
+
+The Tier-1 sensitivity finding (§6.7, Figure 8) is owed to **Brian Crabtree**,
+whose ORSI / ORSIΩ propagation pass on the shipped artifact named the
+smoothness-as-Tier-1-admissibility concern with enough specificity to be
+answered quantitatively. The coverage-certificate discipline (§6.6),
+modular decomposition library (`posdec`), and the linear-case exact
+regression are likewise direct consequences of his propagation steps. The
+errors that survived are mine.
 
 ---
 

@@ -393,8 +393,8 @@ synthetic run failing honestly; each is now documented in the script headers.
   (\file{geophysical\_invariants.md}): a velocity range, a positivity
   condition, a smoothness preference enforced by the sampler. The split is
   only as data-forced as those bounds are data-independent. The natural worry
-  --- raised by ORSI propagation as ``smoothness sneaks regularization into
-  the possibilistic layer'' --- is now answered quantitatively
+  that the smoothness preference sneaks regularization into the possibilistic
+  layer is now answered quantitatively
   (\file{sensitivity\_tier1.py}, Figure~\ref{fig:sensitivity}). Tightening
   the velocity floor $V_{P,\min}$ from $2.0$ to $3.0$ km/s drops the
   forced-high Jaccard to $0.27$; the $V_{P,\max} = 9$ km/s ceiling is
@@ -494,6 +494,16 @@ already engaging. Let us solve that part together.''
   \emph{and} its coverage-adequacy curve; either, varied within a
   plausible range, changes the result.
 \end{itemize}
+
+\section*{Acknowledgements}
+
+The Tier-1 sensitivity finding (\S6 item 7, Figure~\ref{fig:sensitivity})
+is owed to \textbf{Brian Crabtree}, whose ORSI / ORSI$\Omega$ propagation
+pass on the shipped artifact named the smoothness-as-Tier-1-admissibility
+concern with enough specificity to be answered quantitatively. The
+coverage-certificate discipline (\S6 item 6), modular decomposition library
+(\file{posdec}), and the linear-case exact regression are likewise direct
+consequences of his propagation steps. The errors that survived are mine.
 
 \section*{Appendix A --- The split as an instrument}
 
