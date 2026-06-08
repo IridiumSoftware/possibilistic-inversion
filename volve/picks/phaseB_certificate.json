@@ -1,0 +1,57 @@
+{
+  "label": "volve_15_9_F_15A_F_11_T2_phaseB",
+  "schema_version": "phaseB.1.0",
+  "phaseA_corrections_applied": [
+    "anomaly baseline = wireline-sonic linear trend (phase A2 fix)",
+    "sonic validation along actual bore trajectory (phase A3 fix)",
+    "n_members raised 12 -> 30 (toward triad's 80 ask)",
+    "n_gn_iters raised 2 -> 3",
+    "looser prior: smooth corr 350 -> 700 m, envelope 1.5-5.5 -> 1.3-6.0 km/s"
+  ],
+  "geometry": {
+    "n_picks_joint": 2031,
+    "grid_nz": 116,
+    "grid_nw": 69,
+    "grid_cell_m": 40.0
+  },
+  "ensemble": {
+    "n_members": 30,
+    "n_gn_iters_per_member": 3,
+    "noise_rms_target_s": 0.03,
+    "noise_rms_achieved_median_ms": 144.23211196403435,
+    "elapsed_seconds": 3203.6632997989655,
+    "smooth_correlation_m": 700.0,
+    "vp_envelope_kms": [
+      1.3,
+      6.0
+    ]
+  },
+  "decomposition_vs_sonic_baseline": {
+    "eps_kms": 0.1,
+    "forced_high_pct": 0.5747126436781609,
+    "forced_low_pct": 44.252873563218394,
+    "forced_quiet_pct": 23.150924537731136,
+    "measure_dependent_pct": 32.021489255372316
+  },
+  "sonic_along_bore": {
+    "f15a": {
+      "n_points": 216,
+      "inside_count": 123,
+      "inside_pct": 56.94444444444444
+    },
+    "f11t2": {
+      "n_points": 160,
+      "inside_count": 99,
+      "inside_pct": 61.875
+    }
+  },
+  "holdout_calibration": {
+    "n_test": 413,
+    "inside_count": 131,
+    "inside_pct": 31.719128329297817,
+    "residual_mean_ms": 38.412072135798724,
+    "residual_median_ms": 35.46203629244249,
+    "residual_rms_ms": 134.43304138619584,
+    "interval_width_median_ms": 24.212028955310714
+  }
+}
