@@ -1,0 +1,91 @@
+{
+  "snapshot": "volve/picks/phase5_snapshot.npz",
+  "A2_baseline_sweep": {
+    "rows": [
+      {
+        "baseline": "ensemble-mean (original)",
+        "forced_high_pct": 0.9370314842578711,
+        "forced_low_pct": 0.7996001999000499,
+        "forced_quiet_pct": 79.16041979010495,
+        "measure_dep_pct": 19.10294852573713
+      },
+      {
+        "baseline": "wireline-sonic",
+        "forced_high_pct": 0.3873063468265867,
+        "forced_low_pct": 43.853073463268366,
+        "forced_quiet_pct": 22.01399300349825,
+        "measure_dep_pct": 33.7456271864068
+      },
+      {
+        "baseline": "fixed prior-shape",
+        "forced_high_pct": 0.9370314842578711,
+        "forced_low_pct": 0.7746126936531734,
+        "forced_quiet_pct": 79.08545727136432,
+        "measure_dep_pct": 19.202898550724637
+      },
+      {
+        "baseline": "leave-one-out member 0",
+        "forced_high_pct": 0.9120439780109945,
+        "forced_low_pct": 0.8120939530234883,
+        "forced_quiet_pct": 79.12293853073463,
+        "measure_dep_pct": 19.152923538230883
+      }
+    ],
+    "forced_quiet_pct_range": [
+      22.01399300349825,
+      79.16041979010495
+    ],
+    "verdict": "TAUTOLOGICAL"
+  },
+  "A3_sonic_along_bore": {
+    "f15a_inside_count": 70,
+    "f15a_n_points": 216,
+    "f15a_inside_pct": 32.407407407407405,
+    "f11t2_inside_count": 62,
+    "f11t2_n_points": 160,
+    "f11t2_inside_pct": 38.75,
+    "verdict": "BORE-TRAJECTORY FIX IMPROVES BUT DOES NOT RESOLVE"
+  },
+  "A4_illumination_alignment": {
+    "by_class": {
+      "-2": {
+        "n": 64,
+        "mean_illumination": 103.171875,
+        "median_illumination": 45.0,
+        "max_illumination": 841.0
+      },
+      "0": {
+        "n": 6336,
+        "mean_illumination": 32.40830176767677,
+        "median_illumination": 0.0,
+        "max_illumination": 3274.0
+      },
+      "1": {
+        "n": 1529,
+        "mean_illumination": 123.75801177240027,
+        "median_illumination": 56.0,
+        "max_illumination": 1579.0
+      },
+      "2": {
+        "n": 75,
+        "mean_illumination": 67.09333333333333,
+        "median_illumination": 53.0,
+        "max_illumination": 485.0
+      }
+    },
+    "pearson_md_vs_illumination": 0.23007582867733484,
+    "pearson_quiet_vs_illumination": -0.23182198366325515,
+    "verdict": "PARTIAL: r(md,ill)=+0.23, r(quiet,ill)=-0.23"
+  },
+  "A5_ensemble_diversity": {
+    "leading_sv_pct": 16.33684695563382,
+    "top5_sv_pct": 61.22888992660478,
+    "effective_dims_90": 10,
+    "pairwise_distance_kms": {
+      "min": 0.214084982363323,
+      "mean": 0.27780679641522477,
+      "max": 0.3504177673081904
+    },
+    "verdict": "GENUINE DIVERSITY (10 eff dims)"
+  }
+}

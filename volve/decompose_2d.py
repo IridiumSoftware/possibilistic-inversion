@@ -34,6 +34,7 @@ F11T2_LAS = "volve/data/15_9-F-11 T2/05.PETROPHYSICAL INTERPRETATION/" \
             "WLC_PETRO_COMPUTED_INPUT_1.LAS"
 OUT_CERT = "volve/picks/phase5_certificate.json"
 OUT_FIG = "volve_phase5_decomposition.png"
+OUT_NPZ = "volve/picks/phase5_snapshot.npz"
 
 
 def _vp_from_dt(las, dt_curve, depth_curve="MD"):
@@ -310,6 +311,26 @@ def main():
     Path(OUT_CERT).parent.mkdir(parents=True, exist_ok=True)
     Path(OUT_CERT).write_text(json.dumps(cert, indent=2))
     print(f"certificate: {OUT_CERT}")
+
+    # Snapshot for phase-A diagnostics (baseline sweep, sonic
+    # trajectory, illumination, ensemble diversity).
+    np.savez_compressed(
+        OUT_NPZ,
+        members_vp_kms=members_vp,
+        grid_cell_m=np.array([grid.cell_m]),
+        grid_w0=np.array([grid.w0]),
+        grid_z0=np.array([grid.z0]),
+        grid_nw=np.array([grid.nw]),
+        grid_nz=np.array([grid.nz]),
+        cls=dec["cls"],
+        anom_min=dec["anom_min"],
+        anom_max=dec["anom_max"],
+        trend_z=dec["trend_z"],
+        train_mask=train_mask,
+        f15a_wellhead_w=np.array([pp.f15a_wellhead_w]),
+        f11t2_wellhead_w=np.array([pp.f11t2_wellhead_w]),
+    )
+    print(f"snapshot:    {OUT_NPZ}")
     print(f"\ntotal elapsed: {time.time() - t0:.0f} s")
 
 
