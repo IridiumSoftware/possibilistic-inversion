@@ -102,11 +102,12 @@ VSPNI_FILES = {
 class Geometry:
     """Full geometry of a VSP component file, decoded from headers.
 
-    The traces in `field_records` align element-wise with `source_xy`,
-    `receiver_xy`, `receiver_elev_m`. So row i is "FieldRecord
-    field_records[i], source at source_xy[i], receiver at
-    (receiver_xy[i], receiver_elev_m[i])." Use this layout to derive
-    pick tables and per-trace metadata downstream.
+    The arrays align element-wise: row i is "the i-th GOOD trace in the
+    SEG-Y file, originally at index original_trace_idx[i], with
+    FieldRecord field_records[i], source at source_xy[i], receiver at
+    (receiver_xy[i], receiver_elev_m[i])." When drop_bad_headers is in
+    effect, `n_traces` is the number of GOOD traces and `original_trace_idx`
+    indexes back into the underlying SEG-Y file for byte-accurate reads.
     """
     n_traces: int
     n_samples: int
@@ -117,6 +118,7 @@ class Geometry:
     receiver_xy: np.ndarray         # (n_traces, 2) float metres
     receiver_elev_m: np.ndarray     # (n_traces,) float, m below ElevationScalar datum
     wellhead_xy_m: np.ndarray       # (2,) median of receiver_xy
+    original_trace_idx: np.ndarray = None  # (n_traces,) int - SEG-Y file index
 
     @property
     def record_length_s(self) -> float:
@@ -144,11 +146,21 @@ def _decode_coord_scalar(scalar: int) -> float:
     return 1.0 / float(-scalar)
 
 
-def load_geometry_from_segy(path: str) -> Geometry:
+INT32_SENTINEL = -2147483647   # signed-int32 minimum used as "missing" marker
+
+
+def load_geometry_from_segy(path: str,
+                            drop_bad_headers: bool = True) -> Geometry:
     """Decode geometry from a single SEG-Y component file. This is the
     authoritative source for any downstream computation; the documentary
     constants above are observed values from one specific bundle and may
-    NOT match other VSP files even within the same well."""
+    NOT match other VSP files even within the same well.
+
+    If `drop_bad_headers` (default True), traces whose source coordinates
+    are the signed-int32 minimum (-2147483647) - a "missing/invalid"
+    sentinel that the Volve 15/9-F-11 T2 VSP files use on shots where
+    the navigation system failed to log position - are excluded from
+    the returned Geometry. Set to False to inspect them."""
     p = Path(path)
     if not p.exists():
         raise FileNotFoundError(p)
@@ -178,6 +190,23 @@ def load_geometry_from_segy(path: str) -> Geometry:
             gy[i] = h[segyio.TraceField.GroupY]
             re[i] = h[segyio.TraceField.ReceiverGroupElevation]
 
+    original_idx = np.arange(n, dtype=int)
+    if drop_bad_headers:
+        good = (sx != INT32_SENTINEL) & (sy != INT32_SENTINEL) \
+               & (gx != INT32_SENTINEL) & (gy != INT32_SENTINEL)
+        if not good.all():
+            n_drop = int((~good).sum())
+            import warnings
+            warnings.warn(
+                f"Dropped {n_drop} of {n} traces with sentinel header "
+                f"values (likely navigation failures).")
+        fr, tn = fr[good], tn[good]
+        sx, sy = sx[good], sy[good]
+        gx, gy = gx[good], gy[good]
+        re = re[good]
+        original_idx = original_idx[good]
+        n = int(good.sum())
+
     src_xy = np.column_stack([sx, sy]) * coord_scale
     grp_xy = np.column_stack([gx, gy]) * coord_scale
     rec_e = re * elev_scale
@@ -193,6 +222,7 @@ def load_geometry_from_segy(path: str) -> Geometry:
         receiver_xy=grp_xy,
         receiver_elev_m=rec_e,
         wellhead_xy_m=wellhead,
+        original_trace_idx=original_idx,
     )
 
 

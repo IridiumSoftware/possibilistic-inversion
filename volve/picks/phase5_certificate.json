@@ -1,0 +1,59 @@
+{
+  "label": "volve_15_9_F_15A_F_11_T2_joint_eikonal_2d",
+  "schema_version": "phase5.1.0",
+  "geometry": {
+    "n_picks_joint": 2031,
+    "n_picks_f15a": 1215,
+    "n_picks_f11t2": 816,
+    "wellhead_distance_m": 1070.8692844603822,
+    "grid_nz": 116,
+    "grid_nw": 69,
+    "grid_cell_m": 40.0
+  },
+  "ensemble": {
+    "n_members": 12,
+    "n_gn_iters_per_member": 2,
+    "noise_rms_target_s": 0.03,
+    "noise_rms_achieved_median_ms": 145.63172028722937,
+    "elapsed_seconds": 1241.7631158828735
+  },
+  "decomposition_2d": {
+    "eps_kms": 0.1,
+    "forced_high_pct": 0.9370314842578711,
+    "forced_low_pct": 0.7996001999000499,
+    "measure_dependent_pct": 19.10294852573713,
+    "forced_quiet_pct": 79.16041979010495
+  },
+  "sonic_validation_per_well": [
+    {
+      "well": "F-15A (w=0 m)",
+      "sonic_bin_coverage": "79/116",
+      "sonic_inside_count": 8,
+      "sonic_inside_pct": 10.126582278481013,
+      "signed_error_median_kms": 0.13166113621584952,
+      "signed_error_mean_kms": 0.06450098954594484
+    },
+    {
+      "well": "F-11T2 (w=1071 m)",
+      "sonic_bin_coverage": "50/116",
+      "sonic_inside_count": 5,
+      "sonic_inside_pct": 10.0,
+      "signed_error_median_kms": -0.36466566838741565,
+      "signed_error_mean_kms": -0.2503057027004642
+    }
+  ],
+  "joint_holdout_calibration": {
+    "n_test": 413,
+    "inside_count": 94,
+    "inside_pct": 22.760290556900724,
+    "residual_mean_ms": 38.76657844984685,
+    "residual_median_ms": 36.754990214425746,
+    "residual_rms_ms": 136.52992977695212,
+    "interval_width_median_ms": 21.43661177885314
+  },
+  "scope_notes": [
+    "2D Vp(w, z) joint inversion of both wells' picks; eikonal forward via FMM on a 40 m cell grid; lateral-translation-symmetry trick of phase 4 is not available (Vp now varies laterally). Cost scaled with number of UNIQUE source grid cells, which is ~32 (sources cluster).",
+    "Per-well sonic validation samples the ensemble Vp at the well's w-column on the grid; this assumes the well bore is vertical at that w. For deviated wells this approximation spreads sonic error.",
+    "F-11 T2 sonic LAS uses MD; for now we equate MD with TVD (near-vertical assumption above ~3 km), which contributes to that well's sonic-inside rate."
+  ]
+}

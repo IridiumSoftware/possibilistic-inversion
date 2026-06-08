@@ -140,17 +140,25 @@ def pick_one(trace, dt_s,
 # --- File-level pick ------------------------------------------------------
 
 def pick_file(segy_path, geo, **picker_kwargs) -> List[PickRecord]:
-    """Pick every trace in a SEG-Y file. `geo` is the matching Geometry
-    instance from volve.geometry.load_geometry_from_segy()."""
+    """Pick every GOOD trace in a SEG-Y file. `geo` is the matching
+    Geometry instance from volve.geometry.load_geometry_from_segy()
+    (which has already filtered out bad-header traces). Traces are
+    read by their original file index via geo.original_trace_idx."""
     records: List[PickRecord] = []
     with segyio.open(str(segy_path), "r", ignore_geometry=True) as f:
         dt_s = float(f.samples[1] - f.samples[0]) / 1000.0
         offsets = geo.source_offsets_m()
-        for i in range(f.tracecount):
-            trace = f.trace[i].astype(np.float32)
+        # If geo was loaded without filtering, original_trace_idx is
+        # arange(n) so we still index correctly.
+        idx_array = geo.original_trace_idx
+        if idx_array is None:
+            idx_array = np.arange(geo.n_traces)
+        for i in range(geo.n_traces):
+            file_idx = int(idx_array[i])
+            trace = f.trace[file_idx].astype(np.float32)
             pick_t, quality, flag = pick_one(trace, dt_s, **picker_kwargs)
             records.append(PickRecord(
-                trace_idx=i,
+                trace_idx=file_idx,
                 field_record=int(geo.field_records[i]),
                 trace_number=int(geo.trace_numbers[i]),
                 source_x=float(geo.source_xy[i, 0]),
