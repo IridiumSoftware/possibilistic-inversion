@@ -1,0 +1,34 @@
+{
+  "label": "volve_f15a_nn_mlp_mcdropout",
+  "method": "MLP supervised regression on synthetic eikonal data, MC dropout for uncertainty",
+  "settings": {
+    "n_train": 5000,
+    "n_val": 500,
+    "n_epochs": 80,
+    "batch_size": 64,
+    "lr": 0.001,
+    "dropout_p": 0.2,
+    "mc_dropout_runs": 200,
+    "hidden_layers": [
+      512,
+      256,
+      128
+    ],
+    "n_pick": 1215,
+    "n_bins": 45,
+    "vp_envelope_kms": [
+      1.5,
+      5.5
+    ],
+    "prior_smooth_corr_m": 250.0
+  },
+  "val_loss_final": 0.0063808574341237545,
+  "sonic_calibration": {
+    "sonic_bin_coverage": "45/45",
+    "inside_90pct_band": 3,
+    "inside_95pct_band": 4,
+    "inside_90pct_pct": 6.666666666666667,
+    "inside_95pct_pct": 8.88888888888889
+  },
+  "elapsed_seconds": 94.41006231307983
+}

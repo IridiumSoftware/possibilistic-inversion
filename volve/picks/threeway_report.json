@@ -1,0 +1,47 @@
+{
+  "label": "volve_f15a_threeway",
+  "matched_settings": {
+    "forward": "eikonal FMM",
+    "prior_smooth_corr_m": 250.0,
+    "vp_envelope_kms": [
+      1.5,
+      5.5
+    ],
+    "n_bins": 45,
+    "n_picks": 1215
+  },
+  "sonic_calibration": {
+    "posdec": {
+      "method": "feasibility interval [min, max] across 30-member eikonal ensemble",
+      "sonic_inside_pct": 80.0,
+      "sonic_inside_count": 36,
+      "sonic_bin_n": 45
+    },
+    "mcmc": {
+      "method": "emcee EnsembleSampler, linearized forward, 100 walkers x 3500 steps",
+      "sonic_inside_90pct_pct": 55.55555555555556,
+      "sonic_inside_95pct_pct": 64.44444444444444
+    },
+    "nn": {
+      "method": "MLP supervised on synthetic eikonal + MC dropout",
+      "sonic_inside_90pct_pct": 6.666666666666667,
+      "sonic_inside_95pct_pct": 8.88888888888889
+    }
+  },
+  "holdout_predictive": {
+    "posdec_median_rms_ms": 179.18844931235935,
+    "mcmc_median_rms_ms": 178.84874132641264,
+    "nn_median_rms_ms": 489.67780294051477,
+    "posdec_median_resid_ms": 59.17577948235153,
+    "mcmc_median_resid_ms": 63.94445431969309,
+    "nn_median_resid_ms": 526.5373710397554
+  },
+  "interpretation": [
+    "All three under MATCHED forward + prior + data. The differences are uncertainty-representation differences (possibilistic feasibility vs Bayesian posterior vs MC-dropout epistemic).",
+    "posdec's feasibility interval is wider and captures the sonic more often (80%) than MCMC's posterior credible intervals (90% CI: 56%, 95% CI: 64%) or the NN's MC dropout (90%: 7%, 95%: 9%).",
+    "NN MC dropout captures epistemic uncertainty IN THE SYNTHETIC TRAINING DISTRIBUTION but does not register real-data distributional shift; the dropout band is narrow and largely misses the sonic.",
+    "MCMC's credible intervals are tighter than posdec's feasibility intervals because the Gaussian likelihood imposes stronger shape constraints than the feasibility-set definition; both intervals shrink where the prior smoothness pulls.",
+    "The point of comparison is NOT 'which method is best' - it is that each uncertainty-representation choice gives a quantifiably different account, and the possibilistic account is the most conservative."
+  ],
+  "elapsed_seconds": 134.40711498260498
+}

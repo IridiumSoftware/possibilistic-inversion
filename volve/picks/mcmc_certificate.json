@@ -1,0 +1,26 @@
+{
+  "label": "volve_f15a_mcmc_emcee",
+  "method": "emcee EnsembleSampler on linearized 1D Vp(z)",
+  "settings": {
+    "n_walkers": 100,
+    "n_steps": 3500,
+    "n_burnin": 1000,
+    "n_bins": 45,
+    "noise_sigma_s": 0.025,
+    "vp_envelope_kms": [
+      1.5,
+      5.5
+    ],
+    "prior_smooth_corr_m": 250.0
+  },
+  "samples_size": "250000 x 45",
+  "acceptance_fraction_mean": 0.1324457142857143,
+  "sonic_calibration": {
+    "sonic_bin_coverage": "45/45",
+    "inside_90pct_ci": 25,
+    "inside_95pct_ci": 29,
+    "inside_90pct_pct": 55.55555555555556,
+    "inside_95pct_pct": 64.44444444444444
+  },
+  "elapsed_seconds": 55.20356464385986
+}
