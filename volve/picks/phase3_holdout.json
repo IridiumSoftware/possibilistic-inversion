@@ -1,0 +1,28 @@
+{
+  "label": "volve_15_9_F_15A_holdout_calibration",
+  "split": {
+    "n_train": 972,
+    "n_test": 243,
+    "train_frac": 0.8
+  },
+  "ensemble": {
+    "n_members": 80,
+    "training_rms_median_ms": 175.44357991350978
+  },
+  "calibration": {
+    "n_inside_interval": 0,
+    "n_total": 243,
+    "inside_pct": 0.0,
+    "residual_mean_ms": 140.92063443811088,
+    "residual_median_ms": 122.15433133581932,
+    "residual_std_ms": 124.9305127285011,
+    "residual_rms_ms": 188.3248741431834,
+    "interval_width_mean_ms": 19.15919736292228,
+    "interval_width_median_ms": 19.228138329811408
+  },
+  "scope_notes": [
+    "Calibration is the right yardstick: a 100%-coverage possibilistic forecast should land its interval over the truth on every held-out pick. The actual inside-rate is the honest report.",
+    "Inside-rate well below 100% indicates the ensemble UNDER-STATES uncertainty (or the forward operator is biased), and the forced/measure-dependent split should be read with the matching caveat.",
+    "Train/test split is random with seed 20260607; the test set inherits the same straight-ray modeling-error from the training inversion."
+  ]
+}

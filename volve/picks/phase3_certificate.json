@@ -1,0 +1,46 @@
+{
+  "label": "volve_15_9_F_15A_1D_straight_ray",
+  "schema_version": "phase3.1.0",
+  "geometry": {
+    "n_picks_used": 1215,
+    "depth_grid_n_bins": 45,
+    "depth_grid_bin_thick_m": 70.0,
+    "depth_grid_z_min_m": 0.0,
+    "depth_grid_z_max_m": 3150.0
+  },
+  "ensemble": {
+    "n_members": 80,
+    "noise_rms_target_s": 0.08,
+    "noise_rms_achieved_median_ms": 174.12238670507375,
+    "vp_envelope_kms": [
+      1.5,
+      5.5
+    ],
+    "smoothness_correlation_m": 250.0
+  },
+  "decomposition": {
+    "eps_kms": 0.1,
+    "forced_high_bins": 10,
+    "forced_low_bins": 17,
+    "forced_quiet_bins": 0,
+    "measure_dependent_bins": 18,
+    "total_bins": 45,
+    "forced_high_pct": 22.22222222222222,
+    "forced_low_pct": 37.77777777777778,
+    "measure_dependent_pct": 40.0
+  },
+  "sonic_validation": {
+    "sonic_source": "TZV_DEPTH_MD_COMPUTED_1.LAS / DT-EDIT",
+    "sonic_bin_coverage": "45/45",
+    "sonic_inside_ensemble_bins": 5,
+    "sonic_inside_pct": 11.11111111111111,
+    "signed_error_median_kms": 0.5556433896509718,
+    "signed_error_mean_kms": 0.41357735720541383,
+    "abs_signed_error_median_kms": 0.5787859684690453
+  },
+  "scope_notes": [
+    "1D Vp(z) straight-ray forward operator; refracted eikonal rays would bend toward higher-velocity zones, so the straight-line approximation introduces a depth-dependent modeling error of ~80-150 ms per pick. This dominates the misfit floor and biases the ensemble Vp downward at depth (the 11.1% sonic-inside rate reflects that).",
+    "Tier-1 envelope (vp_min=1.5, vp_max=5.5 km/s) is load-bearing above and below those values; the smoothness preference of the random-reference profile is load-bearing in the same sense flagged by the synthetic Tier-1 sensitivity study.",
+    "The 60% forced / 40% measure-dependent split is an internal property of the inversion at this noise level + envelope + smoothness preference; it is not a claim about the real subsurface independent of those choices."
+  ]
+}
