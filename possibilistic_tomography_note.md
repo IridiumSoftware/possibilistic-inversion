@@ -272,10 +272,10 @@ your own pipeline. Figure 7 is the result, and the decomposition code is
 
 These figures are from the feasible-set sampler at its default operating point,
 and at that operating point the forced set itself over-claims: an adversarial
-stress test (§6 point 6; `witness_pass.md`, RWC-2) finds ~41% of forced cells
+stress test (§7 point 6; `witness_pass.md`, RWC-2) finds ~41% of forced cells
 admit a feasible, equally-smooth, opposite-sign model. The decomposition layer
 is sound and forward-model-agnostic; what is coverage-limited is the
-feasible-set *sampling* that feeds it (§7).
+feasible-set *sampling* that feeds it (§8).
 
 The decomposition transferred across two genuinely different forward operators
 without change. That is the load-bearing result of this note: the possibilistic
@@ -288,7 +288,171 @@ operator.*
 
 ---
 
-## 6. What building it surfaced — the discipline the method needs
+## 6. Demonstration 3 — real-data on the Volve walkaway VSP
+
+Demonstrations 1 and 2 validate the methodology against synthetic ground truth.
+This section asks the next question: does any of it survive contact with a real
+field dataset? The Equinor Volve open release (North Sea, 2018) includes
+walkaway-VSP surveys for two wells with full wireline-log suites — independent
+sonic ground truth at known locations. The data pipeline from raw SEG-Y to
+forced/measure-dependent classification is shipped in the `volve/` subpackage
+of this repository; the report below is what came out of it.
+
+### 6.1 1D Vp(z) on well 15/9-F-15A — the methodology calibrates
+
+Picks: STA(10 ms)/LTA(100 ms) trigger with AIC refinement on the Z-component
+geophone traces, 1215 ok of 1248 (97.4% yield; the 33 no-trigger traces are
+the 5 far-offset sources). Ensemble: 30 random-reference Eikonal Gauss–Newton
+members on 45 depth bins (70 m), envelope `[1.5, 5.5]` km/s, smoothness
+correlation 250 m. Validation: the LAS bundle's `DT-EDIT` sonic curve,
+checkshot-stretched to TVD.
+
+Headline numbers, real data:
+
+- **Per-bin ensemble Vp interval covers the wireline sonic in 36/45 bins
+  (80.0%).**
+- **Held-out arrival calibration: 228/243 (93.8%) of held-out pick times fall
+  inside the ensemble's predicted-time interval.**
+- Signed error (ensemble median minus sonic) median +0.29 km/s; the ensemble
+  runs slightly slow at depth, consistent with the first-order FMM solver and
+  the 1D-along-bore parameterization.
+
+![Figure 8. Real-data possibilistic decomposition on well 15/9-F-15A — feasibility ensemble + wireline sonic ground truth.](volve_phase4_decomposition.png)
+
+*Figure 8. Possibilistic decomposition on the 15/9-F-15A walkaway VSP.
+Left: 30-member ensemble Vp(z) fan against the DT-EDIT wireline sonic.
+Centre: the per-bin anomaly interval relative to the depth trend. Right:
+the forced-high / forced-low / measure-dependent classification. The
+ensemble's per-bin Vp interval covers the wireline sonic in 80% of depth
+bins, and the held-out arrival calibration lands at 93.8% — at the rate
+the possibilistic frame claims for full-coverage forecasts.*
+
+That is the "methodology mechanically works on real first arrivals" outcome.
+Calibration matches the methodology's claim; the operator-relative caveats of
+section 8 apply unchanged.
+
+### 6.2 2D joint inversion on F-15A + F-11 T2 — structural misspecification surfaces
+
+Two wells are 1061 m apart laterally; combined they sample depths
+≈ 130 – 4530 m. Promoting to 2D Vp(w, z) on a (well-line, depth) grid
+through both wellheads multiplies the model space ~180× (45 bins → 8004 cells)
+without 180× more data, and changes the inversion's character.
+
+Three rounds of work were needed to get an honest read:
+
+1. **First-cut report.** A 12-member ensemble × 2 Gauss–Newton iterations
+   produced sonic-inside coverage of 10 % at each well's wellhead column, a
+   joint held-out inside rate of 23 %, and 79 % "forced-quiet" cells. The
+   narrative on first read was *"prior dominance in unilluminated cells."*
+2. **Triad witness pass.** A scoped brief went to three independent AI
+   witnesses (Venice / Grok / ChatGPT). They converged on four interpretation
+   artifacts the first read was leaning on: the anomaly baseline was the
+   ensemble mean (gauge-sensitive), the sonic was sampled at the wellhead
+   column instead of along the deviated bore (category error), the ensemble
+   size was small (under-exploration risk), and the prior strength was not
+   directly tested. ChatGPT specifically named the structural-misspecification
+   hypothesis — *2D Vp(w, z) on a 3D Earth* — as the leading alternative.
+3. **Phase A diagnostics + Phase B re-run.** Each artifact was tested in
+   sequence. Switching to a wireline-derived anomaly baseline collapsed the
+   79 % forced-quiet to 22 % (the original number was gauge-sensitive).
+   Sampling the sonic along the bore trajectory raised the F-15A
+   sonic-inside from 10 % → 32 % (post-processing) → **57 %** (Phase B
+   re-inversion, 30 members × 3 GN iters, looser prior). Loosening the
+   smoothness correlation 350 → 700 m and the envelope 1.5 – 5.5 → 1.3 –
+   6.0 km/s did **not** widen the predicted-time interval (21 ms → 24 ms)
+   and did **not** shrink the held-out residual (137 ms → 134 ms RMS).
+   Across all 30 members, 44 % of cells classify as **forced-low** against
+   the wireline-sonic baseline — the ensemble systematically sits below the
+   sonic, and the diagnosis is stable.
+
+![Figure 9. 2D joint inversion result on F-15A + F-11 T2 after the Phase A diagnostic corrections — the methodology correctly diagnoses structural misspecification.](volve_phaseB_decomposition.png)
+
+*Figure 9. 2D Vp(w, z) joint inversion of the F-15A + F-11 T2 picks
+(Phase B, with the witness-pass artifact corrections applied). Top:
+ensemble median Vp(w, z) and the forced/measure-dependent classification
+versus the wireline-sonic baseline (red high, blue low, orange
+measure-dependent, grey forced-quiet). Bottom: sonic-along-bore vs
+ensemble at each well — 57 % (F-15A) and 62 % (F-11 T2) inside the
+ensemble interval. The persistent 44 % forced-low (blue) at depth is the
+diagnostic: 2D Vp(w, z) is structurally insufficient for the 3D Earth at
+this geometry, and the methodology reports it.*
+
+The methodology is doing what it should. The ensemble has ten effective
+dimensions (it is exploring genuine diversity, not collapsing onto a single
+member), and yet every member fits the picks but sits below the sonic at
+depth. The 44 % forced-low survives prior loosening because the binding
+constraint is the parameterization itself, not the prior strength. *That* is
+what "the forward operator (or parameterization) is the load-bearing
+approximation" looks like in real data, and the decomposition correctly
+flags it.
+
+### 6.3 The witness pass as part of the method
+
+The witness pass and the four corrections it produced are themselves part of
+the methodology contribution. The discipline is: *publish the first-cut
+interpretation, run external witnesses on the brief, run the diagnostics they
+recommend, retract the parts that were gauge-sensitive or confounded, re-run
+with the corrections, and re-report.* This was the second time in the
+methodology's development that triad witnesses caught an interpretation drift
+(the first was the possibilism note's figure pass with Crane and Martin); the
+practice is now treated as a step in the workflow, not an extra.
+
+### 6.4 Head-to-head: possibilistic vs Bayesian vs neural-net
+
+On the F-15A 1D problem, under matched physics (Eikonal FMM forward),
+matched prior (smooth random Vp(z), envelope 1.5 – 5.5 km/s, smoothness
+correlation 250 m), and matched data (the same 1215 picks), three different
+representations of inversion uncertainty:
+
+| Method                                       | Sonic-inside | Holdout median RMS |
+|----------------------------------------------|-------------:|-------------------:|
+| posdec (feasibility interval, 30-member)     |     **80.0 %** |             179 ms |
+| MCMC (emcee linearized, 90 % credible)       |       55.6 % |             179 ms |
+| MCMC (95 % credible)                         |       64.4 % |          (same)    |
+| NN (MLP, MC dropout, 90 % band)              |        6.7 % |             490 ms |
+| NN (MC dropout, 95 % band)                   |        8.9 % |          (same)    |
+
+![Figure 10. Three representations of inversion uncertainty on F-15A under matched physics, prior, and data: possibilistic feasibility, Bayesian credible, NN MC-dropout.](volve_threeway.png)
+
+*Figure 10. Three uncertainty representations on the same inverse problem.
+posdec feasibility interval is widest and covers the sonic at the rate the
+possibilistic frame claims (80 %). MCMC's Bayesian credible intervals
+contract more tightly because the Gaussian likelihood imposes shape
+constraints beyond mere feasibility; same central estimate (179 ms
+holdout RMS) but more confident uncertainty. MC dropout on a supervised
+MLP trained on matched-prior synthetic data captures epistemic
+uncertainty within the training distribution and is blind to real-data
+distributional shift: the dropout band is narrow and the median
+prediction is also off the real trend (490 ms holdout RMS).*
+
+The point is not "which method is best." It is that **each choice of
+uncertainty representation gives a quantifiably different account** of the
+same inverse problem — same physics, same prior, same data — and the choice
+is methodologically load-bearing. Brian's ORSI Tier-1 sensitivity work on
+the synthetic side flagged the analogous load-bearing-ness of the smoothness
+prior (§7.7, Figure 11); the three-way head-to-head is its real-data analog.
+Possibilistic is the most conservative; that is the methodology's design,
+and on this real-data test it delivers the calibration its frame claims.
+
+### 6.5 Honest scope of the real-data section
+
+- One field (Volve), two wells. The 1D F-15A result calibrates; the 2D joint
+  result correctly diagnoses parameterization limits.
+- Eikonal first-order FMM, not finite-frequency or full-waveform.
+- The MCMC comparator uses a linearized forward (matrix–vector per step) at the
+  ensemble-median reference, not a full nonlinear chain; emcee is run with
+  100 walkers × 3500 steps.
+- The NN comparator is a stock MLP trained on synthetic eikonal-forward
+  picks from the matched prior, MC dropout for uncertainty. NN tomography
+  state-of-the-art (normalizing-flow posteriors, Bayesian NNs, PINNs) was
+  not invoked; that is a separate scope.
+- A structurally different parameterization (full 3D, anisotropy, finite-
+  frequency) was not tested. Brian's ORSI evaluation explicitly recommends
+  that as the natural extension, paired with a domain collaborator.
+
+---
+
+## 7. What building it surfaced — the discipline the method needs
 
 A method that always says "yes" is a gimmick. This one has real failure modes,
 and finding them is how I know it has content. Each was surfaced by a synthetic
@@ -327,7 +491,7 @@ run failing honestly; each is now documented in the script headers.
    sampler. The split is only as data-forced as those bounds are
    data-independent. The natural worry that the smoothness preference sneaks
    regularization into the possibilistic layer is now answered quantitatively
-   (`sensitivity_tier1.py`, Figure 8). Tightening the
+   (`sensitivity_tier1.py`, Figure 11). Tightening the
    velocity floor `VP_MIN` from 2.0 to 3.0 km/s drops the forced-high Jaccard
    to 0.27; the `VP_MAX = 9` km/s ceiling is saturated (every member touches
    it); and the smoothness preference is load-bearing — at 25% smoothness
@@ -337,9 +501,9 @@ run failing honestly; each is now documented in the script headers.
    smaller-sample narrowing. The Tier-1 envelope is therefore reported
    alongside the coverage-adequacy curve, not assumed.
 
-![Figure 8. Tier-1 sensitivity. Top: tightening the velocity floor VP_MIN shifts the forced sets quickly (worst Jaccard 0.07 at VP_MIN = 3.5). Bottom: at every percentile p, the smoothness-kept ensemble (filled) sits well below the same-size random control (open), isolating the smoothness preference from generic sub-selection.](sensitivity_tier1.png)
+![Figure 11. Tier-1 sensitivity. Top: tightening the velocity floor VP_MIN shifts the forced sets quickly (worst Jaccard 0.07 at VP_MIN = 3.5). Bottom: at every percentile p, the smoothness-kept ensemble (filled) sits well below the same-size random control (open), isolating the smoothness preference from generic sub-selection.](sensitivity_tier1.png)
 
-*Figure 8. Tier-1 sensitivity sweep on the 396-member RWC-1 ensemble. Top
+*Figure 11. Tier-1 sensitivity sweep on the 396-member RWC-1 ensemble. Top
 row: velocity-floor sweep (the VP_MAX ceiling is saturated at 100% and not
 separately sweepable). Bottom row: smoothness-percentile sweep with a
 random-subset control of the same N. The smoothness-kept Jaccard sits below
@@ -352,7 +516,7 @@ tuning itself to the answer it wants.
 
 ---
 
-## 7. The open frontier — and where you come in
+## 8. The open frontier — and where you come in
 
 Here is the honest seam, and it is the reason this is a note to *you* and not
 a finished claim.
@@ -389,10 +553,17 @@ already engaging. Let us solve that part together."
 
 ---
 
-## 8. Honest scope
+## 9. Honest scope
 
-- Everything here is **synthetic**. The demonstrations validate the *method*
-  against known ground truth; they are not a result about the real Earth.
+- The original demonstrations (§§4–5) are **synthetic** — chosen so the method
+  could be validated against known ground truth. §6 promotes the same machinery
+  to **real data** on the Equinor Volve walkaway VSP, with two wells and
+  independent wireline sonics as ground truth. Honest scope on §6 is reported
+  inline (§6.5); the 1D F-15A result calibrates at the rate the methodology
+  claims (80 % sonic-inside, 94 % held-out arrival inside), the 2D joint
+  result correctly diagnoses parameterization limits, and the three-way
+  comparison (posdec / MCMC / NN) under matched physics shows that the choice
+  of uncertainty representation is methodologically load-bearing.
 - The Eikonal solver is **first-order FMM**. Its ~2% mean accuracy is fine for
   a forward-model-agnostic demonstration; your FMM-VFD hybrid is the
   production-grade version.
@@ -414,7 +585,7 @@ already engaging. Let us solve that part together."
   admissibility bounds**. Both the velocity envelope (the `VP_MAX = 9` km/s
   ceiling is saturated and the floor is binding well above the methodology's
   generous default) and the sampler's smoothness preference shift the
-  decomposition quantifiably (§6.7, Figure 8, `sensitivity_tier1.py`). A
+  decomposition quantifiably (§7.7, Figure 11, `sensitivity_tier1.py`). A
   published forced/measure-dependent map travels with its Tier-1 envelope
   *and* its coverage-adequacy curve; either, varied within a plausible range,
   changes the result.
@@ -423,10 +594,10 @@ already engaging. Let us solve that part together."
 
 ## Acknowledgements
 
-The Tier-1 sensitivity finding (§6.7, Figure 8) is owed to **Brian Crabtree**,
+The Tier-1 sensitivity finding (§7.7, Figure 11) is owed to **Brian Crabtree**,
 whose ORSI / ORSIΩ propagation pass on the shipped artifact named the
 smoothness-as-Tier-1-admissibility concern with enough specificity to be
-answered quantitatively. The coverage-certificate discipline (§6.6),
+answered quantitatively. The coverage-certificate discipline (§7.6),
 modular decomposition library (`posdec`), and the linear-case exact
 regression are likewise direct consequences of his propagation steps. The
 errors that survived are mine.
