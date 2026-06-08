@@ -7,4 +7,5 @@ dependencies = [
     "numpy>=2.4.5",
     "segyio>=1.9.13",
     "lasio>=0.31",
+    "dlisio>=1.0.4",
 ]

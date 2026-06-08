@@ -77,7 +77,9 @@ def _write_synthetic_las(path: str) -> None:
 def main() -> None:
     print("volve.smoke - N=1 round-trip of the ingestion pipeline")
     print("=" * 64)
-    print(G.summary())
+    print("Geometry deck: see `python -m volve.geometry <real-SEG-Y>` for")
+    print("the authoritative geometry. This smoke only exercises the LAS")
+    print("and SEG-Y loaders on synthetic data with a placeholder layout.")
 
     with tempfile.TemporaryDirectory() as tmp:
         sgy = str(Path(tmp) / "_volve_smoke.sgy")

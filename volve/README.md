@@ -1,87 +1,112 @@
-# volve - real-data integration on the Equinor Volve walkaway VSP
+# volve - real-data integration on the Equinor Volve VSP (15/9-F-15A)
 
 This subpackage takes the shipped possibilistic-inversion methodology
-(`posdec`) from synthetic-only into real-data territory. The target
-dataset is the **Equinor Volve walkaway VSP** (North Sea, open release
-2018), with the well **15/9-F-1A** sonic log as independent Vp ground
-truth.
+(`posdec`) from synthetic-only into real-data territory. The target dataset
+is the **Equinor Volve open release**, well **15/9-F-15A**, Vertical
+Incidence VSP (acquired 5 Jan 2009 by READ Well Services for StatoilHydro),
+paired with the well's wireline sonic log as independent Vp ground truth.
 
 ## Workflow phases
 
 | Phase | Status | What |
 |-------|--------|------|
-| 1     | landed | Ingestion skeleton: geometry deck + SEG-Y reader + LAS reader, all N=1 smoked on synthetic data. |
-| 2     | open   | First-arrival picking on the real walkaway shot gathers. |
-| 3     | open   | `posdec` decomposition on the picked arrivals; validate forced/measure-dependent split against the 15/9-F-1A sonic log; held-out arrival calibration. |
-| 4     | open   | (optional) Bodin-Sambridge rj-MCMC + simple PINNtomo as parallel comparators on the same picks. |
+| 1     | landed | Ingestion + real geometry decoded from SEG-Y headers + sonic ground-truth cross-checked. |
+| 2     | open   | First-arrival picking on the 1248 raw VSP traces (Z component). |
+| 3     | open   | `posdec` decomposition on the picks; validate forced/measure-dependent split against DT-EDIT; held-out arrival calibration. |
+| 4     | open   | (optional) rj-MCMC + simple NN-tomography parallel comparators. |
 
-## Geometry
+## What landed in phase 1
 
-Known from the Volve documentation (DiscoverVolve / Equinor T&Cs):
+**Real geometry (from `VSPNI_RAW_2.SEGY` headers):**
 
-- 151 surface shots, EW line, 100 m spacing, x in [3700, 18700] m,
-  source 15 m below sea surface.
-- 467 downhole 4-component receivers in 15/9-F-1A at MD 1000-7990 m,
-  15 m spacing.
-- 8 ms sampling, 2001 samples per trace = 16 s record length.
-- Max 70 517 shot-receiver picks if every pair is used.
+- **312 FieldRecords (shots) × 4 sensors per record = 1248 traces** on the
+  Z component. Same shape on X (`VSPNI_RAW_3.SEGY`) and Y
+  (`VSPNI_RAW_4.SEGY`).
+- **145 unique source positions**, two clusters:
+  - main bank at ~430-620 m offset from the wellhead (140 sources)
+  - far-offset bank at ~1500-1600 m offset (5 sources)
+- **224 unique receiver elevations** spanning 130.8 - 3134.7 m below
+  ElevationScalar datum. Intra-array spacing ~15 m.
+- **Wellhead at (434927, 6477976) m** in the survey's UTM-like frame.
+- **Well is significantly deviated**: from wellhead at depth ~0 the well
+  curves to ~1100 m horizontal offset by 3134 m depth.
+- Z + horizontals: 5000 samples x 1 ms = 5 s record. Hydrophone monitor on
+  `VSPNI_RAW_1.SEGY`: 1997 samples x 0.25 ms.
 
-The well easting (`X_WELL_M_PLACEHOLDER`) is a placeholder until the
-real SEG-Y headers are read; the survey origin and coordinate frame
-will be confirmed on first read.
+**Sonic ground truth (cross-checked):**
 
-## Data placement
+| Source | Coverage | Use |
+|---|---|---|
+| `TZV_DEPTH_MD_COMPUTED_1.LAS` (DT-EDIT) | MD 54.9 - 4070 m, 0.1524 m step | PRIMARY ground truth - full well |
+| `WLC_PETRO_COMPUTED_INPUT_1.DLIS` (DT) | MD 2607 - 4070 m, 0.1524 m step | independent cross-check on reservoir |
 
-Drop the downloaded files in `volve/data/` (gitignored):
+On the overlap (MD 2607-4070 m), the two sources agree to median residual
++0.001 us/ft, std 3.36 us/ft over 9369 samples. Above MD 2607 m the LAS
+DT-EDIT is the only source; the cross-check ratifies it on the deep half.
+
+## Data layout
+
+`volve/data/` is gitignored. After downloading both bundles, the tree is:
 
 ```
 volve/data/
-  walkaway/                 # SEG-Y shot gathers from Well_logs/08.VSP_VELOCITY/
-    <name>.sgy
-    ...
-  logs/
-    15_9-F-1A.LAS           # sonic + density + GR for the tie well
+  15_9-F-15 A/
+    VSPNI_RAW_1..4.SEGY                 # raw VSP: hydrophone + Z/X/Y geophones
+    VSPNI_COMPUTED_1..30.SEGY           # READ's processed result (Schlumberger)
+    VSPNI_COMPUTED_31.LAS               # processed VSP corridor stack
+    TZV_DEPTH_MD_COMPUTED_1.LAS         # depth-domain Vp + sonic (DT-EDIT / DT-CKS)
+    TZV_DEPTH_MD_CHECKSHOT_1.ASC        # checkshot time-depth pairs
+    TZV_TIME_CHECKSHOT_1.ASC
+    TZV_TIME_SYNSEIS_1..4.LAS           # synthetic seismograms
+    VELOCITY_REPORT_1..4.ASC            # text reports (geometry, Q, sonic-cal, time-index)
+    VSP_REPORT_1.PDF / 2.PDF            # survey + processing documentation
+    *_INF_*.ASC                         # per-file metadata
+  05.PETROPHYSICAL INTERPRETATION/
+    WLC_PETRO_COMPUTED_INPUT_1.DLIS     # raw wireline logs (DT, RHOB, GR, NPHI, ...)
+    WLC_PETRO_COMPUTED_OUTPUT_1.DLIS    # interpreted petrophysics
+    PETROPHYSICAL_REPORT_1.PDF
+    geomod09/                           # facies + perm
 ```
 
-Then:
+## Quick start (after data drop)
 
 ```bash
-uv run python -m volve.smoke                 # confirms ingestion still works
-uv run python -m volve.geometry              # plots the survey geometry
+uv run python -m volve.geometry "volve/data/15_9-F-15 A/VSPNI_RAW_2.SEGY"
+uv run python -m volve.smoke
 ```
 
-Loaders from a Python session:
+From a Python session:
 
 ```python
-from volve.load_vsp  import load_file, summarize_block, bin_to_shot_recv_tensor
-from volve.load_logs import load_well_log, summary, plot_log
+from volve.geometry import load_geometry_from_segy, summarize, plot_geometry
+geo = load_geometry_from_segy("volve/data/15_9-F-15 A/VSPNI_RAW_2.SEGY")
+print(summarize(geo))
 
-blk = load_file("volve/data/walkaway/<file>.sgy")
-print(summarize_block(blk))                  # header sanity-check
-arr, hdr = bin_to_shot_recv_tensor(blk, n_components=4)
-# arr shape: (n_shots, n_recv, n_comp, n_samples)
-
-log = load_well_log("volve/data/logs/15_9-F-1A.LAS")
-print(summary(log))                          # Vp range, depth range
-plot_log(log, out_path="volve_sonic.png")
+from volve.load_logs import load_well_log, summary
+log = load_well_log("volve/data/15_9-F-15 A/TZV_DEPTH_MD_COMPUTED_1.LAS",
+                    dt_curve="DT-EDIT", depth_curve="MD")
+print(summary(log))
 ```
 
-## Access (one-time)
+## Access (one-time, ~10 min)
 
-1. Sign up at `data.equinor.com` (B2C account, email-verified).
-2. Click through the data-use agreement.
-3. The portal mints a per-user SAS URL to the Azure Blob container.
-4. Use **Azure Storage Explorer** (GUI) or **AZCopy** (CLI) to selectively
-   pull. Example:
+Equinor moved Volve onto **Databricks Marketplace** since the 2018 release;
+the older Azure-Blob + SAS-URL path our initial recon described is
+deprecated. Current path:
 
-   ```bash
-   azcopy copy "<SAS-URL>/Well_logs/08.VSP_VELOCITY/*" \
-       ./volve/data/walkaway/ --recursive
-   azcopy copy "<SAS-URL>/Well_logs/15_9-F-1A.LAS" \
-       ./volve/data/logs/
-   ```
+1. `data.equinor.com` -> Databricks Marketplace (B2C / Microsoft signup).
+2. Locate the Volve listing; the **inventory is exposed as .xlsx files**
+   (a master `VOLVE_INVENTORY.xlsx` plus per-well sheets).
+3. Per-well bundles download as ZIPs. For this integration:
+   - `15_9-F-15 A.zip` (~140 MB) - VSP + sonic + checkshot + reports
+   - `05.PETROPHYSICAL INTERPRETATION.zip` (~2 MB) - raw wireline DLIS
+4. Unzip both into `volve/data/`.
 
-5. Walkaway envelope ~2-5 GB; LAS bundle well under 100 MB.
+The master inventory's "08. VSP & VELOCITY LOGS" row marks **N/A** for
+the F-1 / F-1A / F-1B / F-1C wells; an earlier recon claimed walkaway VSP
+was on 15/9-F-1A, but the inventory says otherwise. The two wells that
+actually have VSP data are **15/9-F-15 A** (this bundle) and
+**15/9-F-11 T2** (a secondary option, similar SEG-Y + checkshot).
 
 ## License
 
@@ -92,20 +117,10 @@ ShareAlike-style propagation of terms to derived data. Derived products
 
 ## Conventions
 
-See module docstrings for the full convention block. Briefly:
-
 - All distances in metres; all times in seconds.
-- z positive downward; the well sits at x = X_WELL_M (refined after read).
-- LAS DEPT in metres; DT in us/ft converted to Vp(km/s) = 304.8 / DT.
-
-## What we still don't know until data arrives
-
-- Exact SEG-Y trace ordering (shot-receiver-component, or
-  receiver-component-shot, or another). `bin_to_shot_recv_tensor` assumes
-  the standard layout but ERRORS rather than silently reshapes; first
-  real-file read will tell us.
-- The CoordinateScalar in the headers. We apply it per SEG-Y rev 1 but
-  some files use a different sign convention.
-- Whether the 4 components are interleaved per receiver or stored as
-  blocks. The smoke uses interleaved; we'll re-fold after the first
-  header peek if needed.
+- SEG-Y `CoordinateScalar` = -10 (divide xy by 10); `ElevationScalar` =
+  -10000 (divide by 10000).
+- DLIS DEPTH stored in `0.1 in`; multiply by 0.00254 m/unit.
+- LAS DT in us/ft; Vp(km/s) = 304.8 / DT.
+- Well datum: Kelly Bushing 54.9 m above MSL; sea bed at 91 m below
+  surface; water velocity 1500 m/s.
