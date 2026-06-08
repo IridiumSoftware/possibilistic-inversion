@@ -292,11 +292,13 @@ operator.*
 
 Demonstrations 1 and 2 validate the methodology against synthetic ground truth.
 This section asks the next question: does any of it survive contact with a real
-field dataset? The Equinor Volve open release (North Sea, 2018) includes
-walkaway-VSP surveys for two wells with full wireline-log suites — independent
-sonic ground truth at known locations. The data pipeline from raw SEG-Y to
-forced/measure-dependent classification is shipped in the `volve/` subpackage
-of this repository; the report below is what came out of it.
+field dataset? The **Equinor Volve open release** (North Sea, 2018), made
+available under Equinor's *HRS Terms and conditions for licence to data — Volve*
+(§6.6), includes walkaway-VSP surveys for two wells with full wireline-log
+suites — independent sonic ground truth at known locations. The data pipeline
+from raw SEG-Y to forced/measure-dependent classification is shipped in the
+`volve/` subpackage of this repository; the report below is what came out of
+it.
 
 ### 6.1 1D Vp(z) on well 15/9-F-15A — the methodology calibrates
 
@@ -449,6 +451,47 @@ and on this real-data test it delivers the calibration its frame claims.
 - A structurally different parameterization (full 3D, anisotropy, finite-
   frequency) was not tested. Brian's ORSI evaluation explicitly recommends
   that as the natural extension, paired with a domain collaborator.
+
+### 6.6 Data attribution and licence
+
+The data used in this section is the **Equinor Volve open dataset** — the
+walkaway-VSP bundles for wells **15/9-F-15 A** and **15/9-F-11 T2** under
+`08.VSP_VELOCITY`, and the corresponding petrophysical-interpretation bundles
+under `05.PETROPHYSICAL INTERPRETATION`. The data is licensed by **Equinor
+ASA**, **ExxonMobil Exploration & Production Norway AS**, and **Bayerngas
+Norge AS** (the "former Volve license partners") under the *HRS Terms and
+conditions for licence to data — Volve* (the "HRS T&C"). The HRS T&C is a
+CC BY 4.0–derived licence with two material modifications: (a) the Licensed
+Material may not be sold, and (b) the licence covers all data in the dataset
+whether or not it is by law covered by copyright.
+
+The work in §6 falls within the permitted scope of §3 of the HRS T&C:
+
+- The Licensed Material is used to **produce Adapted Material** (first-arrival
+  picks, eikonal feasibility ensembles, possibilistic forced/measure-dependent
+  classifications, MCMC and NN comparators, and the figures herein), which the
+  HRS T&C explicitly permits (§3.1).
+- The Adapted Material and the original Licensed Material can be **shared
+  openly** under the HRS T&C's Sharing clause (§3.3). The methodology
+  repository's own licence (where applicable to derived data) does not
+  prevent recipients from complying with the HRS T&C.
+- The presentation here is **not misleading or distorted** (§3.2): every
+  per-well, per-method calibration number, residual, and forced-set
+  fraction is reported as measured, with its scope caveats inline.
+
+Nothing in §6 (or elsewhere in this note) **constitutes or implies endorsement**
+of this work by Equinor or the former Volve licence partners (HRS T&C §4).
+The licence partners are credited solely as the data providers; the
+methodology, the inversion results, and the interpretive narrative are the
+author's, with the honest-scope caveats of §6.5 and §9 applying.
+
+**Citation and link.** The official HRS Terms and conditions document is
+available from Equinor's open-data portal at
+<https://www.equinor.com/energy/data-sharing>. The dataset itself
+("the Volve Data Village") is described in Exhibit 1 of the HRS T&C; the
+specific bundles used here are folders 8 and 9 of that exhibit
+(`Well_logs` and `Well_logs_pr_WELL`). When citing this work, please also
+cite Equinor's release per the HRS T&C attribution requirement.
 
 ---
 
@@ -639,6 +682,17 @@ zero, and never moves A.*
   the Levenberg–Marquardt inversion over a hand-rolled dense-Cholesky module,
   the feasible-set sampler, and the decomposition, pulled together by
   `possibilistic_inversion.c`. Build and run: `cd c && make && ./pi`.
+- `volve/` — the §6 real-data pipeline. Geometry decoders, picker,
+  per-phase inversions (`inversion_eikonal.py`, `inversion_eikonal_2d.py`),
+  Phase B re-runs (`decompose_2d_b.py`), and the MCMC + NN comparators
+  (`mcmc_baseline.py`, `nn_baseline.py`, `threeway.py`). Subpackage README at
+  `volve/README.md`.
+- **Equinor Volve open dataset & licence:** dataset and the *HRS Terms
+  and conditions for licence to data — Volve* at
+  <https://www.equinor.com/energy/data-sharing>. The §6 work uses the
+  walkaway-VSP bundles under `08.VSP_VELOCITY` and the petrophysical
+  bundles under `05.PETROPHYSICAL INTERPRETATION` for wells
+  15/9-F-15 A and 15/9-F-11 T2, per §6.6.
 - `witness_pass.md` — the synthesis witness pass: an adversarial external review
   of the method by three independent models, and the two Required Witness Checks
   it carried, `rwc1_forced_stability.py` and `rwc2_disconnected_test.py`.
