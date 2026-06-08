@@ -1,0 +1,29 @@
+{
+  "label": "volve_15_9_F_15A_eikonal_holdout",
+  "split": {
+    "n_train": 972,
+    "n_test": 243,
+    "train_frac": 0.8
+  },
+  "ensemble": {
+    "n_members": 30,
+    "n_gn_iters_per_member": 3,
+    "training_rms_median_ms": 156.67267389026318
+  },
+  "calibration": {
+    "n_inside_interval": 228,
+    "n_total": 243,
+    "inside_pct": 93.82716049382715,
+    "residual_mean_ms": 107.34736452440266,
+    "residual_median_ms": 57.89761510113589,
+    "residual_std_ms": 204.24100759535307,
+    "residual_rms_ms": 230.7332786008556,
+    "interval_width_mean_ms": 207.27292248503457,
+    "interval_width_median_ms": 199.63900327302508
+  },
+  "scope_notes": [
+    "Eikonal forward gives true refracted first-arrival times; no straight-line modeling bias remains.",
+    "Held-out picks are predicted by re-running the eikonal forward on each ensemble member's Vp(z) profile.",
+    "Compare with phase 3 (straight-ray) holdout: phase 3 had 0/243 inside, +122 ms median residual, 19 ms interval width - dramatically under-calibrated."
+  ]
+}

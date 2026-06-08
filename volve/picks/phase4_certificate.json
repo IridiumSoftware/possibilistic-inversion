@@ -1,0 +1,49 @@
+{
+  "label": "volve_15_9_F_15A_eikonal_1D",
+  "schema_version": "phase4.1.0",
+  "geometry": {
+    "n_picks_used": 1215,
+    "depth_grid_n_bins": 45,
+    "depth_grid_bin_thick_m": 70.0,
+    "fmm_grid": [
+      131,
+      53
+    ],
+    "fmm_cell_m": 25.0
+  },
+  "ensemble": {
+    "n_members": 30,
+    "n_gn_iters_per_member": 3,
+    "noise_rms_target_s": 0.02,
+    "noise_rms_achieved_median_ms": 157.76118006909857,
+    "vp_envelope_kms": [
+      1.5,
+      5.5
+    ]
+  },
+  "decomposition": {
+    "eps_kms": 0.1,
+    "forced_high_bins": 4,
+    "forced_low_bins": 6,
+    "forced_quiet_bins": 0,
+    "measure_dependent_bins": 35,
+    "total_bins": 45,
+    "forced_high_pct": 8.88888888888889,
+    "forced_low_pct": 13.333333333333334,
+    "measure_dependent_pct": 77.77777777777777
+  },
+  "sonic_validation": {
+    "sonic_source": "TZV_DEPTH_MD_COMPUTED_1.LAS / DT-EDIT",
+    "sonic_bin_coverage": "45/45",
+    "sonic_inside_ensemble_bins": 36,
+    "sonic_inside_pct": 80.0,
+    "signed_error_median_kms": 0.29383553656611117,
+    "signed_error_mean_kms": 0.48615982345940395,
+    "abs_signed_error_median_kms": 0.3970219592118416
+  },
+  "scope_notes": [
+    "Eikonal forward via FMM on a 25 m cell grid; the lateral-translation-symmetry trick exploits Vp(z) being laterally uniform to need one FMM solve per ensemble member.",
+    "Nonlinear Gauss-Newton inversion: 3 GN iterations per member with lambda bisected on the trial-step RMS each iteration.",
+    "Compared to phase 3 (straight-ray, RMS median 174 ms, sonic-inside 11.1%, holdout 0%), the eikonal forward is expected to reduce the systematic bias from straight-line path lengths; see phase 4 holdout for the calibration result."
+  ]
+}
