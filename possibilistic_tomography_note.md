@@ -702,7 +702,7 @@ DOE **Geothermal Data Repository** / Open Energy Data Initiative under
 **Creative Commons Attribution 4.0**. The specific products used:
 nodal-array P-wave auto-picks and array metadata, GDR submissions 924
 (DOI 10.15121/1787666) and 826; vibroseis source timing, GDR 824; the
-final material-property grid with its six published Vp models, GDR 1124
+final material-property grid with its six Vp columns, GDR 1124
 (DOI 10.15121/1501544); and well lithologies, GDR 490. Per CC BY 4.0, this
 work is an independent adaptation; it is not endorsed by the PoroTomo team,
 the GDR, or the DOE, and any errors are the author's. The deterministic
@@ -823,12 +823,15 @@ already engaging. Let us solve that part together."
   claims (80 % sonic-inside, 94 % held-out arrival inside), the 2D joint
   result correctly diagnoses parameterization limits, and the three-way
   comparison (posdec / MCMC / NN) under matched physics shows that the choice
-  of uncertainty representation is methodologically load-bearing.
+  of uncertainty representation is methodologically load-bearing. §7 extends
+  the real-data validation to a genuinely 3D acquisition (PoroTomo), with its
+  own inline scope (§7.6).
 - The Eikonal solver is **first-order FMM**. Its ~2% mean accuracy is fine for
   a forward-model-agnostic demonstration; your FMM-VFD hybrid is the
   production-grade version.
-- Two dimensions, modest velocity contrasts, a single noise realization. None
-  of the conclusions depend on scale, but none have been *tested* at scale.
+- The synthetic demonstrations are two-dimensional, with modest velocity
+  contrasts and a single noise realization; §6–§7 are where the machinery is
+  tested on real data at field scale, including full 3D (§7).
 - The forced/measure-dependent split is **operator-relative**: it reports what
   is forced *given a forward operator*. An operator with systematic error
   propagates that error into the forced set. This is not a defect of the
@@ -899,6 +902,11 @@ zero, and never moves A.*
   Phase B re-runs (`decompose_2d_b.py`), and the MCMC + NN comparators
   (`mcmc_baseline.py`, `nn_baseline.py`, `threeway.py`). Subpackage README at
   `volve/README.md`.
+- `porotomo/` — the §7 3D real-data pipeline. Pick/station loaders, the 3D
+  FMM C kernel (`c/eikonal3d.c`) with its ctypes wrapper, the 3D ensemble
+  inversion (`inversion3d.py`), decomposition + holdout + published-model
+  checks, the sensitivity/time-lapse/geology probes, and the Bayes-RTO + NN
+  comparators (`bayes_baseline.py`, `nn_baseline_3d.py`, `threeway_3d.py`).
 - **Equinor Volve open dataset & licence:** dataset and the *HRS Terms
   and conditions for licence to data — Volve* at
   <https://www.equinor.com/energy/data-sharing>. The §6 work uses the

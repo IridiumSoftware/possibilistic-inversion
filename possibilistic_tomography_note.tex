@@ -335,10 +335,10 @@ decomposition code is \emph{identical} to Demonstration~1:
 
 These figures are from the feasible-set sampler at its default operating point,
 and at that operating point the forced set itself over-claims: an adversarial
-stress test (\S7, point~6; \file{witness\_pass.md}, RWC-2) finds $\sim$41\% of
+stress test (\S8, point~6; \file{witness\_pass.md}, RWC-2) finds $\sim$41\% of
 forced cells admit a feasible, equally-smooth, opposite-sign model. The
 decomposition layer is sound and forward-model-agnostic; what is
-coverage-limited is the feasible-set \emph{sampling} that feeds it (\S8).
+coverage-limited is the feasible-set \emph{sampling} that feeds it (\S9).
 
 The decomposition transferred across two genuinely different forward operators
 without change. That is the load-bearing result of this note: the possibilistic
@@ -401,7 +401,7 @@ the possibilistic frame claims for full-coverage forecasts.}
 
 That is the ``methodology mechanically works on real first arrivals''
 outcome. Calibration matches the methodology's claim; the operator-relative
-caveats of \S9 apply unchanged.
+caveats of \S10 apply unchanged.
 
 \subsection{2D joint inversion on F-15A + F-11 T2 --- structural misspecification surfaces}
 
@@ -419,13 +419,13 @@ Three rounds of work were needed to get an honest read:
   well's wellhead column, a joint held-out inside rate of 23\,\%, and 79\,\%
   ``forced-quiet'' cells. The narrative on first read was \emph{``prior
   dominance in unilluminated cells.''}
-\item \textbf{Triad witness pass.} A scoped brief went to three independent
-  AI witnesses (Venice / Grok / ChatGPT). They converged on four interpretation
-  artifacts the first read was leaning on: the anomaly baseline was the
-  ensemble mean (gauge-sensitive), the sonic was sampled at the wellhead
-  column instead of along the deviated bore (category error), the ensemble
-  size was small (under-exploration risk), and the prior strength was not
-  directly tested. ChatGPT specifically named the structural-misspecification
+\item \textbf{External review.} A scoped brief was circulated for
+  independent review, which converged on four interpretation artifacts the
+  first read was leaning on: the anomaly baseline was the ensemble mean
+  (gauge-sensitive), the sonic was sampled at the wellhead column instead
+  of along the deviated bore (category error), the ensemble size was small
+  (under-exploration risk), and the prior strength was not directly
+  tested. The review specifically named the structural-misspecification
   hypothesis --- \emph{2D $V_p(w, z)$ on a 3D Earth} --- as the leading
   alternative.
 \item \textbf{Phase A diagnostics + Phase B re-run.} Each artifact was
@@ -448,7 +448,7 @@ Three rounds of work were needed to get an honest read:
 \centering
 \includegraphics[width=\linewidth]{volve_phaseB_decomposition.png}
 \caption{2D $V_p(w, z)$ joint inversion of the F-15A + F-11 T2 picks
-(Phase B, with the witness-pass artifact corrections applied). Top:
+(Phase B, with the external-review artifact corrections applied). Top:
 ensemble median $V_p(w, z)$ and the forced/measure-dependent
 classification versus the wireline-sonic baseline (red high, blue low,
 orange measure-dependent, grey forced-quiet). Bottom: sonic-along-bore
@@ -468,17 +468,16 @@ is what ``the forward operator (or parameterization) is the load-bearing
 approximation'' looks like in real data, and the decomposition correctly
 flags it.
 
-\subsection{The witness pass as part of the method}
+\subsection{External review as part of the method}
 
-The witness pass and the four corrections it produced are themselves part of
+The review round and the four corrections it produced are themselves part of
 the methodology contribution. The discipline is: \emph{publish the
-first-cut interpretation, run external witnesses on the brief, run the
-diagnostics they recommend, retract the parts that were gauge-sensitive or
-confounded, re-run with the corrections, and re-report.} This was the
-second time in the methodology's development that triad witnesses caught an
-interpretation drift (the first was the possibilism note's figure pass with
-Crane and Martin); the practice is now treated as a step in the workflow,
-not an extra.
+first-cut interpretation, circulate a scoped brief for independent review,
+run the diagnostics it recommends, retract the parts that were
+gauge-sensitive or confounded, re-run with the corrections, and re-report.}
+This was the second time in the methodology's development that external
+review caught an interpretation drift; the practice is now treated as a
+step in the workflow, not an extra.
 
 \subsection{Head-to-head: possibilistic vs Bayesian vs neural-net}
 
@@ -520,11 +519,10 @@ the real trend (490\,ms holdout RMS).}
 The point is not ``which method is best.'' It is that \textbf{each choice
 of uncertainty representation gives a quantifiably different account} of
 the same inverse problem --- same physics, same prior, same data --- and
-the choice is methodologically load-bearing. Brian's ORSI Tier-1
-sensitivity work on the synthetic side flagged the analogous
-load-bearing-ness of the smoothness prior (\S7 item 7,
-Figure~\ref{fig:sensitivity}); the three-way head-to-head is its real-data
-analog. Possibilistic is the most conservative; that is the methodology's
+the choice is methodologically load-bearing. The Tier-1 sensitivity sweep
+on the synthetic side flagged the analogous load-bearing-ness of the
+smoothness prior (\S8 item 7, Figure~\ref{fig:sensitivity}); the three-way
+head-to-head is its real-data analog. Possibilistic is the most conservative; that is the methodology's
 design, and on this real-data test it delivers the calibration its frame
 claims.
 
@@ -541,10 +539,9 @@ claims.
   eikonal-forward picks from the matched prior, MC dropout for uncertainty.
   NN tomography state-of-the-art (normalizing-flow posteriors, Bayesian
   NNs, PINNs) was not invoked; that is a separate scope.
-\item A structurally different parameterization (full 3D, anisotropy,
-  finite-frequency) was not tested. Brian's ORSI evaluation explicitly
-  recommends that as the natural extension, paired with a domain
-  collaborator.
+\item A structurally different parameterization (anisotropy,
+  finite-frequency) was not tested; the full-3D case is taken up in \S7.
+  The remaining extensions are best paired with a domain collaborator.
 \end{itemize}
 
 \subsection{Data attribution and licence}
@@ -585,7 +582,7 @@ implies endorsement} of this work by Equinor or the former Volve licence
 partners (HRS T\&C \S4). The licence partners are credited solely as the
 data providers; the methodology, the inversion results, and the
 interpretive narrative are the author's, with the honest-scope caveats of
-the previous subsection and of \S9 applying.
+the previous subsection and of \S10 applying.
 
 \textbf{Citation and link.} The official HRS Terms and conditions document
 is available from Equinor's open-data portal at
@@ -595,6 +592,267 @@ the specific bundles used here are folders 8 and 9 of that exhibit
 (\file{Well\_logs} and \file{Well\_logs\_pr\_WELL}). When citing this
 work, please also cite Equinor's release per the HRS T\&C attribution
 requirement.
+
+\section{Demonstration 4 --- real 3D on the PoroTomo nodal array}
+\label{sec:porotomo}
+
+Demonstration 3 reached real data, but the acquisition was a walkaway VSP:
+the inversion was 1D along the bore, then 2D in a single well-line plane.
+The natural next question (\S6.5) is whether the method survives a
+\textbf{genuinely 3D acquisition geometry}, where rays cross a volume from
+sources and receivers spread over a surface. This section runs the full
+pipeline on the \textbf{PoroTomo} experiment (Brady Hot Springs, Nevada;
+U.S.\ DOE geothermal program, March 2016), an open dataset whose geometry
+is areal, not linear. The 3D pipeline ships in the \file{porotomo/}
+subpackage; the data is CC~BY~4.0 (\S7.6).
+
+What PoroTomo adds beyond Volve, and what it gives up: it has
+$\sim$130$\times$ the picks (165{,}359 published P-wave auto-picks vs
+Volve's $\sim$1{,}200), an areal source--receiver layout, and --- uniquely
+--- \emph{multiple independent published velocity models and a
+drilling-based 3D geologic model} to test against. What it lacks is
+co-located sonic logs; ground truth here is other methods' models and the
+geology, not a wireline curve.
+
+\subsection{The dataset and the inversion}
+
+Sources: 196 vibroseis points swept over four acquisition stages.
+Receivers: 238 live three-component nodes on a $\sim$1.7\,$\times$\,1.9\,km
+grid. The travel-time picks are the project's own AIC auto-picks (GDR 924),
+so the inversion input is a 10\,MB table, not a terabyte of waveforms.
+\textbf{Stage 1 (41{,}971 picks after an apparent-velocity outlier filter)
+is inverted; stage 2 is held out untouched for calibration; stages 3--4
+are reserved for the time-lapse probe (\S7.5).} Forward operator: the 3D
+first-arrival Fast Marching solver of \file{porotomo/c/eikonal3d.c} (a
+dependency-free C kernel, the 3D sibling of \file{eikonal.py}), with
+analytic source-ball seeding to suppress the first-order scheme's
+near-source error. Ensemble: 30 random-reference damped Gauss--Newton
+members on a 50\,m grid (13\,$\times$\,50\,$\times$\,47; topography masks
+air cells out of the model), each fit to a 60\,ms noise floor --- the
+achievable floor set by the auto-picks' robust repeat scatter
+($\sim$36\,ms) plus their heavy outlier tail (p95 $|\Delta t| = 140$\,ms)
+and the first-order forward error. All 30 members converge to 53--63\,ms
+RMS.
+
+\textbf{One negative result drove a method fix and is worth stating.} The
+first full ensemble damped only toward the random reference, with no
+explicit roughness penalty --- and produced \emph{inverted} interval-width
+ordering: illuminated cells came out \textbf{wider} (4.8\,km/s median)
+than unilluminated ones (1.8), because members streaked bound-to-bound
+along the rays. In 3D the cells-per-datum ratio is high enough that the
+implicit smoothness of the reference is not enough; the smoothness class
+has to be made explicit. Adding a graph-Laplacian roughness penalty on the
+deviation from the reference (the declared class) fixed the ordering
+(0.57 lit vs 1.50 unlit), removed all bound-pinning, \emph{improved} the
+fit, and --- because it conditions the linear solve --- cut per-member
+cost $\sim$20$\times$. This is exactly the load-bearing-ness of the
+smoothness prior that the Tier-1 sensitivity work flagged on the synthetic
+side (\S8 item 7), reappearing as a hard failure mode at 3D scale. The fix
+is honest about what it is: a \emph{declared} class, whose forced labels
+are then reported relative to it and stress-tested for sensitivity to it
+(\S7.5).
+
+\subsection{The decomposition}
+
+The gauge is a laterally-uniform 1D median profile --- a physical null
+(``no lateral structure''), so the forced-high/low labels are claims about
+\emph{lateral} anomalies the data demands, and are non-tautological
+(unlike an ensemble-mean background --- the gauge error the Volve phase-5
+external review caught and \S6.3 documents). Cells without ray coverage
+are flagged unilluminated and held out of the forced statistics rather
+than allowed to pose as findings; on this geometry 20.7\,\% of ground
+cells are illuminated.
+
+At the deadband $\varepsilon = 0.25$\,km/s, over the illuminated volume:
+\textbf{7.7\,\% forced-high, 0.1\,\% forced-low, 13.1\,\% forced-quiet,
+79.1\,\% measure-dependent} (the full $\varepsilon$ sweep is in
+\file{porotomo\_decomposition\_cert.json}). The forced-high cells are not
+scattered --- they form a contiguous NE-trending fast body at 50--150\,m
+depth (Figure~\ref{fig:porotomo_decomp}). The honest headline is the
+79\,\%: most of what a single deterministic model would render as
+confident structure is, under this data and prior class, \emph{permitted
+but not forced}. The method's job is to say which 8\,\% is not.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{porotomo_decomposition.png}
+\caption{PoroTomo stage-1 possibilistic decomposition on a real 3D volume.
+Four depth slices; rows: ensemble-median $V_p$, feasible-interval width on
+illuminated cells, and the forced-sign classification (blue forced-low,
+grey forced-quiet, pink measure-dependent, red forced-high; white
+unilluminated). The forced-high cells (red) concentrate in a coherent
+shallow body, not in isolated voxels; the bulk of the illuminated volume
+is measure-dependent --- structure the data permits but does not compel.
+The width panel confirms the corrected ordering: illuminated cells are
+tighter than the unilluminated surround.}
+\label{fig:porotomo_decomp}
+\end{figure}
+
+\subsection{Calibration: held-out arrivals and independent models}
+
+Two tests, neither using a sonic log. \textbf{Stage-2 holdout:} the
+ensemble-median predicts the untouched stage-2 arrival times at 53.9\,ms
+RMS, versus 53.1\,ms in-sample --- essentially zero generalization gap,
+the direct evidence that the ensemble has not overfit. (Raw
+inside-interval is 27\,\%, rising to 65\,\% with a $\pm$36\,ms pick-noise
+allowance; unlike Volve, the 3D predictive intervals are \emph{tight
+relative to pick noise} --- median 38\,ms --- so the raw rate here mostly
+measures the auto-picks' own noise, and the in-sample $\approx$ holdout
+RMS equality is the load-bearing number.)
+
+\textbf{Independent published models
+(Figure~\ref{fig:porotomo_published}).} The PoroTomo team's final property
+grid (GDR 1124) carries six $V_p$ columns from three groups and two method
+families --- five distinct models, since the two later Thurber entries are
+byte-identical in the published grid. Against the illuminated cells, the
+feasible set brackets them: the Thurber and Nayak travel-time/body-wave
+models fall inside our per-cell intervals in \textbf{95--98\,\%} of cells
+within 0.25\,km/s, with correlation $r = 0.89$--$0.92$; the closest model
+(Thurber 2017-11) matches our field-wide median to 0.004\,km/s and the
+family sits within 0.07. Where we recover the same earth, we recover it
+almost exactly. The two systematic departures are interpretable, not
+failures: at the slow extremes our declared smoothness class compresses
+contrast the finer published parameterization resolves, and the Matzel
+\emph{sweep-interferometry} model runs $\sim$0.3\,km/s fast throughout ---
+different physics sampling different structure, divergent from the
+travel-time models too.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{porotomo_published_check.png}
+\caption{The six published PoroTomo $V_p$ columns (five
+travel-time/body-wave panels --- of which the two later Thurber entries
+are byte-identical in the published grid --- plus one sweep-interferometry
+model) vs the stage-1 feasible-interval ensemble median on illuminated
+cells; inside-interval fraction and correlation annotated per panel.
+Travel-time and body-wave models sit inside the intervals at 95--98\,\%
+($\pm$0.25\,km/s) and track the ensemble median tightly; the
+interferometry model's systematic offset is a real, localizable physics
+difference.}
+\label{fig:porotomo_published}
+\end{figure}
+
+\subsection{Three-way, under matched everything}
+
+The \S6.4 head-to-head repeats in 3D, now against a Bayesian comparator
+built for scale: with 27{,}234 unknowns, an affine-invariant MCMC sampler
+is infeasible, so the Bayesian baseline is
+\textbf{randomize-then-optimize (RTO)}, which draws exact samples from the
+linearized-Gaussian posterior --- matched physics, noise, and prior
+\emph{class} to the possibilistic ensemble. The neural baseline is the
+same stock MLP-with-MC-dropout recipe as Volve, trained on synthetic
+eikonal forwards from the matched prior. All three face the identical
+stage-2 holdout and published-model tests
+(Figure~\ref{fig:porotomo_threeway}):
+
+\begin{center}
+\small
+\begin{tabular}{lrrrr}
+\hline
+Method & \shortstack[r]{Thurber-in\\($\pm$0.25)} & \shortstack[r]{Holdout-in\\($\pm$36\,ms)} & \shortstack[r]{Median\\width} & \shortstack[r]{Holdout\\RMS} \\
+\hline
+posdec (feasible interval, 30)  & \textbf{98\,\%} & \textbf{65\,\%} & 0.57\,km/s & 54.0\,ms \\
+Bayes (RTO, 95\,\% credible)    & 90\,\% & 52\,\% & 0.26\,km/s & 54.0\,ms \\
+NN (MLP, MC-dropout, 95\,\%)    & 90\,\% & 58\,\% & 0.69\,km/s & 61.9\,ms \\
+\hline
+\end{tabular}
+\end{center}
+
+The ordering matches Volve exactly. posdec and the Bayesian posterior
+share physics and so share the central estimate (identical 54.0\,ms RMS),
+but the 95\,\% credible intervals are \emph{half the width} and miss
+accordingly --- textbook credible-interval overconfidence once the
+Gaussian likelihood imposes shape beyond mere feasibility. The NN's
+dropout band is \emph{wider} than the feasible interval yet covers less on
+every test --- a miscalibrated shape, not just a miscalibrated scale.
+Possibilistic is again the representation that delivers the coverage its
+frame claims, on a real 3D problem, against independently-built models.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{porotomo_threeway.png}
+\caption{PoroTomo 3D, three uncertainty representations under matched
+physics/noise/prior/tests: coverage tests (published-model-inside and
+stage-2 holdout, higher is better), median interval width, and stage-2
+holdout RMS. posdec leads every coverage test; the Bayesian posterior
+matches its central estimate but is overconfident; the NN is wide and
+miscalibrated.}
+\label{fig:porotomo_threeway}
+\end{figure}
+
+\subsection{Three stress tests: sensitivity, time-lapse, geology}
+
+Three further probes, run before this section was written, are reported
+in full in the repository's \file{docs/} companion document; the
+load-bearing results:
+
+\begin{itemize}
+\item \textbf{Smoothness-class sensitivity} (the Tier-1 protocol of \S8
+  item 7, in 3D). Re-running the ensemble at perturbed class
+  hyperparameters and measuring the Jaccard overlap of the forced sets
+  against a half-ensemble control ceiling ($J = 0.70$): the forced-high
+  set is robust to \emph{doubling} the correlation length
+  ($J = 0.67 \approx$ ceiling) but moves under \emph{halving} it
+  ($J = 0.46$) and under changes to the smoothness \emph{ratio}
+  ($J = 0.30$--$0.36$). The forced claims are class-relative --- which is
+  precisely how the method states them, and why this probe is part of it,
+  not an afterthought.
+\item \textbf{Possibilistic time-lapse} --- a question type no treatment
+  of this dataset has posed that we could find in the published record.
+  Inverting stages 2/3/4 with \emph{paired references} (shared member
+  seeds, so the prior spread cancels in the per-cell difference) and using
+  the minimal-change stage 1$\rightarrow$2 pair as a null control (a
+  symmetric 2.4\,\% forced-change false-positive floor): the
+  forced-\emph{slower} rate grows monotonically across stages
+  (1.24\,\% $\rightarrow$ 1.88\,\% $\rightarrow$ 2.45\,\%, i.e.\
+  2.0$\times$ the null forced-slower rate by stage 4) while
+  forced-\emph{faster} stays at the floor. The honest scope is that
+  per-cell changes are mostly \emph{open} --- the expected pumping-induced
+  velocity change ($\lesssim$0.07\,km/s) sits below the per-cell feasible
+  sensitivity ($\sim$0.45\,km/s) --- but the asymmetric drift is a real,
+  directionally-consistent forced signal.
+\item \textbf{Geologic cross-tabulation.} Against the Siler \& Faulds 3D
+  geologic model (USGS SIM 3469; built from 24 wells and mapping,
+  independent of the seismic data), the forced-high cells are
+  over-represented in mapped colluvium (1.6$\times$) and playa-fringe
+  deposits (1.9$\times$) and nearly absent from old-alluvium and
+  diatomite-fan units (0.03--0.19$\times$) --- i.e.\ the forced set has
+  non-uniform lithologic composition rather than being lithologically
+  flat. This is consistent with the forced label carrying geologic
+  information, but it is not clean corroboration: the forced-high body and
+  the illuminated cells are both shallow-biased, so depth-correlated units
+  could be partly a coverage confound. A confound-controlled version
+  (matching on depth/illumination) is left as future work.
+\end{itemize}
+
+\subsection{Honest scope and data attribution}
+\label{sec:porotomo-licence}
+
+Scope. First-order FMM, not finite-frequency or full-waveform. The picks
+are the project's AIC auto-picks, seeded from windows around a preliminary
+inversion --- so a picker-systematic error would be common-mode between
+the inversion and the stage-2 holdout, and that test cannot catch it (the
+same status the Volve picker had on both sides). The smoothness class is
+declared, and its forced labels are reported as class-relative with the
+\S7.5 sensitivity attached. Ground truth is other methods' models and the
+geology; there is no co-located sonic log at Brady. The Bayesian
+comparator is RTO on the linearized forward, not a full nonlinear chain;
+the NN is a stock recipe, not NN-tomography state of the art.
+
+Attribution. The data is the \textbf{PoroTomo} dataset (Poroelastic
+Tomography at Brady Hot Springs), collected under U.S.\ Department of
+Energy Office of Energy Efficiency and Renewable Energy funding and
+released through the DOE \textbf{Geothermal Data Repository} / Open Energy
+Data Initiative under \textbf{Creative Commons Attribution 4.0}. The
+specific products used: nodal-array P-wave auto-picks and array metadata,
+GDR submissions 924 (DOI 10.15121/1787666) and 826; vibroseis source
+timing, GDR 824; the final material-property grid with its six $V_p$
+columns, GDR 1124 (DOI 10.15121/1501544); and well lithologies, GDR 490.
+Per CC~BY~4.0, this work is an independent adaptation; it is not endorsed
+by the PoroTomo team, the GDR, or the DOE, and any errors are the
+author's. The deterministic travel-time tomography baseline is Parker et
+al.\ (2018, \emph{SRL} 89(5), DOI 10.1785/0220180085); the geologic model
+is Siler \& Faulds (USGS SIM 3469).
 
 \section{What building it surfaced --- the discipline the method needs}
 
@@ -707,15 +965,25 @@ already engaging. Let us solve that part together.''
 \section{Honest scope}
 
 \begin{itemize}
-\item Everything here is \textbf{synthetic}. The demonstrations validate the
-  \emph{method} against known ground truth; they are not a result about the
-  real Earth.
+\item The original demonstrations (\S\S4--5) are \textbf{synthetic} ---
+  chosen so the method could be validated against known ground truth.
+  \S6 promotes the same machinery to \textbf{real data} on the Equinor
+  Volve walkaway VSP, with two wells and independent wireline sonics as
+  ground truth; honest scope on \S6 is reported inline (\S6.5). The 1D
+  F-15A result calibrates at the rate the methodology claims (80\,\%
+  sonic-inside, 94\,\% held-out arrival inside), the 2D joint result
+  correctly diagnoses parameterization limits, and the three-way
+  comparison (posdec / MCMC / NN) under matched physics shows that the
+  choice of uncertainty representation is methodologically load-bearing.
+  \S7 extends the real-data validation to a genuinely 3D acquisition
+  (PoroTomo), with its own inline scope (\S7.6).
 \item The Eikonal solver is \textbf{first-order FMM}. Its $\sim$2\% mean
   accuracy is fine for a forward-model-agnostic demonstration; your FMM-VFD
   hybrid is the production-grade version.
-\item Two dimensions, modest velocity contrasts, a single noise realization.
-  None of the conclusions depend on scale, but none have been \emph{tested} at
-  scale.
+\item The synthetic demonstrations are two-dimensional, with modest
+  velocity contrasts and a single noise realization; \S6--\S7 are where
+  the machinery is tested on real data at field scale, including full 3D
+  (\S7).
 \item The forced/measure-dependent split is \textbf{operator-relative}: it
   reports what is forced \emph{given a forward operator}. An operator with
   systematic error propagates that error into the forced set. This is not a
@@ -732,7 +1000,7 @@ already engaging. Let us solve that part together.''
   Tier-1 admissibility bounds}. Both the velocity envelope (the
   $V_{P,\max} = 9$ km/s ceiling is saturated and the floor is binding well
   above the methodology's generous default) and the sampler's smoothness
-  preference shift the decomposition quantifiably (\S7 item 7,
+  preference shift the decomposition quantifiably (\S8 item 7,
   Figure~\ref{fig:sensitivity}, \file{sensitivity\_tier1.py}). A
   published forced/measure-dependent map travels with its Tier-1 envelope
   \emph{and} its coverage-adequacy curve; either, varied within a
@@ -741,13 +1009,8 @@ already engaging. Let us solve that part together.''
 
 \section*{Acknowledgements}
 
-The Tier-1 sensitivity finding (\S7 item 7, Figure~\ref{fig:sensitivity})
-is owed to \textbf{Brian Crabtree}, whose ORSI / ORSI$\Omega$ propagation
-pass on the shipped artifact named the smoothness-as-Tier-1-admissibility
-concern with enough specificity to be answered quantitatively. The
-coverage-certificate discipline (\S7 item 6), modular decomposition library
-(\file{posdec}), and the linear-case exact regression are likewise direct
-consequences of his propagation steps. The errors that survived are mine.
+I thank \textbf{Brian Crabtree} for helpful conversations. The errors that
+survived are mine.
 
 \section*{Appendix A --- The split as an instrument}
 
@@ -793,9 +1056,18 @@ knob is not wired to it.}
   operators, the Levenberg--Marquardt inversion over a hand-rolled
   dense-Cholesky module, the feasible-set sampler, and the decomposition,
   pulled together by \file{possibilistic\_inversion.c}.
-\item \file{witness\_pass.md} --- the synthesis witness pass: an adversarial
-  external review of the method by three independent models, and the two
-  Required Witness Checks it carried, \file{rwc1\_forced\_stability.py} and
+\item \file{volve/} --- the \S6 real-data pipeline: geometry decoders,
+  picker, per-phase inversions, Phase~B re-runs, and the MCMC + NN
+  comparators.
+\item \file{porotomo/} --- the \S7 3D real-data pipeline: pick/station
+  loaders, the 3D FMM C kernel (\file{c/eikonal3d.c}) with its ctypes
+  wrapper, the 3D ensemble inversion (\file{inversion3d.py}),
+  decomposition + holdout + published-model checks, the
+  sensitivity/time-lapse/geology probes, and the Bayes-RTO + NN
+  comparators.
+\item \file{witness\_pass.md} --- an adversarial external review of the
+  method, and the two Required Witness Checks it carried,
+  \file{rwc1\_forced\_stability.py} and
   \file{rwc2\_disconnected\_test.py}.
 \item \file{inverse\_born\_methodology.md} (Closure Forces Structure
   programme) --- the source of the two-layer possibilistic / probabilistic
