@@ -255,6 +255,15 @@ class Config3D:
     bisect_iters: int = 12
     bisect_tol: float = 1.15
     lsqr_iters: int = 400
+    # DECLARED SMOOTHNESS CLASS (load-bearing - see the ORSI Tier-1
+    # sensitivity finding): the GN step minimizes
+    #   ||J ds - r||^2 + lam^2 ||s+ds-s_ref||^2
+    #                  + (smooth_ratio*lam)^2 ||L (s+ds-s_ref)||^2
+    # with L the ground-cell graph Laplacian, i.e. deviations from the
+    # smooth random reference are themselves required to be smooth.
+    # Without this (smooth_ratio=0) members streak bound-to-bound along
+    # rays and illuminated cells come out WIDER than unilluminated ones.
+    smooth_ratio: float = 10.0
     seed: int = 20260609
     verbose: bool = False
 
@@ -271,6 +280,35 @@ def _smooth_random_vp_3d(rng, grid: Grid3D, cfg: Config3D) -> np.ndarray:
     return np.clip(vp + noise, cfg.vp_min_kms, cfg.vp_max_kms)
 
 
+def ground_laplacian(grid: Grid3D, air: np.ndarray) -> csr_matrix:
+    """Graph Laplacian over ground cells (6-neighbour, air-clipped):
+    row i = sum_j (s_i - s_j) over ground neighbours j. The smoothness
+    operator of the declared model class."""
+    ground_idx = np.flatnonzero(~air.ravel())
+    pos = -np.ones(grid.n_cells, dtype=int)
+    pos[ground_idx] = np.arange(len(ground_idx))
+    gz, gy, gx = np.unravel_index(ground_idx,
+                                  (grid.nz, grid.ny, grid.nx))
+    rows_l, cols_l, vals_l = [], [], []
+    for dz, dy, dx in ((1, 0, 0), (-1, 0, 0), (0, 1, 0),
+                       (0, -1, 0), (0, 0, 1), (0, 0, -1)):
+        nz_, ny_, nx_ = gz + dz, gy + dy, gx + dx
+        ok = ((nz_ >= 0) & (nz_ < grid.nz) & (ny_ >= 0) & (ny_ < grid.ny)
+              & (nx_ >= 0) & (nx_ < grid.nx))
+        nb_flat = (nz_[ok] * grid.ny + ny_[ok]) * grid.nx + nx_[ok]
+        nb_pos = pos[nb_flat]
+        gok = nb_pos >= 0                      # neighbour is ground
+        i = np.flatnonzero(ok)[gok]
+        rows_l.extend([i, i])
+        cols_l.extend([i, nb_pos[gok]])
+        vals_l.extend([np.ones(len(i)), -np.ones(len(i))])
+    n_g = len(ground_idx)
+    return coo_matrix(
+        (np.concatenate(vals_l),
+         (np.concatenate(rows_l), np.concatenate(cols_l))),
+        shape=(n_g, n_g)).tocsr()
+
+
 def _invert_member(args):
     """One ensemble member: smooth random reference, n_gn_iters damped GN
     steps with lambda bisected toward cfg.noise_rms_s. Module-level so it
@@ -280,6 +318,7 @@ def _invert_member(args):
     t_obs = np.concatenate(ds.times)
     ground = np.flatnonzero(~air.ravel())
     n_ground = len(ground)
+    L = ground_laplacian(grid, air) if cfg.smooth_ratio > 0 else None
     s_lo = 1.0 / (cfg.vp_max_kms * 1000.0)
     s_hi = 1.0 / (cfg.vp_min_kms * 1000.0)
     rng = np.random.default_rng(member_seed)
@@ -303,9 +342,14 @@ def _invert_member(args):
         rms_prev = None
         for _bi in range(cfg.bisect_iters):
             lam = np.sqrt(lo * hi)
-            A = sp_vstack([Jg, lam * sp_eye(n_ground, format="csr")],
-                          format="csr")
-            b = np.concatenate([resid, -lam * (s - s_ref)])
+            blocks = [Jg, lam * sp_eye(n_ground, format="csr")]
+            rhs = [resid, -lam * (s - s_ref)]
+            if L is not None:
+                mu = cfg.smooth_ratio * lam
+                blocks.append(mu * L)
+                rhs.append(-mu * (L @ (s - s_ref)))
+            A = sp_vstack(blocks, format="csr")
+            b = np.concatenate(rhs)
             ds_step = lsqr(A, b, iter_lim=cfg.lsqr_iters)[0]
             s_try = np.clip(s + ds_step, s_lo, s_hi)
             t_try, _ = forward_3d(to_vp(s_try), ds, grid)
