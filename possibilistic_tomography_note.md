@@ -272,10 +272,10 @@ your own pipeline. Figure 7 is the result, and the decomposition code is
 
 These figures are from the feasible-set sampler at its default operating point,
 and at that operating point the forced set itself over-claims: an adversarial
-stress test (§7 point 6; `witness_pass.md`, RWC-2) finds ~41% of forced cells
+stress test (§8 point 6; `witness_pass.md`, RWC-2) finds ~41% of forced cells
 admit a feasible, equally-smooth, opposite-sign model. The decomposition layer
 is sound and forward-model-agnostic; what is coverage-limited is the
-feasible-set *sampling* that feeds it (§8).
+feasible-set *sampling* that feeds it (§9).
 
 The decomposition transferred across two genuinely different forward operators
 without change. That is the load-bearing result of this note: the possibilistic
@@ -331,7 +331,7 @@ the possibilistic frame claims for full-coverage forecasts.*
 
 That is the "methodology mechanically works on real first arrivals" outcome.
 Calibration matches the methodology's claim; the operator-relative caveats of
-section 8 apply unchanged.
+section 9 apply unchanged.
 
 ### 6.2 2D joint inversion on F-15A + F-11 T2 — structural misspecification surfaces
 
@@ -432,7 +432,7 @@ uncertainty representation gives a quantifiably different account** of the
 same inverse problem — same physics, same prior, same data — and the choice
 is methodologically load-bearing. Brian's ORSI Tier-1 sensitivity work on
 the synthetic side flagged the analogous load-bearing-ness of the smoothness
-prior (§7.7, Figure 11); the three-way head-to-head is its real-data analog.
+prior (§8.7, Figure 14); the three-way head-to-head is its real-data analog.
 Possibilistic is the most conservative; that is the methodology's design,
 and on this real-data test it delivers the calibration its frame claims.
 
@@ -483,7 +483,7 @@ Nothing in §6 (or elsewhere in this note) **constitutes or implies endorsement*
 of this work by Equinor or the former Volve licence partners (HRS T&C §4).
 The licence partners are credited solely as the data providers; the
 methodology, the inversion results, and the interpretive narrative are the
-author's, with the honest-scope caveats of §6.5 and §9 applying.
+author's, with the honest-scope caveats of §6.5 and §10 applying.
 
 **Citation and link.** The official HRS Terms and conditions document is
 available from Equinor's open-data portal at
@@ -495,7 +495,221 @@ cite Equinor's release per the HRS T&C attribution requirement.
 
 ---
 
-## 7. What building it surfaced — the discipline the method needs
+## 7. Demonstration 4 — real 3D on the PoroTomo nodal array
+
+Demonstration 3 reached real data, but the acquisition was a walkaway VSP:
+the inversion was 1D along the bore, then 2D in a single well-line plane.
+The natural next question — the one Brian's ORSI evaluation named as the
+decisive extension — is whether the method survives a **genuinely 3D
+acquisition geometry**, where rays cross a volume from sources and
+receivers spread over a surface. This section runs the full pipeline on
+the **PoroTomo** experiment (Brady Hot Springs, Nevada; U.S. DOE
+geothermal program, March 2016), an open dataset whose geometry is areal,
+not linear. The 3D pipeline ships in the `porotomo/` subpackage; the data
+is CC BY 4.0 (§7.6).
+
+What PoroTomo adds beyond Volve, and what it gives up: it has ~130× the
+picks (165,359 published P-wave auto-picks vs Volve's ~1,200), an areal
+source–receiver layout, and — uniquely — *multiple independent published
+velocity models and a drilling-based 3D geologic model* to test against.
+What it lacks is co-located sonic logs; ground truth here is other
+methods' models and the geology, not a wireline curve.
+
+### 7.1 The dataset and the inversion
+
+Sources: 196 vibroseis points swept over four acquisition stages.
+Receivers: 238 live three-component nodes on a ~1.7 × 1.9 km grid. The
+travel-time picks are the project's own AIC auto-picks (GDR 924), so the
+inversion input is a 10 MB table, not a terabyte of waveforms. **Stage 1
+(41,971 picks after an apparent-velocity outlier filter) is inverted;
+stage 2 is held out untouched for calibration; stages 3–4 are reserved
+for the time-lapse probe (§7.5).** Forward operator: the 3D first-arrival
+Fast Marching solver of `porotomo/c/eikonal3d.c` (a dependency-free C
+kernel, the 3D sibling of `eikonal.py`), with analytic source-ball seeding
+to suppress the first-order scheme's near-source error. Ensemble: 30
+random-reference damped Gauss–Newton members on a 50 m grid (13 × 50 × 47;
+topography masks air cells out of the model), each fit to a 60 ms noise
+floor — the achievable floor set by the auto-picks' robust repeat scatter
+(~36 ms) plus their heavy outlier tail (p95 |Δt| = 140 ms) and the
+first-order forward error. All 30 members converge to 53–63 ms RMS.
+
+**One negative result drove a method fix and is worth stating.** The first
+full ensemble damped only toward the random reference, with no explicit
+roughness penalty — and produced *inverted* interval-width ordering:
+illuminated cells came out **wider** (4.8 km/s median) than unilluminated
+ones (1.8), because members streaked bound-to-bound along the rays. In 3D
+the cells-per-datum ratio is high enough that the implicit smoothness of
+the reference is not enough; the smoothness class has to be made explicit.
+Adding a graph-Laplacian roughness penalty on the deviation from the
+reference (the declared class) fixed the ordering (0.57 lit vs 1.50
+unlit), removed all bound-pinning, *improved* the fit, and — because it
+conditions the linear solve — cut per-member cost ~20×. This is exactly
+the load-bearing-ness of the smoothness prior that Brian's Tier-1 work
+flagged on the synthetic side (§8.7), reappearing as a hard failure mode
+at 3D scale. The fix is honest about what it is: a *declared* class, whose
+forced labels are then reported relative to it and stress-tested for
+sensitivity to it (§7.5).
+
+### 7.2 The decomposition
+
+The gauge is a laterally-uniform 1D median profile — a physical null
+("no lateral structure"), so the forced-high/low labels are claims about
+*lateral* anomalies the data demands, and are non-tautological (unlike an
+ensemble-mean background, the error Volve phase 5 caught and §8 point 1
+documents). Cells without ray coverage are flagged unilluminated and held
+out of the forced statistics rather than allowed to pose as findings; on
+this geometry 20.7% of ground cells are illuminated.
+
+At the deadband eps = 0.25 km/s, over the illuminated volume: **7.7%
+forced-high, 0.1% forced-low, 13.1% forced-quiet, 79.1% measure-dependent**
+(the full eps sweep is in `porotomo_decomposition_cert.json`). The
+forced-high cells are not scattered — they form a contiguous NE-trending
+fast body at 50–150 m depth (Figure 11). The honest headline is the 79%:
+most of what a single deterministic model would render as confident
+structure is, under this data and prior class, *permitted but not forced*.
+The method's job is to say which 8% is not.
+
+![Figure 11. PoroTomo stage-1 possibilistic decomposition. Four depth slices; rows: ensemble-median Vp, feasible-interval width on illuminated cells, and the forced-sign classification (blue forced-low, grey forced-quiet, pink measure-dependent, red forced-high; white unilluminated).](porotomo_decomposition.png)
+
+*Figure 11. The decomposition on a real 3D volume. The forced-high cells
+(red) concentrate in a coherent shallow body, not in isolated voxels; the
+bulk of the illuminated volume is measure-dependent (pink) — structure the
+data permits but does not compel. The width panel confirms the corrected
+ordering: illuminated cells are tighter than the unilluminated surround.*
+
+### 7.3 Calibration: held-out arrivals and independent models
+
+Two tests, neither using a sonic log. **Stage-2 holdout:** the
+ensemble-median predicts the untouched stage-2 arrival times at 53.9 ms
+RMS, versus 53.1 ms in-sample — essentially zero generalization gap, the
+direct witness that the ensemble has not overfit. (Raw inside-interval is
+27%, rising to 65% with a ±36 ms pick-noise allowance; unlike Volve, the
+3D predictive intervals are *tight relative to pick noise* — median 38 ms —
+so the raw rate here mostly measures the auto-picks' own noise, and the
+in≈out RMS equality is the load-bearing number.)
+
+**Independent published models (Figure 12).** The PoroTomo team's final
+property grid (GDR 1124) carries six Vp models from three groups and three
+methods. Against the illuminated cells, the feasible set brackets them:
+the Thurber and Nayak travel-time/body-wave models fall inside our
+per-cell intervals in **95–98%** of cells within 0.25 km/s, with
+correlation r ≈ 0.92 and field-wide medians matching ours to 0.01 km/s.
+Where we recover the same earth, we recover it almost exactly. The two
+systematic departures are interpretable, not failures: at the slow
+extremes our declared smoothness class compresses contrast the finer
+published parameterization resolves, and the Matzel *sweep-interferometry*
+model runs ~0.3 km/s fast throughout — different physics sampling
+different structure, divergent from the travel-time models too.
+
+![Figure 12. Six published PoroTomo Vp models (three travel-time/body-wave vintages, one sweep-interferometry) vs the stage-1 feasible-interval ensemble median on illuminated cells; inside-interval fraction and correlation annotated per panel.](porotomo_published_check.png)
+
+*Figure 12. The feasible set vs models built by other groups with other
+methods. Travel-time and body-wave models sit inside the intervals at
+95–98% (±0.25 km/s) and track the ensemble median tightly; the
+interferometry model's systematic offset is a real, localizable physics
+difference.*
+
+### 7.4 Three-way, under matched everything
+
+The Volve §6.4 head-to-head repeats in 3D, now against a Bayesian
+comparator built for scale: with 27,234 unknowns, an affine-invariant
+MCMC sampler is infeasible, so the Bayesian baseline is **randomize-then-
+optimize (RTO)**, which draws exact samples from the linearized-Gaussian
+posterior — matched physics, noise, and prior *class* to the possibilistic
+ensemble. The neural baseline is the same stock MLP-with-MC-dropout recipe
+as Volve, trained on synthetic eikonal forwards from the matched prior.
+All three face the identical stage-2 holdout and published-model tests
+(Figure 13):
+
+| Method | Thurber-inside (±0.25) | Holdout inside (±36 ms) | Median width | Holdout RMS |
+|---|---:|---:|---:|---:|
+| posdec (feasible interval, 30) | **98 %** | **65 %** | 0.57 km/s | 54.0 ms |
+| Bayes (RTO, 95 % credible) | 90 % | 52 % | 0.26 km/s | 54.0 ms |
+| NN (MLP, MC-dropout, 95 %) | 90 % | 58 % | 0.69 km/s | 61.9 ms |
+
+The ordering matches Volve exactly. posdec and the Bayesian posterior
+share physics and so share the central estimate (identical 54.0 ms RMS),
+but the 95% credible intervals are *half the width* and miss accordingly —
+textbook credible-interval overconfidence once the Gaussian likelihood
+imposes shape beyond mere feasibility. The NN's dropout band is *wider*
+than the feasible interval yet covers less on every test — a miscalibrated
+shape, not just a miscalibrated scale. Possibilistic is again the
+representation that delivers the coverage its frame claims, on a real 3D
+problem, against independently-built models.
+
+![Figure 13. PoroTomo 3D, three uncertainty representations under matched physics/noise/prior/tests: coverage tests (published-model-inside and stage-2 holdout, higher is better), median interval width, and stage-2 holdout RMS.](porotomo_threeway.png)
+
+*Figure 13. The same inverse problem, three accounts of its uncertainty.
+posdec leads every coverage test; the Bayesian posterior matches its
+central estimate but is overconfident; the NN is wide and miscalibrated.*
+
+### 7.5 Three stress tests: sensitivity, time-lapse, geology
+
+Three further probes, run before this section was written, are reported in
+full in `docs/porotomo_3d_companion.md`; the load-bearing results:
+
+- **Smoothness-class sensitivity** (the Tier-1 protocol of §8.7, in 3D).
+  Re-running the ensemble at perturbed class hyperparameters and measuring
+  the Jaccard overlap of the forced sets against a half-ensemble control
+  ceiling (J = 0.70): the forced-high set is robust to *doubling* the
+  correlation length (J = 0.67) but moves under changes to the smoothness
+  *ratio* (J = 0.30–0.36). The forced claims are class-relative — which is
+  precisely how the method states them, and why this probe is part of it,
+  not an afterthought.
+- **Possibilistic time-lapse** — a question type neither the deterministic
+  nor any Bayesian treatment of this dataset has posed. Inverting stages
+  2/3/4 with *paired references* (shared member seeds, so the prior spread
+  cancels in the per-cell difference) and using the minimal-change stage
+  1→2 pair as a null control (a symmetric 2.4% forced-change false-positive
+  floor): forced-*slower* cells grow monotonically across stages (to ~1.8×
+  the null rate by stage 4) while forced-*faster* stays at the floor. The
+  honest scope is that per-cell changes are mostly *open* — the expected
+  pumping-induced velocity change (≲0.07 km/s) sits below the per-cell
+  feasible sensitivity (~0.45 km/s) — but the asymmetric drift is a real,
+  directionally-consistent forced signal.
+- **Geologic cross-tabulation.** Against the Siler & Faulds 3D geologic
+  model (USGS SIM 3469; built from 24 wells and mapping, independent of the
+  seismic data), the forced-high cells are over-represented in mapped
+  colluvium (1.6×) and playa-fringe deposits (1.9×) and nearly absent from
+  old-alluvium and diatomite-fan units (0.03–0.19×) — i.e. the forced set
+  has non-uniform lithologic composition rather than being lithologically
+  flat. This is consistent with the forced label carrying geologic
+  information, but it is not clean corroboration: the forced-high body and
+  the illuminated cells are both shallow-biased, so depth-correlated units
+  could be partly a coverage confound. A confound-controlled version
+  (matching on depth/illumination) is left as future work.
+
+### 7.6 Honest scope and data attribution
+
+Scope. First-order FMM, not finite-frequency or full-waveform. The picks
+are the project's AIC auto-picks, seeded from windows around a preliminary
+inversion — so a picker-systematic error would be common-mode between the
+inversion and the stage-2 holdout, and that test cannot catch it (the same
+status the Volve picker had on both sides). The smoothness class is
+declared, and its forced labels are reported as class-relative with the
+§7.5 sensitivity attached. Ground truth is other methods' models and the
+geology; there is no co-located sonic log at Brady. The Bayesian
+comparator is RTO on the linearized forward, not a full nonlinear chain;
+the NN is a stock recipe, not NN-tomography state of the art.
+
+Attribution. The data is the **PoroTomo** dataset (Poroelastic Tomography
+at Brady Hot Springs), collected under U.S. Department of Energy Office of
+Energy Efficiency and Renewable Energy funding and released through the
+DOE **Geothermal Data Repository** / Open Energy Data Initiative under
+**Creative Commons Attribution 4.0**. The specific products used:
+nodal-array P-wave auto-picks and array metadata, GDR submissions 924
+(DOI 10.15121/1787666) and 826; vibroseis source timing, GDR 824; the
+final material-property grid with its six published Vp models, GDR 1124
+(DOI 10.15121/1501544); and well lithologies, GDR 490. Per CC BY 4.0, this
+work is an independent adaptation; it is not endorsed by the PoroTomo team,
+the GDR, or the DOE, and any errors are the author's. The deterministic
+travel-time tomography baseline is Parker et al. (2018, *SRL* 89(5),
+DOI 10.1785/0220180085); the geologic model is Siler & Faulds (USGS SIM
+3469).
+
+---
+
+## 8. What building it surfaced — the discipline the method needs
 
 A method that always says "yes" is a gimmick. This one has real failure modes,
 and finding them is how I know it has content. Each was surfaced by a synthetic
@@ -534,7 +748,7 @@ run failing honestly; each is now documented in the script headers.
    sampler. The split is only as data-forced as those bounds are
    data-independent. The natural worry that the smoothness preference sneaks
    regularization into the possibilistic layer is now answered quantitatively
-   (`sensitivity_tier1.py`, Figure 11). Tightening the
+   (`sensitivity_tier1.py`, Figure 14). Tightening the
    velocity floor `VP_MIN` from 2.0 to 3.0 km/s drops the forced-high Jaccard
    to 0.27; the `VP_MAX = 9` km/s ceiling is saturated (every member touches
    it); and the smoothness preference is load-bearing — at 25% smoothness
@@ -544,9 +758,9 @@ run failing honestly; each is now documented in the script headers.
    smaller-sample narrowing. The Tier-1 envelope is therefore reported
    alongside the coverage-adequacy curve, not assumed.
 
-![Figure 11. Tier-1 sensitivity. Top: tightening the velocity floor VP_MIN shifts the forced sets quickly (worst Jaccard 0.07 at VP_MIN = 3.5). Bottom: at every percentile p, the smoothness-kept ensemble (filled) sits well below the same-size random control (open), isolating the smoothness preference from generic sub-selection.](sensitivity_tier1.png)
+![Figure 14. Tier-1 sensitivity. Top: tightening the velocity floor VP_MIN shifts the forced sets quickly (worst Jaccard 0.07 at VP_MIN = 3.5). Bottom: at every percentile p, the smoothness-kept ensemble (filled) sits well below the same-size random control (open), isolating the smoothness preference from generic sub-selection.](sensitivity_tier1.png)
 
-*Figure 11. Tier-1 sensitivity sweep on the 396-member RWC-1 ensemble. Top
+*Figure 14. Tier-1 sensitivity sweep on the 396-member RWC-1 ensemble. Top
 row: velocity-floor sweep (the VP_MAX ceiling is saturated at 100% and not
 separately sweepable). Bottom row: smoothness-percentile sweep with a
 random-subset control of the same N. The smoothness-kept Jaccard sits below
@@ -559,7 +773,7 @@ tuning itself to the answer it wants.
 
 ---
 
-## 8. The open frontier — and where you come in
+## 9. The open frontier — and where you come in
 
 Here is the honest seam, and it is the reason this is a note to *you* and not
 a finished claim.
@@ -596,7 +810,7 @@ already engaging. Let us solve that part together."
 
 ---
 
-## 9. Honest scope
+## 10. Honest scope
 
 - The original demonstrations (§§4–5) are **synthetic** — chosen so the method
   could be validated against known ground truth. §6 promotes the same machinery
@@ -628,7 +842,7 @@ already engaging. Let us solve that part together."
   admissibility bounds**. Both the velocity envelope (the `VP_MAX = 9` km/s
   ceiling is saturated and the floor is binding well above the methodology's
   generous default) and the sampler's smoothness preference shift the
-  decomposition quantifiably (§7.7, Figure 11, `sensitivity_tier1.py`). A
+  decomposition quantifiably (§8.7, Figure 14, `sensitivity_tier1.py`). A
   published forced/measure-dependent map travels with its Tier-1 envelope
   *and* its coverage-adequacy curve; either, varied within a plausible range,
   changes the result.
@@ -637,10 +851,10 @@ already engaging. Let us solve that part together."
 
 ## Acknowledgements
 
-The Tier-1 sensitivity finding (§7.7, Figure 11) is owed to **Brian Crabtree**,
+The Tier-1 sensitivity finding (§8.7, Figure 14) is owed to **Brian Crabtree**,
 whose ORSI / ORSIΩ propagation pass on the shipped artifact named the
 smoothness-as-Tier-1-admissibility concern with enough specificity to be
-answered quantitatively. The coverage-certificate discipline (§7.6),
+answered quantitatively. The coverage-certificate discipline (§8.6),
 modular decomposition library (`posdec`), and the linear-case exact
 regression are likewise direct consequences of his propagation steps. The
 errors that survived are mine.
