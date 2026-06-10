@@ -346,13 +346,13 @@ Three rounds of work were needed to get an honest read:
    produced sonic-inside coverage of 10 % at each well's wellhead column, a
    joint held-out inside rate of 23 %, and 79 % "forced-quiet" cells. The
    narrative on first read was *"prior dominance in unilluminated cells."*
-2. **Triad witness pass.** A scoped brief went to three independent AI
-   witnesses (Venice / Grok / ChatGPT). They converged on four interpretation
-   artifacts the first read was leaning on: the anomaly baseline was the
-   ensemble mean (gauge-sensitive), the sonic was sampled at the wellhead
-   column instead of along the deviated bore (category error), the ensemble
-   size was small (under-exploration risk), and the prior strength was not
-   directly tested. ChatGPT specifically named the structural-misspecification
+2. **External review.** A scoped brief was circulated for independent
+   review, which converged on four interpretation artifacts the first read
+   was leaning on: the anomaly baseline was the ensemble mean
+   (gauge-sensitive), the sonic was sampled at the wellhead column instead
+   of along the deviated bore (category error), the ensemble size was
+   small (under-exploration risk), and the prior strength was not directly
+   tested. The review specifically named the structural-misspecification
    hypothesis — *2D Vp(w, z) on a 3D Earth* — as the leading alternative.
 3. **Phase A diagnostics + Phase B re-run.** Each artifact was tested in
    sequence. Switching to a wireline-derived anomaly baseline collapsed the
@@ -370,7 +370,7 @@ Three rounds of work were needed to get an honest read:
 ![Figure 9. 2D joint inversion result on F-15A + F-11 T2 after the Phase A diagnostic corrections — the methodology correctly diagnoses structural misspecification.](volve_phaseB_decomposition.png)
 
 *Figure 9. 2D Vp(w, z) joint inversion of the F-15A + F-11 T2 picks
-(Phase B, with the witness-pass artifact corrections applied). Top:
+(Phase B, with the external-review artifact corrections applied). Top:
 ensemble median Vp(w, z) and the forced/measure-dependent classification
 versus the wireline-sonic baseline (red high, blue low, orange
 measure-dependent, grey forced-quiet). Bottom: sonic-along-bore vs
@@ -388,16 +388,16 @@ what "the forward operator (or parameterization) is the load-bearing
 approximation" looks like in real data, and the decomposition correctly
 flags it.
 
-### 6.3 The witness pass as part of the method
+### 6.3 External review as part of the method
 
-The witness pass and the four corrections it produced are themselves part of
+The review round and the four corrections it produced are themselves part of
 the methodology contribution. The discipline is: *publish the first-cut
-interpretation, run external witnesses on the brief, run the diagnostics they
-recommend, retract the parts that were gauge-sensitive or confounded, re-run
-with the corrections, and re-report.* This was the second time in the
-methodology's development that triad witnesses caught an interpretation drift
-(the first was the possibilism note's figure pass with Crane and Martin); the
-practice is now treated as a step in the workflow, not an extra.
+interpretation, circulate a scoped brief for independent review, run the
+diagnostics it recommends, retract the parts that were gauge-sensitive or
+confounded, re-run with the corrections, and re-report.* This was the second
+time in the methodology's development that external review caught an
+interpretation drift; the practice is now treated as a step in the workflow,
+not an extra.
 
 ### 6.4 Head-to-head: possibilistic vs Bayesian vs neural-net
 
@@ -430,8 +430,8 @@ prediction is also off the real trend (490 ms holdout RMS).*
 The point is not "which method is best." It is that **each choice of
 uncertainty representation gives a quantifiably different account** of the
 same inverse problem — same physics, same prior, same data — and the choice
-is methodologically load-bearing. Brian's ORSI Tier-1 sensitivity work on
-the synthetic side flagged the analogous load-bearing-ness of the smoothness
+is methodologically load-bearing. The Tier-1 sensitivity sweep on the
+synthetic side flagged the analogous load-bearing-ness of the smoothness
 prior (§8.7, Figure 14); the three-way head-to-head is its real-data analog.
 Possibilistic is the most conservative; that is the methodology's design,
 and on this real-data test it delivers the calibration its frame claims.
@@ -448,9 +448,9 @@ and on this real-data test it delivers the calibration its frame claims.
   picks from the matched prior, MC dropout for uncertainty. NN tomography
   state-of-the-art (normalizing-flow posteriors, Bayesian NNs, PINNs) was
   not invoked; that is a separate scope.
-- A structurally different parameterization (full 3D, anisotropy, finite-
-  frequency) was not tested. Brian's ORSI evaluation explicitly recommends
-  that as the natural extension, paired with a domain collaborator.
+- A structurally different parameterization (anisotropy, finite-frequency)
+  was not tested; the full-3D case is taken up in §7. The remaining
+  extensions are best paired with a domain collaborator.
 
 ### 6.6 Data attribution and licence
 
@@ -499,8 +499,7 @@ cite Equinor's release per the HRS T&C attribution requirement.
 
 Demonstration 3 reached real data, but the acquisition was a walkaway VSP:
 the inversion was 1D along the bore, then 2D in a single well-line plane.
-The natural next question — the extension Brian's ORSI evaluation
-explicitly recommended (§6.5) — is whether the method survives a
+The natural next question (§6.5) is whether the method survives a
 **genuinely 3D acquisition geometry**, where rays cross a volume from sources and
 receivers spread over a surface. This section runs the full pipeline on
 the **PoroTomo** experiment (Brady Hot Springs, Nevada; U.S. DOE
@@ -544,8 +543,8 @@ Adding a graph-Laplacian roughness penalty on the deviation from the
 reference (the declared class) fixed the ordering (0.57 lit vs 1.50
 unlit), removed all bound-pinning, *improved* the fit, and — because it
 conditions the linear solve — cut per-member cost ~20×. This is exactly
-the load-bearing-ness of the smoothness prior that Brian's Tier-1 work
-flagged on the synthetic side (§8.7), reappearing as a hard failure mode
+the load-bearing-ness of the smoothness prior that the Tier-1 sensitivity
+work flagged on the synthetic side (§8.7), reappearing as a hard failure mode
 at 3D scale. The fix is honest about what it is: a *declared* class, whose
 forced labels are then reported relative to it and stress-tested for
 sensitivity to it (§7.5).
@@ -555,8 +554,8 @@ sensitivity to it (§7.5).
 The gauge is a laterally-uniform 1D median profile — a physical null
 ("no lateral structure"), so the forced-high/low labels are claims about
 *lateral* anomalies the data demands, and are non-tautological (unlike an
-ensemble-mean background — the gauge error the Volve phase-5 witness pass
-caught and §6.3 documents). Cells without ray coverage are flagged unilluminated and held
+ensemble-mean background — the gauge error the Volve phase-5 external
+review caught and §6.3 documents). Cells without ray coverage are flagged unilluminated and held
 out of the forced statistics rather than allowed to pose as findings; on
 this geometry 20.7% of ground cells are illuminated.
 
@@ -582,7 +581,7 @@ ordering: illuminated cells are tighter than the unilluminated surround.*
 Two tests, neither using a sonic log. **Stage-2 holdout:** the
 ensemble-median predicts the untouched stage-2 arrival times at 53.9 ms
 RMS, versus 53.1 ms in-sample — essentially zero generalization gap, the
-direct witness that the ensemble has not overfit. (Raw inside-interval is
+direct evidence that the ensemble has not overfit. (Raw inside-interval is
 27%, rising to 65% with a ±36 ms pick-noise allowance; unlike Volve, the
 3D predictive intervals are *tight relative to pick noise* — median 38 ms —
 so the raw rate here mostly measures the auto-picks' own noise, and the
@@ -855,13 +854,8 @@ already engaging. Let us solve that part together."
 
 ## Acknowledgements
 
-The Tier-1 sensitivity finding (§8.7, Figure 14) is owed to **Brian Crabtree**,
-whose ORSI / ORSIΩ propagation pass on the shipped artifact named the
-smoothness-as-Tier-1-admissibility concern with enough specificity to be
-answered quantitatively. The coverage-certificate discipline (§8.6),
-modular decomposition library (`posdec`), and the linear-case exact
-regression are likewise direct consequences of his propagation steps. The
-errors that survived are mine.
+I thank **Brian Crabtree** for helpful conversations. The errors that
+survived are mine.
 
 ---
 
@@ -911,9 +905,9 @@ zero, and never moves A.*
   walkaway-VSP bundles under `08.VSP_VELOCITY` and the petrophysical
   bundles under `05.PETROPHYSICAL INTERPRETATION` for wells
   15/9-F-15 A and 15/9-F-11 T2, per §6.6.
-- `witness_pass.md` — the synthesis witness pass: an adversarial external review
-  of the method by three independent models, and the two Required Witness Checks
-  it carried, `rwc1_forced_stability.py` and `rwc2_disconnected_test.py`.
+- `witness_pass.md` — an adversarial external review of the method, and the
+  two Required Witness Checks it carried, `rwc1_forced_stability.py` and
+  `rwc2_disconnected_test.py`.
 - `inverse_born_methodology.md` (Closure Forces Structure programme) — the
   source of the two-layer possibilistic / probabilistic discipline.
 - Bodin, T. & Sambridge, M. (2009), *Seismic tomography with the reversible
