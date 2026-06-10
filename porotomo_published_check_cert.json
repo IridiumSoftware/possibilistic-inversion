@@ -1,0 +1,61 @@
+{
+  "dataset": "GDR 1124 MESHEDTOMO_20190108 (CC-BY 4.0, DOI 10.15121/1501544)",
+  "tol_kms": 0.0,
+  "illum_min_path_m": 150.0,
+  "models": {
+    "ID05_Vp_Thurber_velfile20170727": {
+      "n_cells_compared": 2666,
+      "unit_scale_applied": 0.001,
+      "inside_strict": 0.6118,
+      "inside_tol_0p25": 0.9482,
+      "corr_with_median": 0.891,
+      "published_median_kms": 2.342,
+      "ensemble_median_kms": 2.361
+    },
+    "ID10_Vp_Thurber20171123": {
+      "n_cells_compared": 2666,
+      "unit_scale_applied": 0.001,
+      "inside_strict": 0.7033,
+      "inside_tol_0p25": 0.9782,
+      "corr_with_median": 0.917,
+      "published_median_kms": 2.357,
+      "ensemble_median_kms": 2.361
+    },
+    "ID13_Vp_Thurber20180504": {
+      "n_cells_compared": 2666,
+      "unit_scale_applied": 0.001,
+      "inside_strict": 0.7033,
+      "inside_tol_0p25": 0.9782,
+      "corr_with_median": 0.917,
+      "published_median_kms": 2.357,
+      "ensemble_median_kms": 2.361
+    },
+    "ID14_Vp_Nayak20180513": {
+      "n_cells_compared": 2666,
+      "unit_scale_applied": 0.001,
+      "inside_strict": 0.7311,
+      "inside_tol_0p25": 0.9752,
+      "corr_with_median": 0.921,
+      "published_median_kms": 2.429,
+      "ensemble_median_kms": 2.361
+    },
+    "ID18_Vp_Nayak20180607": {
+      "n_cells_compared": 2666,
+      "unit_scale_applied": 0.001,
+      "inside_strict": 0.7149,
+      "inside_tol_0p25": 0.97,
+      "corr_with_median": 0.906,
+      "published_median_kms": 2.393,
+      "ensemble_median_kms": 2.361
+    },
+    "ID01_Vp_MatzelSweepInterfNov2017": {
+      "n_cells_compared": 2661,
+      "unit_scale_applied": 0.001,
+      "inside_strict": 0.5246,
+      "inside_tol_0p25": 0.823,
+      "corr_with_median": 0.883,
+      "published_median_kms": 2.675,
+      "ensemble_median_kms": 2.363
+    }
+  }
+}

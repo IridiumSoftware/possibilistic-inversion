@@ -1,0 +1,45 @@
+{
+  "dataset": "PoroTomo stage-1 nodal P picks (GDR 924)",
+  "gauge": "laterally-uniform 1D median profile vp_1d(z); lateral-anomaly labels only",
+  "vp_1d_kms": [
+    NaN,
+    1.226,
+    1.461,
+    1.702,
+    1.942,
+    2.152,
+    2.33,
+    2.506,
+    2.67,
+    2.837,
+    3.01,
+    3.189,
+    3.378
+  ],
+  "illum_min_path_m": 150.0,
+  "n_ground_cells": 27234,
+  "n_illuminated": 5636,
+  "frac_illuminated_of_ground": 0.2069,
+  "eps_sweep": {
+    "0.15": {
+      "forced_high": 0.1297,
+      "forced_low": 0.0043,
+      "forced_quiet": 0.0319,
+      "measure_dependent": 0.8341
+    },
+    "0.25": {
+      "forced_high": 0.0774,
+      "forced_low": 0.0014,
+      "forced_quiet": 0.1308,
+      "measure_dependent": 0.7905
+    },
+    "0.35": {
+      "forced_high": 0.0447,
+      "forced_low": 0.0,
+      "forced_quiet": 0.278,
+      "measure_dependent": 0.6773
+    }
+  },
+  "median_width_kms_illuminated": 0.568,
+  "median_width_kms_unilluminated_ground": 1.498
+}

@@ -1,0 +1,11 @@
+{
+  "dataset": "PoroTomo stage-2 nodal P picks (GDR 924), held out",
+  "n_picks": 38555,
+  "n_members": 30,
+  "inside_raw": 0.2677,
+  "inside_with_pick_noise": 0.654,
+  "pick_noise_allowance_s": 0.036,
+  "rms_median_prediction_ms": 54.0,
+  "median_interval_width_ms": 38.0,
+  "caveat": "stage-2 picks share the AIC auto-picker and its preliminary-inversion windows with stage 1; picker-systematic errors are common-mode and not tested here"
+}
