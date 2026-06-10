@@ -1,0 +1,12 @@
+{
+  "method": "pointwise MLP + MC-dropout, trained on synthetic eikonal data from the ensemble's prior class",
+  "n_dropout": 30,
+  "n_models_train": 240,
+  "prox_radius_m": 120.0,
+  "holdout": {
+    "inside_raw": 0.1804,
+    "inside_with_pick_noise": 0.5826,
+    "rms_median_prediction_ms": 61.9
+  },
+  "median_interval_width_kms_lit": 0.686
+}

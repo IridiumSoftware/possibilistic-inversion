@@ -1,0 +1,30 @@
+{
+  "published_model": "ID10_Vp_Thurber20171123",
+  "n_cells_compared": 2666,
+  "methods": {
+    "possibilistic": {
+      "published_inside_strict": 0.7033,
+      "published_inside_tol_0p25": 0.9782,
+      "median_width_kms_lit": 0.568,
+      "holdout_inside_raw": 0.2677,
+      "holdout_inside_with_noise": 0.654,
+      "holdout_rms_ms": 54.0
+    },
+    "bayes_rto_95": {
+      "published_inside_strict": 0.4107,
+      "published_inside_tol_0p25": 0.8957,
+      "median_width_kms_lit": 0.26,
+      "holdout_inside_raw": 0.0705,
+      "holdout_inside_with_noise": 0.5165,
+      "holdout_rms_ms": 54.0
+    },
+    "nn_mcdropout_95": {
+      "published_inside_strict": 0.7146,
+      "published_inside_tol_0p25": 0.9036,
+      "median_width_kms_lit": 0.686,
+      "holdout_inside_raw": 0.1804,
+      "holdout_inside_with_noise": 0.5826,
+      "holdout_rms_ms": 61.9
+    }
+  }
+}

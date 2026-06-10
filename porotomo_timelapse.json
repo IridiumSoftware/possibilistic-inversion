@@ -1,0 +1,83 @@
+{
+  "design": "paired references (same member seeds per stage); pair (1,2) is the null control",
+  "eps_dt_sweep_kms": [
+    0.05,
+    0.1,
+    0.2
+  ],
+  "n_members": 30,
+  "pairs": {
+    "1->2": {
+      "n_cells_lit_both": 5179,
+      "median_paired_spread_kms": 0.48,
+      "eps": {
+        "0.05": {
+          "forced_faster": 205,
+          "forced_slower": 146,
+          "forced_stable_frac": 0.0098,
+          "open_frac": 0.9224
+        },
+        "0.10": {
+          "forced_faster": 58,
+          "forced_slower": 64,
+          "forced_stable_frac": 0.0595,
+          "open_frac": 0.917
+        },
+        "0.20": {
+          "forced_faster": 15,
+          "forced_slower": 12,
+          "forced_stable_frac": 0.2137,
+          "open_frac": 0.781
+        }
+      }
+    },
+    "1->3": {
+      "n_cells_lit_both": 4888,
+      "median_paired_spread_kms": 0.498,
+      "eps": {
+        "0.05": {
+          "forced_faster": 102,
+          "forced_slower": 204,
+          "forced_stable_frac": 0.0119,
+          "open_frac": 0.9255
+        },
+        "0.10": {
+          "forced_faster": 41,
+          "forced_slower": 92,
+          "forced_stable_frac": 0.0606,
+          "open_frac": 0.9122
+        },
+        "0.20": {
+          "forced_faster": 2,
+          "forced_slower": 14,
+          "forced_stable_frac": 0.2132,
+          "open_frac": 0.7836
+        }
+      }
+    },
+    "1->4": {
+      "n_cells_lit_both": 4768,
+      "median_paired_spread_kms": 0.439,
+      "eps": {
+        "0.05": {
+          "forced_faster": 125,
+          "forced_slower": 307,
+          "forced_stable_frac": 0.0153,
+          "open_frac": 0.8941
+        },
+        "0.10": {
+          "forced_faster": 65,
+          "forced_slower": 117,
+          "forced_stable_frac": 0.0782,
+          "open_frac": 0.8836
+        },
+        "0.20": {
+          "forced_faster": 12,
+          "forced_slower": 18,
+          "forced_stable_frac": 0.2655,
+          "open_frac": 0.7282
+        }
+      }
+    }
+  }
+}

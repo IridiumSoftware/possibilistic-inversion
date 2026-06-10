@@ -103,6 +103,60 @@ brackets the independent travel-time/body-wave models at 95–98% within
 ~0.3 km/s faster — different physics, real and interpretable divergence,
 not a calibration failure of either.
 
+## §2b — Forward-options results (second pass, 2026-06-09/10)
+
+All four §4 candidates were executed before drafting the note section.
+
+**Smoothness-class sensitivity (`porotomo/sensitivity_3d.py`).** Four full
+30-member variant ensembles; Jaccard of forced labels vs base on base-lit
+cells; control ceiling = base split into 15-member halves (J(high)=0.70,
+J(quiet)=0.43 — conservative, since half-ensembles have narrower
+intervals). Forced-high: corr_600m J=0.67 (~ceiling — robust to doubling
+the correlation length); corr_150m J=0.46; smooth_ratio 3 / 30 J=0.36 /
+0.30 with counts 154–481 vs base 436. Verdict matches the Volve Tier-1
+shape: the smoothness *ratio* is load-bearing for label extent; forced
+claims are class-relative, which is how the method states them.
+
+**Possibilistic time-lapse (`porotomo/timelapse.py`).** Stages 2/3/4
+inverted with paired references (same member seeds). Null control (1→2,
+minimal pumping change): 2.4% forced-change cells at eps 0.10 km/s,
+symmetric (58 faster / 64 slower) — the false-positive floor. 1→3: 41/92;
+1→4: 65/117 — forced-slower grows monotonically to ~1.8× the null rate
+while forced-faster stays at null. Median paired-difference spread
+0.44–0.50 km/s, so expected pumping-induced changes (~1–3%, ≲0.07 km/s)
+are below per-cell sensitivity. Scoped finding: mostly open at cell level,
+with a weak, directionally consistent forced-slowing drift across stages.
+
+**Three-way bake-off (`porotomo/bayes_baseline.py`,
+`porotomo/nn_baseline_3d.py`, `porotomo/threeway_3d.py`).** Bayesian
+baseline = RTO exact sampling of the linearized-Gaussian posterior
+(emcee infeasible at 27k dims), matched physics/noise/prior class; NN =
+pointwise MLP + MC-dropout trained on 240 synthetic eikonal forwards from
+the same prior class. Matched tests, lit cells (n=2,666):
+
+| metric | possibilistic | Bayes RTO 95% | NN MC-dropout 95% |
+|---|---|---|---|
+| Thurber-inside strict | **70%** | 41% | 71% |
+| Thurber-inside ±0.25 | **98%** | 90% | 90% |
+| holdout inside raw | **27%** | 7% | 18% |
+| holdout inside ±36 ms | **65%** | 52% | 58% |
+| median width (km/s) | 0.57 | 0.26 | 0.69 |
+| holdout RMS (ms) | 54.0 | 54.0 | 61.9 |
+
+Same ordering as Volve §6.5: identical RMS for posdec/Bayes (same
+physics), but the Bayesian 95% credible intervals are half the width and
+miss accordingly (overconfident under misspecification); the NN is wider
+than posdec yet covers less on every test (miscalibrated shape). The
+possibilistic intervals dominate on coverage-per-width.
+
+**Geology cross-check (`porotomo/geology_check.py`).** Against the Siler
+& Faulds 3D geologic model (USGS SIM 3469 via GDR 1124 ID15; drilling +
+mapping, independent of the seismic data): forced-high cells concentrate
+in mapped colluvium (lift 1.58) and playa-fringe deposits (1.91), and are
+nearly absent from old-alluvium / diatomite-fan units (lift 0.03–0.19) —
+the forced label is geologically structured, not acquisition-geometry
+noise.
+
 ## §3 — Verification
 
 - *3D FMM correctness:* example-tested — `python -m porotomo.eikonal3d`

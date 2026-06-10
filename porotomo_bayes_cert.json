@@ -1,0 +1,12 @@
+{
+  "method": "RTO exact sampling of the linearized-Gaussian posterior (matched physics/noise/prior class)",
+  "n_samples": 30,
+  "lam": 100.0,
+  "sigma_s": 0.06,
+  "holdout": {
+    "inside_raw_95cred": 0.0705,
+    "inside_with_pick_noise": 0.5165,
+    "rms_median_prediction_ms": 54.0
+  },
+  "median_cred_width_kms_lit": 0.26
+}

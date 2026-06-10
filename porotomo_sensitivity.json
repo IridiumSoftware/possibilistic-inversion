@@ -1,0 +1,72 @@
+{
+  "eps_kms": 0.25,
+  "n_members": 30,
+  "base_counts": {
+    "high": 436,
+    "low": 8,
+    "quiet": 737
+  },
+  "control_half_ensemble": {
+    "high": 0.701,
+    "quiet": 0.433
+  },
+  "note": "control uses 15-member halves; half-ensembles have narrower intervals than the full 30, so the ceiling is conservative (true 30-vs-30 stability would be higher)",
+  "variants": {
+    "smooth_ratio_3": {
+      "overrides": {
+        "smooth_ratio": 3.0
+      },
+      "counts": {
+        "high": 183,
+        "low": 0,
+        "quiet": 103
+      },
+      "jaccard_vs_base": {
+        "high": 0.36,
+        "quiet": 0.082
+      }
+    },
+    "smooth_ratio_30": {
+      "overrides": {
+        "smooth_ratio": 30.0
+      },
+      "counts": {
+        "high": 154,
+        "low": 2,
+        "quiet": 642
+      },
+      "jaccard_vs_base": {
+        "high": 0.302,
+        "quiet": 0.29
+      }
+    },
+    "corr_150m": {
+      "overrides": {
+        "smooth_correlation_m": 150.0
+      },
+      "counts": {
+        "high": 206,
+        "low": 0,
+        "quiet": 116
+      },
+      "jaccard_vs_base": {
+        "high": 0.456,
+        "quiet": 0.127
+      }
+    },
+    "corr_600m": {
+      "overrides": {
+        "smooth_correlation_m": 600.0
+      },
+      "counts": {
+        "high": 481,
+        "low": 90,
+        "quiet": 910
+      },
+      "jaccard_vs_base": {
+        "high": 0.67,
+        "quiet": 0.344
+      }
+    }
+  }
+}
