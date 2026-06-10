@@ -121,11 +121,13 @@ claims are class-relative, which is how the method states them.
 inverted with paired references (same member seeds). Null control (1→2,
 minimal pumping change): 2.4% forced-change cells at eps 0.10 km/s,
 symmetric (58 faster / 64 slower) — the false-positive floor. 1→3: 41/92;
-1→4: 65/117 — forced-slower grows monotonically to ~1.8× the null rate
-while forced-faster stays at null. Median paired-difference spread
-0.44–0.50 km/s, so expected pumping-induced changes (~1–3%, ≲0.07 km/s)
-are below per-cell sensitivity. Scoped finding: mostly open at cell level,
-with a weak, directionally consistent forced-slowing drift across stages.
+1→4: 65/117 — the forced-slower *rate* grows monotonically (1.24% →
+1.88% → 2.45%, i.e. 2.0× the null forced-slower rate by stage 4; total
+forced rate 1.6× null) while forced-faster stays at null. Median
+paired-difference spread 0.44–0.50 km/s, so expected pumping-induced
+changes (~1–3%, ≲0.07 km/s) are below per-cell sensitivity. Scoped
+finding: mostly open at cell level, with a weak, directionally consistent
+forced-slowing drift across stages.
 
 **Three-way bake-off (`porotomo/bayes_baseline.py`,
 `porotomo/nn_baseline_3d.py`, `porotomo/threeway_3d.py`).** Bayesian
@@ -151,11 +153,15 @@ possibilistic intervals dominate on coverage-per-width.
 
 **Geology cross-check (`porotomo/geology_check.py`).** Against the Siler
 & Faulds 3D geologic model (USGS SIM 3469 via GDR 1124 ID15; drilling +
-mapping, independent of the seismic data): forced-high cells concentrate
-in mapped colluvium (lift 1.58) and playa-fringe deposits (1.91), and are
-nearly absent from old-alluvium / diatomite-fan units (lift 0.03–0.19) —
-the forced label is geologically structured, not acquisition-geometry
-noise.
+mapping, independent of the seismic data): forced-high cells are
+over-represented in mapped colluvium (lift 1.58) and playa-fringe
+deposits (1.91), and nearly absent from old-alluvium / diatomite-fan
+units (lift 0.03–0.19) — the forced set has non-uniform lithologic
+composition. CAVEAT (audit 2026-06-10): the forced-high body and the
+illuminated volume are both shallow-biased, so depth-correlated units may
+be partly a coverage confound; this is consistent-with, not clean
+corroboration-of, the forced label carrying geologic information. A
+depth/illumination-matched control is future work.
 
 ## §3 — Verification
 

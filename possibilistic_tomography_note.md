@@ -499,9 +499,9 @@ cite Equinor's release per the HRS T&C attribution requirement.
 
 Demonstration 3 reached real data, but the acquisition was a walkaway VSP:
 the inversion was 1D along the bore, then 2D in a single well-line plane.
-The natural next question — the one Brian's ORSI evaluation named as the
-decisive extension — is whether the method survives a **genuinely 3D
-acquisition geometry**, where rays cross a volume from sources and
+The natural next question — the extension Brian's ORSI evaluation
+explicitly recommended (§6.5) — is whether the method survives a
+**genuinely 3D acquisition geometry**, where rays cross a volume from sources and
 receivers spread over a surface. This section runs the full pipeline on
 the **PoroTomo** experiment (Brady Hot Springs, Nevada; U.S. DOE
 geothermal program, March 2016), an open dataset whose geometry is areal,
@@ -555,8 +555,8 @@ sensitivity to it (§7.5).
 The gauge is a laterally-uniform 1D median profile — a physical null
 ("no lateral structure"), so the forced-high/low labels are claims about
 *lateral* anomalies the data demands, and are non-tautological (unlike an
-ensemble-mean background, the error Volve phase 5 caught and §8 point 1
-documents). Cells without ray coverage are flagged unilluminated and held
+ensemble-mean background — the gauge error the Volve phase-5 witness pass
+caught and §6.3 documents). Cells without ray coverage are flagged unilluminated and held
 out of the forced statistics rather than allowed to pose as findings; on
 this geometry 20.7% of ground cells are illuminated.
 
@@ -589,19 +589,22 @@ so the raw rate here mostly measures the auto-picks' own noise, and the
 in≈out RMS equality is the load-bearing number.)
 
 **Independent published models (Figure 12).** The PoroTomo team's final
-property grid (GDR 1124) carries six Vp models from three groups and three
-methods. Against the illuminated cells, the feasible set brackets them:
-the Thurber and Nayak travel-time/body-wave models fall inside our
-per-cell intervals in **95–98%** of cells within 0.25 km/s, with
-correlation r ≈ 0.92 and field-wide medians matching ours to 0.01 km/s.
-Where we recover the same earth, we recover it almost exactly. The two
+property grid (GDR 1124) carries six Vp columns from three groups and two
+method families — five distinct models, since the two later Thurber
+entries are byte-identical in the published grid. Against the illuminated
+cells, the feasible set brackets them: the Thurber and Nayak
+travel-time/body-wave models fall inside our per-cell intervals in
+**95–98%** of cells within 0.25 km/s, with correlation r = 0.89–0.92;
+the closest model (Thurber 2017-11) matches our field-wide median to
+0.004 km/s and the family sits within 0.07. Where we recover the same
+earth, we recover it almost exactly. The two
 systematic departures are interpretable, not failures: at the slow
 extremes our declared smoothness class compresses contrast the finer
 published parameterization resolves, and the Matzel *sweep-interferometry*
 model runs ~0.3 km/s fast throughout — different physics sampling
 different structure, divergent from the travel-time models too.
 
-![Figure 12. Six published PoroTomo Vp models (three travel-time/body-wave vintages, one sweep-interferometry) vs the stage-1 feasible-interval ensemble median on illuminated cells; inside-interval fraction and correlation annotated per panel.](porotomo_published_check.png)
+![Figure 12. The six published PoroTomo Vp columns (five travel-time/body-wave panels — of which the two later Thurber entries are byte-identical in the published grid — plus one sweep-interferometry model) vs the stage-1 feasible-interval ensemble median on illuminated cells; inside-interval fraction and correlation annotated per panel.](porotomo_published_check.png)
 
 *Figure 12. The feasible set vs models built by other groups with other
 methods. Travel-time and body-wave models sit inside the intervals at
@@ -652,17 +655,18 @@ full in `docs/porotomo_3d_companion.md`; the load-bearing results:
   Re-running the ensemble at perturbed class hyperparameters and measuring
   the Jaccard overlap of the forced sets against a half-ensemble control
   ceiling (J = 0.70): the forced-high set is robust to *doubling* the
-  correlation length (J = 0.67) but moves under changes to the smoothness
-  *ratio* (J = 0.30–0.36). The forced claims are class-relative — which is
-  precisely how the method states them, and why this probe is part of it,
-  not an afterthought.
-- **Possibilistic time-lapse** — a question type neither the deterministic
-  nor any Bayesian treatment of this dataset has posed. Inverting stages
-  2/3/4 with *paired references* (shared member seeds, so the prior spread
-  cancels in the per-cell difference) and using the minimal-change stage
-  1→2 pair as a null control (a symmetric 2.4% forced-change false-positive
-  floor): forced-*slower* cells grow monotonically across stages (to ~1.8×
-  the null rate by stage 4) while forced-*faster* stays at the floor. The
+  correlation length (J = 0.67 ≈ ceiling) but moves under *halving* it
+  (J = 0.46) and under changes to the smoothness *ratio* (J = 0.30–0.36).
+  The forced claims are class-relative — which is precisely how the method
+  states them, and why this probe is part of it, not an afterthought.
+- **Possibilistic time-lapse** — a question type no treatment of this
+  dataset has posed that we could find in the published record. Inverting
+  stages 2/3/4 with *paired references* (shared member seeds, so the prior
+  spread cancels in the per-cell difference) and using the minimal-change
+  stage 1→2 pair as a null control (a symmetric 2.4% forced-change
+  false-positive floor): the forced-*slower* rate grows monotonically
+  across stages (1.24% → 1.88% → 2.45%, i.e. 2.0× the null forced-slower
+  rate by stage 4) while forced-*faster* stays at the floor. The
   honest scope is that per-cell changes are mostly *open* — the expected
   pumping-induced velocity change (≲0.07 km/s) sits below the per-cell
   feasible sensitivity (~0.45 km/s) — but the asymmetric drift is a real,
