@@ -1,0 +1,85 @@
+{
+  "eps_kms": 0.25,
+  "n_lit_with_lith": 2928,
+  "n_forced_high_with_lith": 372,
+  "source": "ID15_SilerLithology on GDR 1124 mesh (Siler & Faulds 3D geologic model, USGS SIM 3469); unit names GDR 490",
+  "units": [
+    {
+      "unit_id": 16,
+      "unit": "Qpf - Playa fringe deposits",
+      "frac_of_lit": 0.0704,
+      "frac_of_forced_high": 0.1344,
+      "lift": 1.91
+    },
+    {
+      "unit_id": 14,
+      "unit": "Qc - Colluvial deposits, undivided",
+      "frac_of_lit": 0.5287,
+      "frac_of_forced_high": 0.836,
+      "lift": 1.58
+    },
+    {
+      "unit_id": 13,
+      "unit": "Qfd - Alluvial fan deposits with mainly diatomite clasts",
+      "frac_of_lit": 0.1274,
+      "frac_of_forced_high": 0.0242,
+      "lift": 0.19
+    },
+    {
+      "unit_id": 17,
+      "unit": "QTa - Old alluvium found within the Hot Springs Mountains. Early Pleistocene to late Miocene",
+      "frac_of_lit": 0.1762,
+      "frac_of_forced_high": 0.0054,
+      "lift": 0.03
+    },
+    {
+      "unit_id": 0,
+      "unit": "?",
+      "frac_of_lit": 0.0065,
+      "frac_of_forced_high": 0.0,
+      "lift": 0.0
+    },
+    {
+      "unit_id": 1,
+      "unit": "Qm - Mine Waste",
+      "frac_of_lit": 0.0068,
+      "frac_of_forced_high": 0.0,
+      "lift": 0.0
+    },
+    {
+      "unit_id": 2,
+      "unit": "Qx - Disturbed areas, undivided",
+      "frac_of_lit": 0.0089,
+      "frac_of_forced_high": 0.0,
+      "lift": 0.0
+    },
+    {
+      "unit_id": 8,
+      "unit": "Qfw - Subaerial deposits of the Wyemaha alloformation, late Pleistocene",
+      "frac_of_lit": 0.0068,
+      "frac_of_forced_high": 0.0,
+      "lift": 0.0
+    },
+    {
+      "unit_id": 12,
+      "unit": "Qfb - Alluvial deposits with mainly basaltic clasts",
+      "frac_of_lit": 0.0085,
+      "frac_of_forced_high": 0.0,
+      "lift": 0.0
+    },
+    {
+      "unit_id": 18,
+      "unit": "Qd - Sand dunes",
+      "frac_of_lit": 0.0277,
+      "frac_of_forced_high": 0.0,
+      "lift": 0.0
+    },
+    {
+      "unit_id": 20,
+      "unit": "Qed - Eolian sands with diatomite or siltstone clasts",
+      "frac_of_lit": 0.0246,
+      "frac_of_forced_high": 0.0,
+      "lift": 0.0
+    }
+  ]
+}
